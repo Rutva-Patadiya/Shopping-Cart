@@ -5,7 +5,7 @@ import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
-import 'login/blocs/auth_bloc.dart';
+import 'login/bloc/auth_bloc.dart';
 
 Future<void> main() async {
   //ensure flutter sets up

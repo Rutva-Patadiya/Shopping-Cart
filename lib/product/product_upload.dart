@@ -1,13 +1,15 @@
+import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
-
-static const route='/product_upload';
 class AddProductPage extends StatefulWidget {
+  const AddProductPage({super.key});
+
+  static const route = '/product_upload';
+
   @override
   _AddProductPageState createState() => _AddProductPageState();
 }
@@ -34,8 +36,9 @@ class _AddProductPageState extends State<AddProductPage> {
 
   Future<void> uploadSvgToStorage() async {
     if (svgFile == null) return;
-    final ref = FirebaseStorage.instance
-        .ref('product_images/${DateTime.now().millisecondsSinceEpoch}.svg');
+    final ref = FirebaseStorage.instance.ref(
+      'product_images/${DateTime.now().millisecondsSinceEpoch}.svg',
+    );
     await ref.putFile(svgFile!);
     svgUrl = await ref.getDownloadURL();
   }
@@ -51,9 +54,9 @@ class _AddProductPageState extends State<AddProductPage> {
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Product added!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Product added!')));
 
     nameController.clear();
     priceController.clear();
@@ -66,28 +69,61 @@ class _AddProductPageState extends State<AddProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Add Product')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(controller: nameController, decoration: InputDecoration(labelText: 'Product Name')),
-            TextField(controller: priceController, decoration: InputDecoration(labelText: 'Price'), keyboardType: TextInputType.number),
-            TextField(controller: categoryController, decoration: InputDecoration(labelText: 'Category')),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: pickSvgFile,
-              child: Text(svgFile == null ? 'Pick SVG Image' : 'SVG Selected'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: addProduct,
-              child: Text('Add Product'),
-            ),
-          ],
+    return Column(
+      children: [
+        TextField(
+          controller: nameController,
+          decoration: InputDecoration(labelText: 'Product Name'),
         ),
-      ),
+        TextField(
+          controller: priceController,
+          decoration: InputDecoration(labelText: 'Price'),
+          keyboardType: TextInputType.number,
+        ),
+        TextField(
+          controller: categoryController,
+          decoration: InputDecoration(labelText: 'Category'),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: pickSvgFile,
+          child: Text(svgFile == null ? 'Pick SVG Image' : 'SVG Selected'),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(onPressed: addProduct, child: Text('Add Product')),
+      ],
     );
+    // }Widget build(BuildContext context) {
+    //   return Scaffold(
+    //     appBar: AppBar(title: Text('Add Product')),
+    //     body: Padding(
+    //       padding: const EdgeInsets.all(16.0),
+    //       child: Column(
+    //         children: [
+    //           TextField(
+    //             controller: nameController,
+    //             decoration: InputDecoration(labelText: 'Product Name'),
+    //           ),
+    //           TextField(
+    //             controller: priceController,
+    //             decoration: InputDecoration(labelText: 'Price'),
+    //             keyboardType: TextInputType.number,
+    //           ),
+    //           TextField(
+    //             controller: categoryController,
+    //             decoration: InputDecoration(labelText: 'Category'),
+    //           ),
+    //           const SizedBox(height: 10),
+    //           ElevatedButton(
+    //             onPressed: pickSvgFile,
+    //             child: Text(svgFile == null ? 'Pick SVG Image' : 'SVG Selected'),
+    //           ),
+    //           const SizedBox(height: 20),
+    //           ElevatedButton(onPressed: addProduct, child: Text('Add Product')),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 }

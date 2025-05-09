@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../core/utils/theme/text_theme.dart';
-import '../login/blocs/auth_bloc.dart';
-import '../login/blocs/auth_event.dart';
-import '../login/blocs/auth_state.dart';
+import '../login/bloc/auth_bloc.dart';
+import '../login/bloc/auth_event.dart';
+import '../login/bloc/auth_state.dart';
 import '../login/login_page.dart';
 
 class HomePage extends StatelessWidget {
