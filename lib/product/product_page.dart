@@ -76,6 +76,27 @@ class ProductList extends StatelessWidget {
             ),
           ),
 
+          // Expanded(
+          //   child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
+          //     builder: (context, state) {
+          //       if (state is ProductFilterLoading) {
+          //         return const Center(child: CircularProgressIndicator());
+          //       } else if (state is ProductFilterLoaded) {
+          //         final products = state.filteredProducts;
+          //
+          //         return ListView.builder(
+          //           itemCount: products.length,
+          //           itemBuilder: (context, index) {
+          //             return ProductCard(product: products[index]);
+          //           },
+          //         );
+          //       } else if (state is ProductFilterError) {
+          //         return Center(child: Text(state.message));
+          //       }
+          //       return const SizedBox.shrink();
+          //     },
+          //   ),
+          // ),
           Expanded(
             child: FutureBuilder<List<Product>>(
               future: fetchProducts(),
