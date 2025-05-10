@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopping_cart/product/product_page.dart';
+import 'package:shopping_cart/signup/signup_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: ProductList(),
+        home: SignupPage(),
       ),
     );
   }
