@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
         log("State received: $state");
 
         if (state is Authenticated) {
-          Navigator.pushNamed(context, ProductList.route);
+          Navigator.pushNamed(context, ProductPage.route);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,

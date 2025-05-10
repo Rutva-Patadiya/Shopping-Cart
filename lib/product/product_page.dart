@@ -7,9 +7,10 @@ import '../core/utils/theme/theme.dart';
 import '../signup/signup_page.dart';
 import 'bloc/filter_product_bloc.dart';
 import 'bloc/filter_product_event.dart';
+import 'bloc/filter_product_state.dart';
 
-class ProductList extends StatelessWidget {
-  const ProductList({super.key});
+class ProductPage extends StatelessWidget {
+  const ProductPage({super.key});
 
   static const route = '/product';
 
@@ -43,15 +44,13 @@ class ProductList extends StatelessWidget {
                 CustomButton(
                   name: "All",
                   onPressed: () {
-                    context.read<ProductFilterBloc>().add(
-                      FilterProducts("All"),
-                    );
+                    context.read<ProductBloc>().add(FilterProducts("All"));
                   },
                 ),
                 CustomButton(
                   name: "Electronic",
                   onPressed: () {
-                    context.read<ProductFilterBloc>().add(
+                    context.read<ProductBloc>().add(
                       FilterProducts("Electronic"),
                     );
                   },
@@ -59,20 +58,37 @@ class ProductList extends StatelessWidget {
                 CustomButton(
                   name: "Clothing",
                   onPressed: () {
-                    context.read<ProductFilterBloc>().add(
-                      FilterProducts("Clothing"),
-                    );
+                    context.read<ProductBloc>().add(FilterProducts("Clothing"));
                   },
                 ),
                 CustomButton(
                   name: "Grocery",
                   onPressed: () {
-                    context.read<ProductFilterBloc>().add(
-                      FilterProducts("Grocery"),
-                    );
+                    context.read<ProductBloc>().add(FilterProducts("Grocery"));
                   },
                 ),
               ],
+            ),
+          ),
+
+          Expanded(
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
+                if (state is ProductLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is ProductLoaded) {
+                  final products = state.products;
+                  return ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder:
+                        (context, index) =>
+                            ProductList(product: products[index]),
+                  );
+                } else if (state is ProductError) {
+                  return Center(child: Text(state.message));
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ),
 
@@ -97,36 +113,36 @@ class ProductList extends StatelessWidget {
           //     },
           //   ),
           // ),
-          Expanded(
-            child: FutureBuilder<List<Product>>(
-              future: fetchProducts(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-
-                final products = snapshot.data ?? [];
-
-                return ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return ProductCard(product: products[index]);
-                  },
-                );
-              },
-            ),
-            // Product list
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemCount: allProducts.length,
-            //     itemBuilder: (context, index) {
-            //       return ProductCard(product: allProducts[index]);
-            //     },
-            //   ),
-            // ),
-          ),
+          // Expanded(
+          //   child: FutureBuilder<List<Product>>(
+          //     future: fetchProducts(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         return const Center(child: CircularProgressIndicator());
+          //       } else if (snapshot.hasError) {
+          //         return Center(child: Text('Error: ${snapshot.error}'));
+          //       }
+          //
+          //       final products = snapshot.data ?? [];
+          //
+          //       return ListView.builder(
+          //         itemCount: products.length,
+          //         itemBuilder: (context, index) {
+          //           return ProductCard(product: products[index]);
+          //         },
+          //       );
+          //     },
+          //   ),
+          // Product list
+          // Expanded(
+          //   child: ListView.builder(
+          //     itemCount: allProducts.length,
+          //     itemBuilder: (context, index) {
+          //       return ProductCard(product: allProducts[index]);
+          //     },
+          //   ),
+          // ),
+          // ),
           // AddProductPage(),
         ],
       ),
@@ -159,7 +175,7 @@ class CustomButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         ),
         onPressed: () {
-          onPressed;
+          onPressed();
         },
         child: Text(name),
       ),

@@ -1,26 +1,17 @@
-// abstract class FilterProduct {}
-//
-// class ProductLoading extends FilterProduct {}
-//
-// class ProductLoaded extends FilterProduct {}
-// product_filter_state.dart
+import 'filter_product_bloc.dart';
 
-import '../product_list.dart';
+abstract class ProductState {}
 
-abstract class ProductFilterState {}
+class ProductLoading extends ProductState {}
 
-class ProductFilterInitial extends ProductFilterState {}
+class ProductLoaded extends ProductState {
+  final List<Product> products;
 
-class ProductFilterLoading extends ProductFilterState {}
-
-class ProductFilterLoaded extends ProductFilterState {
-  final List<Product> filteredProducts;
-
-  ProductFilterLoaded(this.filteredProducts);
+  ProductLoaded(this.products);
 }
 
-class ProductFilterError extends ProductFilterState {
+class ProductError extends ProductState {
   final String message;
 
-  ProductFilterError(this.message);
+  ProductError(this.message);
 }

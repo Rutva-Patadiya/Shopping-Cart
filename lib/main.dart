@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
+import 'package:shopping_cart/product/bloc/filter_product_event.dart';
 import 'package:shopping_cart/signup/signup_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
@@ -22,7 +24,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>(create: (_) => LoginBloc(), child: MyApp()),
+        BlocProvider<LoginBloc>(create: (_) => LoginBloc()),
+
+        // immediately sends a LoadProducts event to the bloc right after it's created,
+        BlocProvider<ProductBloc>(
+          create: (_) => ProductBloc()..add(FilterProducts("All")),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

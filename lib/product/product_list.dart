@@ -1,45 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-class Product {
-  final String name;
-  final String category;
-  final int price;
-  final String imageUrl;
+import 'bloc/filter_product_bloc.dart';
 
-  Product({
-    required this.name,
-    required this.category,
-    required this.price,
-    required this.imageUrl,
-  });
-
-  factory Product.fromFirestore(Map<String, dynamic> data) {
-    return Product(
-      name: data['Name'] ?? '',
-      category: data['Category'] ?? '',
-      price: data['Price'] ?? 0,
-      imageUrl: data['Image'] ?? '',
-    );
-  }
-}
-
-Future<List<Product>> fetchProducts() async {
-  // it fetches documents from Firebase
-  final snapshot =
-      await FirebaseFirestore.instance.collection('products').get();
-  // loops over each document, and for every document, it calls
-  // docs:property of snapshot & give list of all the product documents Each doc contains fields like Name..
-  return snapshot.docs.map((doc) => Product.fromFirestore(doc.data())).toList();
-}
-
-class ProductCard extends StatelessWidget {
+class ProductList extends StatelessWidget {
   final Product product;
 
-  const ProductCard({super.key, required this.product});
+  const ProductList({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -94,19 +63,6 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // InkWell(
-            //   customBorder: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(10),
-            //   ),
-            //   onTap: () => Text("On tap is pressed"),
-            //   child: Text(
-            //     "Add to Cart",
-            //     style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

@@ -13,8 +13,8 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
     case Login.route:
       return MaterialPageRoute(builder: (context) => Login());
 
-    case ProductList.route:
-      return MaterialPageRoute(builder: (context) => ProductList());
+    case ProductPage.route:
+      return MaterialPageRoute(builder: (context) => ProductPage());
 
     // case Product.route:
     //   return MaterialPageRoute(builder: (context) => HomePage());
