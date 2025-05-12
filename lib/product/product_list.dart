@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-import '../cart/bloc/add_to_cart_bloc.dart';
-import '../cart/bloc/add_to_cart_event.dart';
+// import '../cart/bloc/add_to_cart_bloc.dart';
+// import '../cart/bloc/add_to_cart_event.dart';
 import 'bloc/filter_product_bloc.dart';
 
 class ProductList extends StatelessWidget {
@@ -54,23 +53,23 @@ class ProductList extends StatelessWidget {
               ),
 
               SizedBox(height: 4),
-              ElevatedButton(
-                onPressed:
-                    () => {context.read<AddToCartBloc>().add(AddToCart())},
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(24, 24),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(
-                  "Add ",
-                  style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed:
+              //       () => {context.read<AddToCartBloc>().add(AddToCart())},
+              //   style: ElevatedButton.styleFrom(
+              //     minimumSize: Size(24, 24),
+              //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              //   ),
+              //   child: Text(
+              //     "Add ",
+              //     style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+              //       fontSize: 10,
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.w400,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
