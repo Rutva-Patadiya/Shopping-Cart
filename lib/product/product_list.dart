@@ -39,31 +39,36 @@ class ProductList extends StatelessWidget {
           style: TTextTheme.lightTextTheme.headlineLarge?.copyWith(),
         ),
         subtitle: Text(product.category),
-        trailing: Column(
-          children: [
-            Text(
-              '\₹${product.price}',
-              style: TTextTheme.lightTextTheme.headlineSmall,
-            ),
-
-            SizedBox(height: 4),
-            ElevatedButton(
-              onPressed: () => {},
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(24, 24),
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        trailing: SizedBox(
+          width: 80,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\₹${product.price}',
+                style: TTextTheme.lightTextTheme.headlineSmall,
               ),
-              child: Text(
-                "Add ",
-                style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                  fontSize: 10,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+
+              SizedBox(height: 4),
+              ElevatedButton(
+                onPressed: () => {},
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(24, 24),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  "Add ",
+                  style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                    fontSize: 10,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

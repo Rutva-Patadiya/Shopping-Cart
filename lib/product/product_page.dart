@@ -91,59 +91,6 @@ class ProductPage extends StatelessWidget {
               },
             ),
           ),
-
-          // Expanded(
-          //   child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
-          //     builder: (context, state) {
-          //       if (state is ProductFilterLoading) {
-          //         return const Center(child: CircularProgressIndicator());
-          //       } else if (state is ProductFilterLoaded) {
-          //         final products = state.filteredProducts;
-          //
-          //         return ListView.builder(
-          //           itemCount: products.length,
-          //           itemBuilder: (context, index) {
-          //             return ProductCard(product: products[index]);
-          //           },
-          //         );
-          //       } else if (state is ProductFilterError) {
-          //         return Center(child: Text(state.message));
-          //       }
-          //       return const SizedBox.shrink();
-          //     },
-          //   ),
-          // ),
-          // Expanded(
-          //   child: FutureBuilder<List<Product>>(
-          //     future: fetchProducts(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.waiting) {
-          //         return const Center(child: CircularProgressIndicator());
-          //       } else if (snapshot.hasError) {
-          //         return Center(child: Text('Error: ${snapshot.error}'));
-          //       }
-          //
-          //       final products = snapshot.data ?? [];
-          //
-          //       return ListView.builder(
-          //         itemCount: products.length,
-          //         itemBuilder: (context, index) {
-          //           return ProductCard(product: products[index]);
-          //         },
-          //       );
-          //     },
-          //   ),
-          // Product list
-          // Expanded(
-          //   child: ListView.builder(
-          //     itemCount: allProducts.length,
-          //     itemBuilder: (context, index) {
-          //       return ProductCard(product: allProducts[index]);
-          //     },
-          //   ),
-          // ),
-          // ),
-          // AddProductPage(),
         ],
       ),
     );
