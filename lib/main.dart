@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_event.dart';
-import 'package:shopping_cart/product/product_page.dart';
+import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
+import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
+import 'package:shopping_cart/signup/signup_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
@@ -25,12 +27,13 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(create: (_) => LoginBloc()),
-
         // immediately sends a LoadProducts event to the bloc right after it's created,
         BlocProvider<ProductBloc>(
-          create: (_) => ProductBloc()..add(FilterProducts("All")),
+          create:
+              (_) =>
+                  ProductBloc(ProductRepositoryImpl(ProductDataSources()))
+                    ..add(LoadProducts()),
         ),
-
         // BlocProvider(create: (_) =>)
       ],
       child: MaterialApp(
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: ProductPage(),
+        home: SignupPage(),
       ),
     );
   }
