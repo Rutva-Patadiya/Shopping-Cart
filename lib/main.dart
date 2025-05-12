@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_event.dart';
-import 'package:shopping_cart/signup/signup_page.dart';
+import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProductBloc>(
           create: (_) => ProductBloc()..add(FilterProducts("All")),
         ),
+
+        // BlocProvider(create: (_) =>)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: SignupPage(),
+        home: ProductPage(),
       ),
     );
   }

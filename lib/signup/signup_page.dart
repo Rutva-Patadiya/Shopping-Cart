@@ -60,6 +60,7 @@ class SignupPage extends StatelessWidget {
                       SizedBox(height: 30),
 
                       CustomTextField(
+                        width: null,
                         label: "Name",
                         keyboardType: TextInputType.name,
                         hint: "Enter your name",
@@ -80,6 +81,7 @@ class SignupPage extends StatelessWidget {
 
                       SizedBox(height: 16),
                       CustomTextField(
+                        width: null,
                         label: "Email",
                         keyboardType: TextInputType.emailAddress,
                         hint: "abc@example.com",
@@ -107,6 +109,7 @@ class SignupPage extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
+                            width: null,
                             label: "Password",
                             keyboardType: TextInputType.text,
                             hint: "Password",
@@ -148,6 +151,7 @@ class SignupPage extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
+                            width: null,
                             label: "Confirm Password",
                             keyboardType: TextInputType.text,
                             hint: "Confirm Password",
@@ -189,7 +193,7 @@ class SignupPage extends StatelessWidget {
                           return state is AuthLoading
                               ? const Center(child: CircularProgressIndicator())
                               : Container(
-                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 6),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
@@ -244,6 +248,7 @@ class SignupPage extends StatelessWidget {
 }
 
 class CustomTextField extends StatelessWidget {
+  final double? width;
   final String? label;
   final TextInputType? keyboardType;
   final bool obscureText;
@@ -256,6 +261,7 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
+    required this.width,
     required this.label,
     required this.keyboardType,
     required this.hint,
@@ -279,7 +285,7 @@ class CustomTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 5, left: 3),
+          padding: const EdgeInsets.only(bottom: 6, left: 2),
           child: Text(
             label ?? ' ',
             style: TTextTheme.lightTextTheme.headlineMedium?.copyWith(
@@ -287,29 +293,33 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
         ),
-        // SizedBox(height: 5),
-        TextFormField(
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          validator: validator,
-          controller: controller,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          //to validate when user interacts
-          cursorColor: Colors.blueAccent,
-          style: TTextTheme.lightTextTheme.bodyLarge,
 
-          decoration: InputDecoration(
-            isDense: true,
-            // labelText: label,
-            hintText: hint,
-            // contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-            hintStyle: hintStyle,
-            prefixIcon: Padding(
-              padding: EdgeInsets.only(top: 1),
-              child: Icon(prefixIcon, color: Colors.grey, size: 25),
+        // SizedBox(height: 5),
+        SizedBox(
+          width: width,
+          child: TextFormField(
+            keyboardType: keyboardType,
+            obscureText: obscureText,
+            validator: validator,
+            controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            //to validate when user interacts
+            cursorColor: Colors.blueAccent,
+            style: TTextTheme.lightTextTheme.bodyLarge,
+
+            decoration: InputDecoration(
+              isDense: true,
+              // labelText: label,
+              hintText: hint,
+              // contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+              hintStyle: hintStyle,
+              prefixIcon: Padding(
+                padding: EdgeInsets.only(top: 1),
+                child: Icon(prefixIcon, color: Colors.grey, size: 25),
+              ),
+              suffixIcon: suffixIcon,
+              border: OutlineInputBorder(),
             ),
-            suffixIcon: suffixIcon,
-            border: OutlineInputBorder(),
           ),
         ),
       ],

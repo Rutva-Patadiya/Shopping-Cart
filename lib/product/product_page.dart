@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/product_list.dart';
 
+import '../cart/cart_page.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import '../signup/signup_page.dart';
@@ -20,18 +21,34 @@ class ProductPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 32),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            child: CustomTextField(
-              label: null,
-              keyboardType: TextInputType.name,
-              hint: "Enter Product",
-              hintStyle: TTextTheme.lightTextTheme.titleSmall,
-              obscureText: false,
-              controller: SearchController(),
-              prefixIcon: Icons.search,
-              suffixIcon: null,
-              validator: null,
+          Padding(
+            padding: const EdgeInsets.only(left: 28),
+            child: Row(
+              children: [
+                CustomTextField(
+                  label: null,
+                  keyboardType: TextInputType.name,
+                  hint: "Enter Product",
+                  hintStyle: TTextTheme.lightTextTheme.titleSmall,
+                  obscureText: false,
+                  controller: SearchController(),
+                  prefixIcon: Icons.search,
+                  suffixIcon: null,
+                  validator: null,
+                  width: 300,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 18),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, CartPage.route);
+                    },
+                    color: Colors.black,
+                    icon: Icon(Icons.shopping_cart_outlined, size: 34),
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -105,27 +122,34 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.grey,
-          // Override background color
-          foregroundColor: Colors.black,
-          // Override text/icon color
-          minimumSize: Size(30, 40),
-          // Override size
-          textStyle: TextStyle(
-            fontWeight: FontWeight.normal,
-            letterSpacing: 0.5,
+    return Row(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2),
+              ),
+              backgroundColor: AppColors.grey,
+              // Override background color
+              foregroundColor: Colors.black,
+              // Override text/icon color
+              minimumSize: Size(30, 40),
+              // Override size
+              textStyle: TextStyle(
+                fontWeight: FontWeight.normal,
+                letterSpacing: 0.5,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            ),
+            onPressed: () {
+              onPressed();
+            },
+            child: Text(name),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         ),
-        onPressed: () {
-          onPressed();
-        },
-        child: Text(name),
-      ),
+      ],
     );
   }
 }
