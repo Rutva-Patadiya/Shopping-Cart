@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/product_list.dart';
 
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import '../signup/signup_page.dart';
+import 'bloc/filter_product_bloc.dart';
+import 'bloc/filter_product_event.dart';
+import 'bloc/filter_product_state.dart';
 
-class ProductList extends StatelessWidget {
-  const ProductList({super.key});
+class ProductPage extends StatelessWidget {
+  const ProductPage({super.key});
 
   static const route = '/product';
 
@@ -37,19 +41,53 @@ class ProductList extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                CustomButton(name: "All"),
-                CustomButton(name: "Electronic"),
-                CustomButton(name: "Clothing"),
-                CustomButton(name: "Grocery"),
+                CustomButton(
+                  name: "All",
+                  onPressed: () {
+                    context.read<ProductBloc>().add(FilterProducts("All"));
+                  },
+                ),
+                CustomButton(
+                  name: "Electronic",
+                  onPressed: () {
+                    context.read<ProductBloc>().add(
+                      FilterProducts("Electronic"),
+                    );
+                  },
+                ),
+                CustomButton(
+                  name: "Clothing",
+                  onPressed: () {
+                    context.read<ProductBloc>().add(FilterProducts("Clothing"));
+                  },
+                ),
+                CustomButton(
+                  name: "Grocery",
+                  onPressed: () {
+                    context.read<ProductBloc>().add(FilterProducts("Grocery"));
+                  },
+                ),
               ],
             ),
           ),
-          // Product list
+
           Expanded(
-            child: ListView.builder(
-              itemCount: allProducts.length,
-              itemBuilder: (context, index) {
-                return ProductCard(product: allProducts[index]);
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
+                if (state is ProductLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is ProductLoaded) {
+                  final products = state.products;
+                  return ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder:
+                        (context, index) =>
+                            ProductList(product: products[index]),
+                  );
+                } else if (state is ProductError) {
+                  return Center(child: Text(state.message));
+                }
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -61,34 +99,33 @@ class ProductList extends StatelessWidget {
 
 class CustomButton extends StatelessWidget {
   final String name;
+  final VoidCallback onPressed;
 
-  const CustomButton({super.key, required this.name});
+  const CustomButton({super.key, required this.name, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 6),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.grey,
-              // Override background color
-              foregroundColor: Colors.black,
-              // Override text/icon color
-              minimumSize: Size(30, 40),
-              // Override size
-              textStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0.5,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            ),
-            onPressed: () {},
-            child: Text(name),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.grey,
+          // Override background color
+          foregroundColor: Colors.black,
+          // Override text/icon color
+          minimumSize: Size(30, 40),
+          // Override size
+          textStyle: TextStyle(
+            fontWeight: FontWeight.normal,
+            letterSpacing: 0.5,
           ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         ),
-      ],
+        onPressed: () {
+          onPressed();
+        },
+        child: Text(name),
+      ),
     );
   }
 }

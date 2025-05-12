@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import '../product/product_page.dart';
-import 'blocs/auth_bloc.dart';
-import 'blocs/auth_event.dart';
-import 'blocs/auth_state.dart';
+import 'bloc/auth_bloc.dart';
+import 'bloc/auth_event.dart';
+import 'bloc/auth_state.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
         log("State received: $state");
 
         if (state is Authenticated) {
-          Navigator.pushNamed(context, ProductList.route);
+          Navigator.pushNamed(context, ProductPage.route);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
