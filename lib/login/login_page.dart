@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import '../product/product_page.dart';
-import 'blocs/auth_bloc.dart';
-import 'blocs/auth_event.dart';
-import 'blocs/auth_state.dart';
+import 'bloc/auth_bloc.dart';
+import 'bloc/auth_event.dart';
+import 'bloc/auth_state.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
         log("State received: $state");
 
         if (state is Authenticated) {
-          Navigator.pushNamed(context, ProductList.route);
+          Navigator.pushNamed(context, ProductPage.route);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
@@ -146,7 +146,7 @@ class Login extends StatelessWidget {
                               : Padding(
                                 padding: const EdgeInsets.only(left: 1.0),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 4),
+                                  padding: EdgeInsets.symmetric(horizontal: 6),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
@@ -186,13 +186,13 @@ class Login extends StatelessWidget {
 }
 
 class CustomTextField extends StatelessWidget {
-  final String label;
+  final String? label;
   final TextInputType? keyboardType;
   final bool obscureText;
   final IconData prefixIcon;
   final TextEditingController controller;
   final String hint;
-  final FormFieldValidator validator;
+  final FormFieldValidator? validator;
   final TextStyle? hintStyle;
   final Widget? suffixIcon;
 
@@ -223,7 +223,7 @@ class CustomTextField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 5, left: 3),
           child: Text(
-            label,
+            label!,
             style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
               fontFamily: 'Poppins-Light',
             ),
