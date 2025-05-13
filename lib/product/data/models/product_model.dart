@@ -1,5 +1,6 @@
 import '../../domain/entities/product.dart';
 
+//converts the raw firebase data into dart classes
 class ProductModel {
   final String name;
   final String category;
@@ -13,6 +14,7 @@ class ProductModel {
     required this.imageUrl,
   });
 
+  //here it takes data ad map from firebase and then we convert it into dart obje
   factory ProductModel.fromFirestore(Map<String, dynamic> data) {
     return ProductModel(
       name: data['Name'] ?? '',

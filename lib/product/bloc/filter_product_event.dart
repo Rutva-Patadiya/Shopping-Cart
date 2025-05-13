@@ -6,7 +6,7 @@ class ProductFilterEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadProducts extends ProductFilterEvent {}
+class LoadInitialProducts extends ProductFilterEvent {}
 
 class FilterProducts extends ProductFilterEvent {
   final String category;

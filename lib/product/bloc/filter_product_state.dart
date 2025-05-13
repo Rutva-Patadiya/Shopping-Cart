@@ -1,23 +1,23 @@
 import 'package:equatable/equatable.dart';
 
-import '../data/models/product_model.dart';
+import '../domain/entities/product.dart';
 
+//Equatable: when the state changes Equatable compare that whether the parameters are same or not if they are same then dont re render it
 abstract class ProductState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class InitialProduct extends ProductState {}
-
 class ProductLoading extends ProductState {}
 
 class ProductLoaded extends ProductState {
-  final List<ProductModel> products;
+  final List<Product> allProducts;
+  final List<Product> filteredProducts;
 
-  ProductLoaded(this.products);
+  ProductLoaded({required this.allProducts, required this.filteredProducts});
 
   @override
-  List<Object?> get props => [products];
+  List<Object?> get props => [allProducts, filteredProducts];
 }
 
 class ProductError extends ProductState {

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           create:
               (_) =>
                   ProductBloc(ProductRepositoryImpl(ProductDataSources()))
-                    ..add(LoadProducts()),
+                    ..add(LoadInitialProducts()),
         ),
         // BlocProvider(create: (_) =>)
       ],
@@ -47,3 +47,15 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// ProductBloc
+// ↓ calls
+// ProductRepositoryImpl
+// ↓ calls
+// ProductDataSources
+// ↓ calls
+// FirebaseFirestore.collection("products").get()
+// ↓ returns
+// List<ProductModel> → .toEntity()
+// ↓ returns
+// List<Product> → used in UI state

@@ -3,10 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-import 'data/models/product_model.dart';
+import 'domain/entities/product.dart';
 
 class ProductList extends StatelessWidget {
-  final ProductModel product;
+  final Product product;
 
   const ProductList({super.key, required this.product});
 
