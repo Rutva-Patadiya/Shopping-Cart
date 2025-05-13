@@ -1,56 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-class Product {
-  final String name;
-  final String category;
-  final double price;
-  final String imageUrl;
+import 'domain/entities/product.dart';
 
-  Product({
-    required this.name,
-    required this.category,
-    required this.price,
-    required this.imageUrl,
-  });
-}
-
-List<Product> allProducts = [
-  Product(
-    name: 'Apple',
-    category: 'Grocery',
-    price: 105,
-    imageUrl: 'asset/images/apple.png',
-  ),
-  Product(
-    name: 'T-Shirt',
-    category: 'Clothing',
-    price: 999,
-    imageUrl: 'asset/images/tshirt.png',
-  ),
-  Product(
-    name: 'Headphones',
-    category: 'Electronic',
-    price: 25.0,
-    imageUrl: 'asset/images/headphones.png',
-  ),
-];
-
-class ProductCard extends StatelessWidget {
+class ProductList extends StatelessWidget {
   final Product product;
 
-  const ProductCard({required this.product, super.key});
+  const ProductList({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.creamColor,
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 4),
       child: ListTile(
-        leading: Image.asset(product.imageUrl, width: 40, height: 40),
-        title: Text(product.name),
-        subtitle: Text('\$${product.price}'),
-        trailing: Text(product.category),
+        tileColor: AppColors.lGreen,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        leading:
+            product.imageUrl.endsWith(".svg")
+                ? SvgPicture.network(
+                  product.imageUrl,
+                  width: 40,
+                  height: 40,
+                  placeholderBuilder: (context) => CircularProgressIndicator(),
+                )
+                : Image.network(
+                  product.imageUrl,
+                  width: 40,
+                  height: 40,
+                  // fit: BoxFit.cover,
+                ),
+        title: Text(
+          product.name,
+          style: TTextTheme.lightTextTheme.headlineLarge,
+        ),
+        subtitle: Text(product.category),
+        trailing: SizedBox(
+          width: 80,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\₹${product.price}',
+                style: TTextTheme.lightTextTheme.headlineSmall,
+              ),
+
+              SizedBox(height: 4),
+              // ElevatedButton(
+              //   onPressed:
+              //       () => {context.read<AddToCartBloc>().add(AddToCart())},
+              //   style: ElevatedButton.styleFrom(
+              //     minimumSize: Size(24, 24),
+              //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              //   ),
+              //   child: Text(
+              //     "Add ",
+              //     style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+              //       fontSize: 10,
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.w400,
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+        ),
       ),
     );
   }
