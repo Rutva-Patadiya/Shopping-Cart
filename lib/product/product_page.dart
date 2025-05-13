@@ -37,7 +37,7 @@ class _ProductPageState extends State<ProductPage> {
         children: [
           SizedBox(height: 32),
           Padding(
-            padding: const EdgeInsets.only(left: 28),
+            padding: const EdgeInsets.only(left: 14),
             child: Row(
               children: [
                 CustomTextField(
@@ -50,7 +50,7 @@ class _ProductPageState extends State<ProductPage> {
                   prefixIcon: Icons.search,
                   suffixIcon: null,
                   validator: null,
-                  width: 300,
+                  width: 330,
                 ),
 
                 Padding(
@@ -111,6 +111,7 @@ class _ProductPageState extends State<ProductPage> {
                 } else if (state is ProductLoaded) {
                   final products = state.filteredProducts;
                   return ListView.builder(
+                    padding: EdgeInsets.only(top: 6),
                     itemCount: products.length,
                     itemBuilder:
                         (context, index) =>
@@ -137,34 +138,33 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 8),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(2),
-              ),
-              backgroundColor: AppColors.grey,
-              // Override background color
-              foregroundColor: Colors.black,
-              // Override text/icon color
-              minimumSize: Size(30, 40),
-              // Override size
-              textStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0.5,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    return Padding(
+      padding: EdgeInsets.only(left: 0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2),
             ),
-            onPressed: () {
-              onPressed();
-            },
-            child: Text(name),
+            backgroundColor: AppColors.grey,
+            // Override background color
+            foregroundColor: Colors.black,
+            // Override text/icon color
+            minimumSize: Size(30, 40),
+            // Override size
+            textStyle: TextStyle(
+              fontWeight: FontWeight.normal,
+              letterSpacing: 0.5,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           ),
+          onPressed: () {
+            onPressed();
+          },
+          child: Text(name),
         ),
-      ],
+      ),
     );
   }
 }

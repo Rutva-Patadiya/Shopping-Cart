@@ -1,3 +1,17 @@
-abstract class AddToCartEvent {}
+import 'package:equatable/equatable.dart';
+import 'package:shopping_cart/product/domain/entities/product.dart';
 
-class AddToCart extends AddToCartEvent {}
+class AddToCartEvent extends Equatable {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class AddToCart extends AddToCartEvent {
+  final Product product;
+
+  AddToCart(this.product);
+
+  @override
+  List<Object?> get props => [product];
+}

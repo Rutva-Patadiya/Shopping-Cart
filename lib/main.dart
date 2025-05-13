@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/cart/bloc/add_to_cart_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
-import 'package:shopping_cart/signup/signup_page.dart';
+import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
           create:
               (_) => ProductBloc(ProductRepositoryImpl(ProductDataSources())),
         ),
-        // BlocProvider(create: (_) =>)
+        BlocProvider(create: (_) => AddToCartBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: SignupPage(),
+        home: ProductPage(),
       ),
     );
   }
