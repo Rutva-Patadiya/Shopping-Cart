@@ -1,4 +1,4 @@
-import '../../domain/enitities/product.dart';
+import '../../domain/entities/product.dart';
 
 class ProductModel {
   final String name;
