@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
-import 'package:shopping_cart/product/bloc/filter_product_event.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
 import 'package:shopping_cart/signup/signup_page.dart';
@@ -30,9 +29,7 @@ class MyApp extends StatelessWidget {
         // immediately sends a LoadProducts event to the bloc right after it's created,
         BlocProvider<ProductBloc>(
           create:
-              (_) =>
-                  ProductBloc(ProductRepositoryImpl(ProductDataSources()))
-                    ..add(LoadInitialProducts()),
+              (_) => ProductBloc(ProductRepositoryImpl(ProductDataSources())),
         ),
         // BlocProvider(create: (_) =>)
       ],

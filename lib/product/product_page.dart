@@ -10,10 +10,25 @@ import 'bloc/filter_product_bloc.dart';
 import 'bloc/filter_product_event.dart';
 import 'bloc/filter_product_state.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
 
   static const route = '/product';
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    //addPostFrameCallback means it will call something when the whole UI is loaded.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProductBloc>().add(LoadInitialProducts());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

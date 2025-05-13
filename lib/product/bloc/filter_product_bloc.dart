@@ -10,7 +10,6 @@ class ProductBloc extends Bloc<ProductFilterEvent, ProductState> {
 
   ProductBloc(this.repository) : super(ProductLoading()) {
     on<LoadInitialProducts>((event, emit) async {
-      emit(ProductLoading());
       try {
         final allProducts = await repository.getProducts();
         emit(
