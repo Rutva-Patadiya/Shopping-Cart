@@ -10,7 +10,7 @@ class AddToCartBloc extends Bloc<AddToCartEvent, AddToCartState> {
   AddToCartBloc() : super(CartLoading()) {
     on<AddToCart>((event, emit) async {
       _cartItems.add(event.product);
-      emit(CartLoaded(_cartItems));
+      emit(CartLoaded(List<Product>.from(_cartItems)));
     });
   }
 }

@@ -12,6 +12,9 @@ class CartLoaded extends AddToCartState {
   final List<Product> cartItems;
 
   CartLoaded(this.cartItems);
+
+  @override
+  List<Object?> get props => [cartItems];
 }
 
 class CartError extends AddToCartState {
@@ -20,8 +23,8 @@ class CartError extends AddToCartState {
   CartError(this.message);
 }
 
-class ButtonClicked extends AddToCartState {
-  final bool isClicked;
-
-  ButtonClicked(this.isClicked);
-}
+// class ButtonClicked extends AddToCartState {
+//   final bool isClicked;
+//
+//   ButtonClicked(this.isClicked);
+// }

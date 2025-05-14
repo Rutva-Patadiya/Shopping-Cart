@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-
 class TInputDecoration {
   TInputDecoration._();
 

@@ -16,3 +16,12 @@ class FilterProducts extends ProductFilterEvent {
   @override
   List<Object?> get props => [category];
 }
+
+class SearchProduct extends ProductFilterEvent {
+  final String query;
+
+  SearchProduct(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}

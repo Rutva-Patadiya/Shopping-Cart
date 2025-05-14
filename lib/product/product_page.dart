@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/cart/bloc/add_to_cart_bloc.dart';
+import 'package:shopping_cart/cart/bloc/add_to_cart_state.dart';
 import 'package:shopping_cart/product/product_list.dart';
 
 import '../cart/cart_page.dart';
@@ -20,9 +22,18 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  String selectedCategory = "All";
+  TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    //for searching feature in textfield
+    //called everytime when the text is written or changed
+    searchController.addListener(() {
+      String query = searchController.text;
+      context.read<ProductBloc>().add(SearchProduct(query));
+    });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -30,9 +41,19 @@ class _ProductPageState extends State<ProductPage> {
     });
   }
 
+  //for highlight the button which is selected
+  void _onCategoryChanged(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+    context.read<ProductBloc>().add(FilterProducts(selectedCategory));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       body: Column(
         children: [
           SizedBox(height: 32),
@@ -46,22 +67,42 @@ class _ProductPageState extends State<ProductPage> {
                   hint: "Enter Product",
                   hintStyle: TTextTheme.lightTextTheme.titleSmall,
                   obscureText: false,
-                  controller: SearchController(),
+                  controller: searchController,
                   prefixIcon: Icons.search,
                   suffixIcon: null,
                   validator: null,
-                  width: 330,
+                  width: 320,
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 18),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, CartPage.route);
-                    },
-                    color: Colors.black,
-                    icon: Icon(Icons.shopping_cart_outlined, size: 34),
-                  ),
+                BlocBuilder<AddToCartBloc, AddToCartState>(
+                  builder: (context, state) {
+                    int count = 0;
+                    bool isGreater = false;
+                    if (state is CartLoaded) {
+                      count = state.cartItems.length;
+                      isGreater = count > 9;
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 22),
+                      child: Badge(
+                        label: Text(
+                          isGreater ? '9+' : '$count',
+                          style: TextTheme.of(
+                            context,
+                          ).labelLarge?.copyWith(fontWeight: FontWeight.w400),
+                        ),
+
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, CartPage.route);
+                          },
+                          color: Colors.black,
+                          icon: Icon(Icons.shopping_cart_outlined, size: 32),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -69,34 +110,36 @@ class _ProductPageState extends State<ProductPage> {
 
           SizedBox(height: 16),
 
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          Padding(
+            padding: const EdgeInsets.only(left: 2),
             child: Row(
               children: [
                 CustomButton(
                   name: "All",
+                  isSelected: selectedCategory == "All",
                   onPressed: () {
-                    context.read<ProductBloc>().add(FilterProducts("All"));
+                    _onCategoryChanged("All");
                   },
                 ),
                 CustomButton(
                   name: "Electronic",
+                  isSelected: selectedCategory == "Electronic",
                   onPressed: () {
-                    context.read<ProductBloc>().add(
-                      FilterProducts("Electronic"),
-                    );
+                    _onCategoryChanged("Electronic");
                   },
                 ),
                 CustomButton(
                   name: "Clothing",
+                  isSelected: selectedCategory == "Clothing",
                   onPressed: () {
-                    context.read<ProductBloc>().add(FilterProducts("Clothing"));
+                    _onCategoryChanged("Clothing");
                   },
                 ),
                 CustomButton(
                   name: "Grocery",
+                  isSelected: selectedCategory == "Grocery",
                   onPressed: () {
-                    context.read<ProductBloc>().add(FilterProducts("Grocery"));
+                    _onCategoryChanged("Grocery");
                   },
                 ),
               ],
@@ -114,8 +157,9 @@ class _ProductPageState extends State<ProductPage> {
                     padding: EdgeInsets.only(top: 6),
                     itemCount: products.length,
                     itemBuilder:
-                        (context, index) =>
-                            ProductList(product: products[index]),
+                        (context, index) => ProductList(
+                          product: products[index],
+                        ), //after converting the products in the list it can be accessed using an index number
                   );
                 } else if (state is ProductError) {
                   return Center(child: Text(state.message));
@@ -133,8 +177,14 @@ class _ProductPageState extends State<ProductPage> {
 class CustomButton extends StatelessWidget {
   final String name;
   final VoidCallback onPressed;
+  final bool isSelected;
 
-  const CustomButton({super.key, required this.name, required this.onPressed});
+  const CustomButton({
+    super.key,
+    required this.name,
+    required this.onPressed,
+    required this.isSelected, //to check whether that button is selected or not
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +197,9 @@ class CustomButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(2),
             ),
-            backgroundColor: AppColors.grey,
+            backgroundColor: isSelected ? AppColors.bgAccent : AppColors.grey,
             // Override background color
-            foregroundColor: Colors.black,
+            foregroundColor: isSelected ? Colors.white : Colors.black,
             // Override text/icon color
             minimumSize: Size(30, 40),
             // Override size
