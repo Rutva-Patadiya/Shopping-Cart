@@ -1,4 +1,4 @@
-package com.example.shopping_cart
+package com.rutva.shopping_cart
 
 import io.flutter.embedding.android.FlutterActivity
 

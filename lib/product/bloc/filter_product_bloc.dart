@@ -26,22 +26,30 @@ class ProductBloc extends Bloc<ProductFilterEvent, ProductState> {
     on<SearchProduct>((event, emit) async {
       emit(ProductLoading());
       final List<Product> allProducts = await repository.getProducts();
+      // emit(
+      //   ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
+      // );
+      // if (state is ProductLoaded) {
+      final categoryFiltered =
+          allProducts.where((product) {
+            return event.category == "All" ||
+                product.category == event.category;
+          }).toList();
+
+      final searchFiltered =
+          categoryFiltered
+              .where(
+                (product) => product.name.toLowerCase().contains(
+                  event.query.toLowerCase(),
+                ),
+              )
+              .toList();
       emit(
-        ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
+        ProductLoaded(
+          allProducts: allProducts,
+          filteredProducts: searchFiltered,
+        ),
       );
-      if (state is ProductLoaded) {
-        final filtered =
-            allProducts
-                .where(
-                  (product) => product.name.toLowerCase().contains(
-                    event.query.toLowerCase(),
-                  ),
-                )
-                .toList();
-        emit(
-          ProductLoaded(allProducts: allProducts, filteredProducts: filtered),
-        );
-      }
     });
     on<FilterProducts>((event, emit) async {
       emit(ProductLoading());

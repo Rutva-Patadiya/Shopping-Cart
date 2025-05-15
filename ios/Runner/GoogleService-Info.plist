@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.shoppingCart</string>
+	<string>com.rutva.shoppingCart</string>
 	<key>PROJECT_ID</key>
 	<string>shopping-cart-52f9b</string>
 	<key>STORAGE_BUCKET</key>

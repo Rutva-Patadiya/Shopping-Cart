@@ -10,6 +10,7 @@ import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
 import 'login/bloc/auth_bloc.dart';
+import 'login/bloc/auth_event.dart';
 
 Future<void> main() async {
   //ensure flutter sets up
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>(create: (_) => LoginBloc()),
+        BlocProvider<LoginBloc>(create: (_) => LoginBloc()..add(AppStarted())),
         // immediately sends a LoadProducts event to the bloc right after it's created,
         BlocProvider<ProductBloc>(
           create:

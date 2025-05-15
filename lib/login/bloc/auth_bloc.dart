@@ -1,6 +1,8 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -24,34 +26,72 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    on<AppStarted>((event, emit) async {
+      final user = _auth.currentUser;
+
+      if (user != null) {
+        emit(Authenticated());
+      } else if (user == null) {
+        await _auth.signOut();
+        emit(UnAuthenticated());
+      }
+    });
+
     // Login request handler
+    // on<LoginRequested>((event, emit) async {
+    //   emit(AuthLoading());
+    //
+    //   try {
+    //     // Await the result of the login request
+    //     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+    //       email: event.email,
+    //       password: event.password,
+    //     );
+    //
+    //     // Get the user object after login attempt
+    //     final user = userCredential.user;
+    //     // String? idtoken = await user?.getIdToken();
+    //
+    //     //for check entered email adn pass
+    //     log('Email: ${event.email}');
+    //     log('Password: ${event.password}');
+    //     // log('Token: $idtoken');
+    //
+    //     // Check if the user object exists and is email-verified
+    //     if (user != null) {
+    //       emit(Authenticated());
+    //     } else if (user == null) {
+    //       emit(UnAuthenticated());
+    //     } else {
+    //       // If email is not verified, ask user to verify email
+    //       emit(AuthError(message: "Please verify your email address."));
+    //     }
+    //   } catch (e) {
+    //     // Handle any unexpected errors
+    //     emit(AuthError(message: 'User not Found'));
+    //   }
+    // });
     on<LoginRequested>((event, emit) async {
       emit(AuthLoading());
 
       try {
-        // Await the result of the login request
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: event.email,
           password: event.password,
         );
 
-        //for check entered email adn pass
+        final user = userCredential.user;
+
         log('Email: ${event.email}');
         log('Password: ${event.password}');
 
-        // Get the user object after login attempt
-        final user = userCredential.user;
-
-        // Check if the user object exists and is email-verified
         if (user != null) {
           emit(Authenticated());
-        } else {
-          // If email is not verified, ask user to verify email
-          emit(AuthError(message: "Please verify your email address."));
+        } else if (user == null) {
+          emit(UnAuthenticated());
         }
       } catch (e) {
-        // Handle any unexpected errors
-        emit(AuthError(message: 'User not Found'));
+        emit(AuthError(message: 'User not found or invalid credentials.'));
       }
     });
 
@@ -71,7 +111,6 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
 
     on<LogOut>((event, emit) async {
       emit(AuthLoading());
-
       await _auth.signOut();
       emit(LogOutUser());
     });

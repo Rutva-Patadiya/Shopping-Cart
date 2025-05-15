@@ -32,7 +32,7 @@ class SignupPage extends StatelessWidget {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text("User Successfully created")));
-          Navigator.pushNamed(context, Login.route);
+          Navigator.popAndPushNamed(context, Login.route);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
@@ -221,7 +221,9 @@ class SignupPage extends StatelessWidget {
                       SizedBox(height: 16),
                       InkWell(
                         onTap:
-                            () => {Navigator.pushNamed(context, Login.route)},
+                            () => {
+                              Navigator.popAndPushNamed(context, Login.route),
+                            },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(

@@ -19,8 +19,9 @@ class FilterProducts extends ProductFilterEvent {
 
 class SearchProduct extends ProductFilterEvent {
   final String query;
+  final String category;
 
-  SearchProduct(this.query);
+  SearchProduct(this.query, this.category);
 
   @override
   List<Object?> get props => [query];

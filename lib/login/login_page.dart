@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/signup/signup_page.dart';
 
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
@@ -27,7 +28,9 @@ class Login extends StatelessWidget {
         log("State received: $state");
 
         if (state is Authenticated) {
-          Navigator.pushNamed(context, ProductPage.route);
+          Navigator.popAndPushNamed(context, ProductPage.route);
+        } else if (state is UnAuthenticated) {
+          Navigator.popAndPushNamed(context, Login.route);
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
@@ -48,7 +51,7 @@ class Login extends StatelessWidget {
                       const SizedBox(height: 30),
 
                       Text(
-                        "Log in to E-Mart",
+                        "Log in to Shopping Cart",
                         style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -172,6 +175,19 @@ class Login extends StatelessWidget {
                                 ),
                               );
                         },
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.popAndPushNamed(context, SignupPage.route);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            "Don't have an account?",
+                            style: TTextTheme.lightTextTheme.labelMedium
+                                ?.copyWith(color: AppColors.bgAccent),
+                          ),
+                        ),
                       ),
                     ],
                   ),

@@ -13,4 +13,8 @@ class ProductDataSources {
         .map((doc) => ProductModel.fromFirestore(doc.data()))
         .toList();
   }
+
+  // Future<List<ProductModel>>
 }
+
+//make constant file for collection of products so that when we change name of collection it should be changed vevrywhere

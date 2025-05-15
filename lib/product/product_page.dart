@@ -28,11 +28,12 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    //for searching feature in textfield
+    //for searching feature in text field
     //called everytime when the text is written or changed
     searchController.addListener(() {
       String query = searchController.text;
-      context.read<ProductBloc>().add(SearchProduct(query));
+
+      context.read<ProductBloc>().add(SearchProduct(query, selectedCategory));
     });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
@@ -44,6 +45,8 @@ class _ProductPageState extends State<ProductPage> {
   //for highlight the button which is selected
   void _onCategoryChanged(String category) {
     setState(() {
+      //when category is changed then text field should be clear
+      // searchController.clear();
       selectedCategory = category;
     });
     context.read<ProductBloc>().add(FilterProducts(selectedCategory));
@@ -52,8 +55,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-
+      // appBar: AppBar(),
       body: Column(
         children: [
           SizedBox(height: 32),
@@ -61,23 +63,29 @@ class _ProductPageState extends State<ProductPage> {
             padding: const EdgeInsets.only(left: 14),
             child: Row(
               children: [
-                CustomTextField(
-                  label: null,
-                  keyboardType: TextInputType.name,
-                  hint: "Enter Product",
-                  hintStyle: TTextTheme.lightTextTheme.titleSmall,
-                  obscureText: false,
-                  controller: searchController,
-                  prefixIcon: Icons.search,
-                  suffixIcon: null,
-                  validator: null,
-                  width: 320,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    child: CustomTextField(
+                      label: null,
+                      keyboardType: TextInputType.name,
+                      hint: "Enter Product",
+                      hintStyle: TTextTheme.lightTextTheme.titleSmall,
+                      obscureText: false,
+                      controller: searchController,
+                      prefixIcon: Icons.search,
+                      suffixIcon: null,
+                      validator: null,
+                      width: null,
+                    ),
+                  ),
                 ),
 
                 BlocBuilder<AddToCartBloc, AddToCartState>(
                   builder: (context, state) {
                     int count = 0;
                     bool isGreater = false;
+
                     if (state is CartLoaded) {
                       count = state.cartItems.length;
                       isGreater = count > 9;
@@ -85,21 +93,36 @@ class _ProductPageState extends State<ProductPage> {
 
                     return Padding(
                       padding: const EdgeInsets.only(top: 22),
-                      child: Badge(
-                        label: Text(
-                          isGreater ? '9+' : '$count',
-                          style: TextTheme.of(
-                            context,
-                          ).labelLarge?.copyWith(fontWeight: FontWeight.w400),
-                        ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, CartPage.route);
+                              },
 
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, CartPage.route);
-                          },
-                          color: Colors.black,
-                          icon: Icon(Icons.shopping_cart_outlined, size: 32),
-                        ),
+                              child: Icon(
+                                Icons.shopping_cart_outlined,
+                                size: 32,
+                              ),
+                            ),
+                          ),
+                          if (count > 0)
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              // bottom: 4,
+                              child: Badge(
+                                // backgroundColor: Colors.re,
+                                label: Text(
+                                  isGreater ? '9+' : '$count',
+                                  style: TextTheme.of(context).labelSmall
+                                      ?.copyWith(fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     );
                   },
@@ -112,37 +135,40 @@ class _ProductPageState extends State<ProductPage> {
 
           Padding(
             padding: const EdgeInsets.only(left: 2),
-            child: Row(
-              children: [
-                CustomButton(
-                  name: "All",
-                  isSelected: selectedCategory == "All",
-                  onPressed: () {
-                    _onCategoryChanged("All");
-                  },
-                ),
-                CustomButton(
-                  name: "Electronic",
-                  isSelected: selectedCategory == "Electronic",
-                  onPressed: () {
-                    _onCategoryChanged("Electronic");
-                  },
-                ),
-                CustomButton(
-                  name: "Clothing",
-                  isSelected: selectedCategory == "Clothing",
-                  onPressed: () {
-                    _onCategoryChanged("Clothing");
-                  },
-                ),
-                CustomButton(
-                  name: "Grocery",
-                  isSelected: selectedCategory == "Grocery",
-                  onPressed: () {
-                    _onCategoryChanged("Grocery");
-                  },
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  CustomButton(
+                    name: "All",
+                    isSelected: selectedCategory == "All",
+                    onPressed: () {
+                      _onCategoryChanged("All");
+                    },
+                  ),
+                  CustomButton(
+                    name: "Electronic",
+                    isSelected: selectedCategory == "Electronic",
+                    onPressed: () {
+                      _onCategoryChanged("Electronic");
+                    },
+                  ),
+                  CustomButton(
+                    name: "Clothing",
+                    isSelected: selectedCategory == "Clothing",
+                    onPressed: () {
+                      _onCategoryChanged("Clothing");
+                    },
+                  ),
+                  CustomButton(
+                    name: "Grocery",
+                    isSelected: selectedCategory == "Grocery",
+                    onPressed: () {
+                      _onCategoryChanged("Grocery");
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
 

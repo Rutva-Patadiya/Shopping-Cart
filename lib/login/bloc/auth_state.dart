@@ -31,6 +31,8 @@ class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {}
 
+class UnAuthenticated extends AuthState {}
+
 class UserCreated extends AuthState {}
 
 class LogOutUser extends AuthState {}
