@@ -32,8 +32,8 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(Authenticated());
       } else if (user == null) {
-        await _auth.signOut();
         emit(UnAuthenticated());
+        await _auth.signOut();
       }
     });
 

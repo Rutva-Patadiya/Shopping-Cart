@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/signup/signup_page.dart';
 
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
-import '../product/product_page.dart';
+import '../widgets/custom_textfield.dart';
 import 'bloc/auth_bloc.dart';
 import 'bloc/auth_event.dart';
 import 'bloc/auth_state.dart';
@@ -60,6 +60,7 @@ class Login extends StatelessWidget {
                       const SizedBox(height: 26),
 
                       CustomTextField(
+                        // width: null,
                         label: "Email",
                         keyboardType: TextInputType.emailAddress,
                         hint: "abc@example.com",
@@ -88,6 +89,7 @@ class Login extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
+                            // width: null,
                             label: "Password",
                             keyboardType: TextInputType.text,
                             hint: "Enter Password",
@@ -197,81 +199,6 @@ class Login extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final String? label;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final IconData prefixIcon;
-  final TextEditingController controller;
-  final String hint;
-  final FormFieldValidator? validator;
-  final TextStyle? hintStyle;
-  final Widget? suffixIcon;
-
-  const CustomTextField({
-    super.key,
-    required this.label,
-    required this.keyboardType,
-    required this.hint,
-    required this.hintStyle,
-    required this.obscureText,
-    required this.controller,
-    required this.prefixIcon,
-    required this.suffixIcon,
-    required this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5, left: 3),
-          child: Text(
-            label!,
-            style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
-              fontFamily: 'Poppins-Light',
-            ),
-          ),
-        ),
-        // SizedBox(height: 5),
-        TextFormField(
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          validator: validator,
-          controller: controller,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          //to validate when user interacts
-          cursorColor: Colors.blueAccent,
-          style: TTextTheme.lightTextTheme.bodyLarge,
-
-          decoration: InputDecoration(
-            isDense: true,
-            // labelText: label,
-            hintText: hint,
-
-            // contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-            hintStyle: hintStyle,
-            prefixIcon: Padding(
-              padding: EdgeInsets.only(top: 1),
-              child: Icon(prefixIcon, color: Colors.grey, size: 25),
-            ),
-            suffixIcon: suffixIcon,
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ],
     );
   }
 }

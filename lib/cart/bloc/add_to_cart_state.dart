@@ -22,4 +22,3 @@ class CartError extends AddToCartState {
 
   CartError(this.message);
 }
-

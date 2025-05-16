@@ -6,7 +6,7 @@ import 'input_decoration.dart';
 class AppColors {
   static const Color bgAccent = Color(0xFF1976D2); //blue700 border focus
   static const Color border = Color(0XFFD6D6D6); //grey300
-  static const Color grey2 = Color(0xFF9E9E9E);//grey button
+  static const Color grey2 = Color(0xFF9E9E9E); //grey button
   static const Color greyColor = Color(0xFFBDBDBD); //grey button
   static const Color lightGrey = Color(0xFFF7F7F7);
   static const Color grey = Color(0xFFEEEEEE);

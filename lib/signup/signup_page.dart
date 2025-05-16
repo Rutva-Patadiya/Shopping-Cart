@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/utils/theme/text_theme.dart';
@@ -10,6 +9,7 @@ import '../login/bloc/auth_bloc.dart';
 import '../login/bloc/auth_event.dart';
 import '../login/bloc/auth_state.dart';
 import '../login/login_page.dart';
+import '../widgets/custom_textfield.dart';
 
 class SignupPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -60,7 +60,6 @@ class SignupPage extends StatelessWidget {
                       SizedBox(height: 30),
 
                       CustomTextField(
-                        width: null,
                         label: "Name",
                         keyboardType: TextInputType.name,
                         hint: "Enter your name",
@@ -81,7 +80,7 @@ class SignupPage extends StatelessWidget {
 
                       SizedBox(height: 16),
                       CustomTextField(
-                        width: null,
+                        // width: null,
                         label: "Email",
                         keyboardType: TextInputType.emailAddress,
                         hint: "abc@example.com",
@@ -109,7 +108,7 @@ class SignupPage extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
-                            width: null,
+                            // width: null,
                             label: "Password",
                             keyboardType: TextInputType.text,
                             hint: "Password",
@@ -151,7 +150,7 @@ class SignupPage extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
-                            width: null,
+                            // width: null,
                             label: "Confirm Password",
                             keyboardType: TextInputType.text,
                             hint: "Confirm Password",
@@ -249,82 +248,83 @@ class SignupPage extends StatelessWidget {
   }
 }
 
-class CustomTextField extends StatelessWidget {
-  final double? width;
-  final String? label;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final IconData prefixIcon;
-  final TextEditingController controller;
-  final String hint;
-  final FormFieldValidator? validator;
-  final TextStyle? hintStyle;
-  final Widget? suffixIcon;
-
-  const CustomTextField({
-    super.key,
-    required this.width,
-    required this.label,
-    required this.keyboardType,
-    required this.hint,
-    required this.hintStyle,
-    required this.obscureText,
-    required this.controller,
-    required this.prefixIcon,
-    required this.suffixIcon,
-    required this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 6, left: 2),
-          child: Text(
-            label ?? ' ',
-            style: TTextTheme.lightTextTheme.headlineMedium?.copyWith(
-              fontFamily: 'Poppins-Light',
-            ),
-          ),
-        ),
-
-        // SizedBox(height: 5),
-        SizedBox(
-          width: width,
-          child: TextFormField(
-            keyboardType: keyboardType,
-            obscureText: obscureText,
-            validator: validator,
-            controller: controller,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            //to validate when user interacts
-            cursorColor: Colors.blueAccent,
-            style: TTextTheme.lightTextTheme.bodyLarge,
-
-            decoration: InputDecoration(
-              isDense: true,
-              // labelText: label,
-              hintText: hint,
-              // contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-              hintStyle: hintStyle,
-              prefixIcon: Padding(
-                padding: EdgeInsets.only(top: 1),
-                child: Icon(prefixIcon, color: Colors.grey, size: 25),
-              ),
-              suffixIcon: suffixIcon,
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+//
+// class CustomTextField extends StatelessWidget {
+//   final double? width;
+//   final String? label;
+//   final TextInputType? keyboardType;
+//   final bool obscureText;
+//   final IconData prefixIcon;
+//   final TextEditingController controller;
+//   final String hint;
+//   final FormFieldValidator? validator;
+//   final TextStyle? hintStyle;
+//   final IconButton? suffixIcon;
+//
+//   const CustomTextField({
+//     super.key,
+//     required this.width,
+//     required this.label,
+//     required this.keyboardType,
+//     required this.hint,
+//     required this.hintStyle,
+//     required this.obscureText,
+//     required this.controller,
+//     required this.prefixIcon,
+//     required this.suffixIcon,
+//     required this.validator,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     SystemChrome.setSystemUIOverlayStyle(
+//       const SystemUiOverlayStyle(
+//         statusBarColor: Colors.white,
+//         statusBarIconBrightness: Brightness.dark,
+//       ),
+//     );
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Padding(
+//           padding: const EdgeInsets.only(bottom: 6, left: 2),
+//           child: Text(
+//             label ?? ' ',
+//             style: TTextTheme.lightTextTheme.headlineMedium?.copyWith(
+//               fontFamily: 'Poppins-Light',
+//             ),
+//           ),
+//         ),
+//
+//         // SizedBox(height: 5),
+//         SizedBox(
+//           width: width,
+//           child: TextFormField(
+//             keyboardType: keyboardType,
+//             obscureText: obscureText,
+//             validator: validator,
+//             controller: controller,
+//             autovalidateMode: AutovalidateMode.onUserInteraction,
+//             //to validate when user interacts
+//             cursorColor: Colors.blueAccent,
+//             style: TTextTheme.lightTextTheme.bodyLarge,
+//
+//             decoration: InputDecoration(
+//               isDense: true,
+//               // labelText: label,
+//               hintText: hint,
+//               // contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+//               hintStyle: hintStyle,
+//               prefixIcon: Padding(
+//                 padding: EdgeInsets.only(top: 1),
+//                 child: Icon(prefixIcon, color: Colors.grey, size: 25),
+//               ),
+//               suffixIcon: suffixIcon,
+//               border: OutlineInputBorder(),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

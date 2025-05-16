@@ -49,7 +49,7 @@ class ProductList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '\₹${product.price}',
+                '₹${product.price}',
                 style: TTextTheme.lightTextTheme.headlineSmall,
               ),
 

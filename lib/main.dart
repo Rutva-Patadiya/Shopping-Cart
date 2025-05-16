@@ -5,12 +5,12 @@ import 'package:shopping_cart/cart/bloc/add_to_cart_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
-import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'core/utils/theme/theme.dart';
 import 'login/bloc/auth_bloc.dart';
 import 'login/bloc/auth_event.dart';
+import 'login/login_page.dart';
 
 Future<void> main() async {
   //ensure flutter sets up
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: ProductPage(),
+        home: Login(),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../cart/cart_page.dart';
-import '../home/home_page.dart';
 import '../login/login_page.dart';
 import '../product/product_page.dart';
 import '../signup/signup_page.dart';
@@ -20,8 +19,8 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
     case CartPage.route:
       return MaterialPageRoute(builder: (context) => CartPage());
 
-    case HomePage.route:
-      return MaterialPageRoute(builder: (context) => HomePage());
+    // case HomePage.route:
+    //   return MaterialPageRoute(builder: (context) => HomePage());
 
     // case AddProductPage.route:
     //   return MaterialPageRoute(builder: (context) => AddProductPage());
