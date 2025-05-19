@@ -7,9 +7,9 @@ import 'package:shopping_cart/widgets/custom_action_chip.dart';
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
 import '../product/bloc/filter_product_state.dart';
+import '../product/category_icon_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
 import '../product/product_card.dart';
-import '../product/product_list.dart';
 import '../widgets/custom_textfield.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,7 +26,8 @@ class HomePageState extends State<HomePage> {
   int currentIndex = 0;
   TextEditingController searchController = TextEditingController();
 
-final dataSources=ProductDataSources();
+  final dataSources = ProductDataSources();
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +37,9 @@ final dataSources=ProductDataSources();
       setState(() {});
       String query = searchController.text;
 
-      context.read<ProductBloc>().add(ProductSearchedEvent(query, selectedCategory));
+      context.read<ProductBloc>().add(
+        ProductSearchedEvent(query, selectedCategory),
+      );
     });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
@@ -56,6 +59,7 @@ final dataSources=ProductDataSources();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: TAppTheme.lightTheme.colorScheme.background,
       body: Column(
         children: [
           SizedBox(height: 32),
@@ -65,11 +69,10 @@ final dataSources=ProductDataSources();
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 16),
                   child: CustomTextField(
-
                     controller: searchController,
                     decoration: InputDecoration(
                       isDense: true,
-                      prefixIcon: Icon(Icons.search,size:20),
+                      prefixIcon: Icon(Icons.search, size: 20),
                       suffixIcon:
                           searchController.text.isNotEmpty
                               ? IconButton(
@@ -79,18 +82,20 @@ final dataSources=ProductDataSources();
                                 icon: Icon(Icons.clear, size: 20),
                               )
                               : null,
-                      hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(color:Colors.grey),
+                      hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
+                        color: Colors.grey,
+                      ),
                       hintText: "Search",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color:AppColors.grey)
+                        borderSide: BorderSide(color: AppColors.grey),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.blue, width: 2),
+                        borderSide: BorderSide(color: Colors.brown, width: 2),
                       ),
                     ),
                     obscureText: false,
@@ -104,19 +109,36 @@ final dataSources=ProductDataSources();
           ),
 
           SizedBox(height: 16),
+
+          Container(
+            margin:
+                EdgeInsets.symmetric(horizontal: 16, vertical: 4).copyWith(),
+            child: Row(
+              children: [
+                Text(
+                  "Category",
+                  style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CategoryIcon(),
+          SizedBox(height: 16),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: CategoryChips(
-                onCategoryChanged: (selectedId) {
-                  onCategoryChanged(selectedId);
+                onCategoryChanged: (selectedCategory) {
+                  context.read<ProductBloc>().add(
+                    ProductFilteredEvent(selectedCategory),
+                  );
                 },
               ),
             ),
           ),
-
-
 
           Expanded(
             child: BlocBuilder<ProductBloc, ProductState>(
@@ -127,12 +149,13 @@ final dataSources=ProductDataSources();
                   final products = state.filteredProducts;
                   return GridView.builder(
                     padding: const EdgeInsets.all(12),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.7,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.7,
+                        ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       return ProductCard(product: products[index]);
@@ -145,9 +168,8 @@ final dataSources=ProductDataSources();
               },
             ),
           ),
-
         ],
-      )
+      ),
     );
   }
 }
@@ -175,50 +197,49 @@ final dataSources=ProductDataSources();
 // ),
 // ),
 // BlocBuilder<AddToCartBloc, AddToCartState>(
-              //   builder: (context, state) {
-              //     int count = 0;
-              //     bool isGreater = false;
-              //
-              //     if (state is CartLoaded) {
-              //       count = state.cartItems.length;
-              //       isGreater = count > 9;
-              //     }
+//   builder: (context, state) {
+//     int count = 0;
+//     bool isGreater = false;
+//
+//     if (state is CartLoaded) {
+//       count = state.cartItems.length;
+//       isGreater = count > 9;
+//     }
 
-                  // return Padding(
-                  //   padding: const EdgeInsets.only(top: 22),
-                  //   child: Stack(
-                  //     children: [
-                  //       Container(
-                  //         margin: EdgeInsets.symmetric(horizontal: 10),
-                  //         child: InkWell(
-                  //           onTap: () {
-                  //             Navigator.pushNamed(context, CartPage.route);
-                  //           },
-                  //
-                  //           child: Icon(
-                  //             Icons.shopping_cart_outlined,
-                  //             size: 32,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       if (count > 0)
-                  //         Positioned(
-                  //           top: 4,
-                  //           right: 4,
-                  //           // bottom: 4,
-                  //           child: Badge(
-                  //             // backgroundColor: Colors.re,
-                  //             label: Text(
-                  //               isGreater ? '9+' : '$count',
-                  //               style: TextTheme.of(context).labelSmall
-                  //                   ?.copyWith(fontWeight: FontWeight.w400),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //     ],
-                  //   ),
-                  // );
-          //       },
-          //     ),
-          //     // GestureDetector(child: CircleAvatar()),
-
+// return Padding(
+//   padding: const EdgeInsets.only(top: 22),
+//   child: Stack(
+//     children: [
+//       Container(
+//         margin: EdgeInsets.symmetric(horizontal: 10),
+//         child: InkWell(
+//           onTap: () {
+//             Navigator.pushNamed(context, CartPage.route);
+//           },
+//
+//           child: Icon(
+//             Icons.shopping_cart_outlined,
+//             size: 32,
+//           ),
+//         ),
+//       ),
+//       if (count > 0)
+//         Positioned(
+//           top: 4,
+//           right: 4,
+//           // bottom: 4,
+//           child: Badge(
+//             // backgroundColor: Colors.re,
+//             label: Text(
+//               isGreater ? '9+' : '$count',
+//               style: TextTheme.of(context).labelSmall
+//                   ?.copyWith(fontWeight: FontWeight.w400),
+//             ),
+//           ),
+//         ),
+//     ],
+//   ),
+// );
+//       },
+//     ),
+//     // GestureDetector(child: CircleAvatar()),

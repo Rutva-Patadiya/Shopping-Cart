@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../product/domain/entities/product.dart';
@@ -9,13 +10,19 @@ class AddToCartBloc extends Bloc<CartEvent, AddToCartState> {
 
   AddToCartBloc() : super(CartLoading()) {
     on<AddToCartEvent>((event, emit) {
-      if (_cartItems.containsKey(event.product)) {
-        // it'll return the value for that product
-        _cartItems[event.product] = _cartItems[event.product]! + 1;
-      } else {
-        _cartItems[event.product] = 1;
+      try {
+        if (_cartItems.containsKey(event.product)) {
+          // it'll return the value for that product
+          _cartItems[event.product] = _cartItems[event.product]! + 1;
+        } else {
+          _cartItems[event.product] = 1;
+        }
+        emit(CartLoaded(Map<Product, int>.from(_cartItems)));
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
       }
-      emit(CartLoaded(Map<Product, int>.from(_cartItems)));
     });
 
     on<RemoveFromCartEvent>((event, emit) {

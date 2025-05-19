@@ -14,7 +14,10 @@ class ProductLoadSuccess extends ProductState {
   final List<Product> allProducts;
   final List<Product> filteredProducts;
 
-  ProductLoadSuccess({required this.allProducts, required this.filteredProducts});
+  ProductLoadSuccess({
+    required this.allProducts,
+    required this.filteredProducts,
+  });
 
   @override
   List<Object?> get props => [allProducts, filteredProducts];
@@ -28,13 +31,3 @@ class ProductLoadFailure extends ProductState {
   @override
   List<Object?> get props => [message];
 }
-
-//
-// class CategoryState extends ProductState {
-//   final String selectedCategoryId;
-//
-//    CategoryState({required this.selectedCategoryId});
-//
-//   @override
-//   List<Object?> get props => [selectedCategoryId];
-// }

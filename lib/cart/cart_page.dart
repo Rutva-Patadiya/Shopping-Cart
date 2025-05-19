@@ -1,9 +1,10 @@
+// TODO Implement this library.import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shopping_cart/cart/bloc/add_to_cart_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
-import 'bloc/add_to_cart_bloc.dart';
 import 'bloc/add_to_cart_event.dart';
 import 'bloc/add_to_cart_state.dart';
 
@@ -22,10 +23,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Your Cart"),
-        backgroundColor: Colors.brown,
-      ),
+      appBar: AppBar(title: Text("Your Cart"), backgroundColor: Colors.brown),
       body: BlocBuilder<AddToCartBloc, AddToCartState>(
         builder: (context, state) {
           if (state is CartLoaded) {
@@ -50,7 +48,7 @@ class _CartPageState extends State<CartPage> {
                                 (context) => CircularProgressIndicator(),
                           )
                           : Image.network(product.imageUrl),
-                  subtitle: Text(product.category),
+                  // subtitle: Text(product.category),
                   trailing: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: Column(

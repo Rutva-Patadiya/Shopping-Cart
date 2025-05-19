@@ -14,13 +14,25 @@ class ProductCard extends StatelessWidget {
       children: [
         Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Image.network(
-                  product.imageUrl,
-                  // fit: BoxFit.cover,
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.brown,
+                  // Change this to your desired border color
+                  width: 2, // Border width
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Image.network(
+                    product.imageUrl,
+
+                    // fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -29,7 +41,7 @@ class ProductCard extends StatelessWidget {
               right: 8,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white,
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(6),
@@ -43,23 +55,27 @@ class ProductCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Text(
-          product.name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        Row(
+          children: [
+            Text(
+              product.name,
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+            const Spacer(),
+            Text(
+              "\$${product.price}",
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+          ],
         ),
         const SizedBox(height: 4),
         Row(
           children: const [
             Icon(Icons.star, color: Colors.amber, size: 16),
             SizedBox(width: 4),
-            Text(
-              "4.9",
-              style: TextStyle(fontSize: 14),
-            ),
+            Text("4.9", style: TextStyle(fontSize: 14)),
           ],
-        )
+        ),
       ],
     );
   }

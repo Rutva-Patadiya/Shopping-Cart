@@ -14,11 +14,15 @@ class ProductModel {
     required this.imageUrl,
   });
 
-  //here it takes data ad map from firebase and then we convert it into dart obj
   factory ProductModel.fromFirestore(Map<String, dynamic> data) {
+    print("Loaded product: ${data['name']}  ");
+    print("Loaded product: ${data['price']}  ");
+    print("Loaded product: ${data['image']}  ");
+    print("Loaded product: ${data['category_id'].path} ");
+
     return ProductModel(
       name: data['name'] ?? '',
-      category: data['category'] ?? '',
+      category: data['category_id'].path ?? '',
       price: data['price'] ?? 0,
       imageUrl: data['image'] ?? '',
     );
@@ -33,3 +37,9 @@ class ProductModel {
     );
   }
 }
+
+//here it takes data ad map from firebase and then we convert it into dart obj
+
+// final categoryRef = data['category_id'];
+// final categoryDoc = categoryRef.get();
+// final categoryName = categoryDoc.get('name');

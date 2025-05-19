@@ -41,7 +41,9 @@ class ProductList extends StatelessWidget {
           product.name,
           style: TTextTheme.lightTextTheme.headlineLarge,
         ),
-        subtitle: Text(product.category),
+
+        //need to convert in string format
+        // subtitle: Text(product),
         trailing: SizedBox(
           width: 80,
           child: Column(

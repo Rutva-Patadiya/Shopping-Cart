@@ -16,7 +16,7 @@ class CategoryChips extends StatefulWidget {
 class _CategoryChipsState extends State<CategoryChips> {
   late Future<List<CategoryModel>> _categoryFuture;
   final ProductDataSources dataSource = ProductDataSources(); // Create instance
-  String selectedCategoryId = "All";
+  String selectedCategory = "All";
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _CategoryChipsState extends State<CategoryChips> {
                 "All",
                 style: TTextTheme.lightTextTheme.labelLarge?.copyWith(
                   color:
-                      selectedCategoryId == "All" ? Colors.white : Colors.black,
+                      selectedCategory == "All" ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -55,10 +55,11 @@ class _CategoryChipsState extends State<CategoryChips> {
                 borderRadius: BorderRadius.circular(50),
               ),
               backgroundColor:
-                  selectedCategoryId == "All" ? Colors.brown : Colors.white,
+                  selectedCategory == "All" ? Colors.brown : Colors.white,
               onPressed: () {
+                // context.read().add(ProductFilteredEvent("All"));
                 setState(() {
-                  selectedCategoryId = "All";
+                  selectedCategory = "All";
                 });
                 widget.onCategoryChanged("All");
               },
@@ -70,7 +71,7 @@ class _CategoryChipsState extends State<CategoryChips> {
                   category.name,
                   style: TTextTheme.lightTextTheme.labelLarge?.copyWith(
                     color:
-                        selectedCategoryId == category.id
+                        selectedCategory == category.name
                             ? Colors.white
                             : Colors.black,
                     fontWeight: FontWeight.w400,
@@ -80,15 +81,16 @@ class _CategoryChipsState extends State<CategoryChips> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 backgroundColor:
-                    selectedCategoryId == category.id
+                    selectedCategory == category.name
                         ? Colors.brown
                         : Colors.white,
                 onPressed: () {
+                  // context.read().add(ProductFilteredEvent(category.name));
                   setState(() {
-                    selectedCategoryId = category.id;
+                    selectedCategory = category.name;
                   });
 
-                  widget.onCategoryChanged(category.id);
+                  widget.onCategoryChanged(category.name);
                 },
               );
             }),

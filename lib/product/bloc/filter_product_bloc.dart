@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
@@ -25,38 +27,43 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
     on<ProductSearchedEvent>((event, emit) async {
       emit(ProductLoadInProgress());
-      final List<Product> allProducts = await repository.getProducts();
-      // emit(
-      //   ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
-      // );
-      // if (state is ProductLoaded) {
-      final categoryFiltered =
-          allProducts.where((product) {
-            return event.category == "All" ||
-                product.category == event.category;
-          }).toList();
+      try {
+        final List<Product> allProducts = await repository.getProducts();
+        // emit(
+        //   ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
+        // );
+        // if (state is ProductLoaded) {
+        final categoryFiltered =
+            allProducts.where((product) {
+              return event.category == "All" ||
+                  product.category == event.category;
+            }).toList();
 
-      final searchFiltered =
-          categoryFiltered
-              .where(
-                (product) => product.name.toLowerCase().contains(
-                  event.query.toLowerCase(),
-                ),
-              )
-              .toList();
-      emit(
-        ProductLoadSuccess(
-          allProducts: allProducts,
-          filteredProducts: searchFiltered,
-        ),
-      );
+        final searchFiltered =
+            categoryFiltered
+                .where(
+                  (product) => product.name.toLowerCase().contains(
+                    event.query.toLowerCase(),
+                  ),
+                )
+                .toList();
+        emit(
+          ProductLoadSuccess(
+            allProducts: allProducts,
+            filteredProducts: searchFiltered,
+          ),
+        );
+      } catch (e) {
+        emit(ProductLoadFailure('Failed to fetch products: $e'));
+      }
     });
     on<ProductFilteredEvent>((event, emit) async {
+      print("Filtering products by category: ${event.categoryName}");
+
       emit(ProductLoadInProgress());
       try {
         final List<Product> allProducts = await repository.getProducts();
-
-        if (event.category == "All") {
+        if (event.categoryName == "All") {
           emit(
             ProductLoadSuccess(
               allProducts: allProducts,
@@ -65,12 +72,16 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           );
         } else {
           final List<Product> filtered =
-              allProducts
-                  .where((product) => product.category == event.category)
-                  .toList();
+              allProducts.where((product) {
+                return product.category == event.categoryName;
+              }).toList();
+          log(event.categoryName);
 
           emit(
-            ProductLoadSuccess(allProducts: allProducts, filteredProducts: filtered),
+            ProductLoadSuccess(
+              allProducts: allProducts,
+              filteredProducts: filtered,
+            ),
           );
         }
       } catch (e) {

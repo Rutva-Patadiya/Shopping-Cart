@@ -8,13 +8,13 @@ class FilterProductEvent extends Equatable {
 
 class InitialProductLoaded extends FilterProductEvent {}
 
-class ProductFilteredEvent extends FilterProductEvent{
-  final String category;
+class ProductFilteredEvent extends FilterProductEvent {
+  final String categoryName;
 
-  ProductFilteredEvent(this.category);
+  ProductFilteredEvent(this.categoryName);
 
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [categoryName];
 }
 
 class ProductSearchedEvent extends FilterProductEvent {
@@ -24,5 +24,5 @@ class ProductSearchedEvent extends FilterProductEvent {
   ProductSearchedEvent(this.query, this.category);
 
   @override
-  List<Object?> get props => [query];
+  List<Object?> get props => [query, category];
 }
