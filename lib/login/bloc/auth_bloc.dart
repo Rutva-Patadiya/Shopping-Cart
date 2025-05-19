@@ -11,18 +11,18 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
 
   // final FirebaseAuth _auth = FirebaseAuth.instance;
   LoginBloc() : super(const AuthState()) {
-    on<SignUpRequested>((event, emit) async {
+    on<SignUpStarted>((event, emit) async {
       emit(
-        AuthLoading(),
+        AuthInProgress(),
       ); //when this emits the state changes and bloc builder will rebuild the ui
       try {
         await _auth.createUserWithEmailAndPassword(
           email: event.email,
           password: event.password,
         );
-        emit(UserCreated());
+        emit(AuthRegistrationSuccess());
       } on FirebaseAuthException catch (e) {
-        emit(AuthError(message: e.message ?? 'Unknown error'));
+        emit(AuthFailure(message: e.message ?? 'Unknown error'));
       }
     });
 
@@ -30,49 +30,15 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       final user = _auth.currentUser;
 
       if (user != null) {
-        emit(Authenticated());
+        emit(AuthSuccess());
       } else if (user == null) {
-        emit(UnAuthenticated());
+        emit(AuthInitial());
         await _auth.signOut();
       }
     });
 
-    // Login request handler
-    // on<LoginRequested>((event, emit) async {
-    //   emit(AuthLoading());
-    //
-    //   try {
-    //     // Await the result of the login request
-    //     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-    //       email: event.email,
-    //       password: event.password,
-    //     );
-    //
-    //     // Get the user object after login attempt
-    //     final user = userCredential.user;
-    //     // String? idtoken = await user?.getIdToken();
-    //
-    //     //for check entered email adn pass
-    //     log('Email: ${event.email}');
-    //     log('Password: ${event.password}');
-    //     // log('Token: $idtoken');
-    //
-    //     // Check if the user object exists and is email-verified
-    //     if (user != null) {
-    //       emit(Authenticated());
-    //     } else if (user == null) {
-    //       emit(UnAuthenticated());
-    //     } else {
-    //       // If email is not verified, ask user to verify email
-    //       emit(AuthError(message: "Please verify your email address."));
-    //     }
-    //   } catch (e) {
-    //     // Handle any unexpected errors
-    //     emit(AuthError(message: 'User not Found'));
-    //   }
-    // });
-    on<LoginRequested>((event, emit) async {
-      emit(AuthLoading());
+    on<LoginStarted>((event, emit) async {
+      emit(AuthInProgress());
 
       try {
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -86,17 +52,17 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
         log('Password: ${event.password}');
 
         if (user != null) {
-          emit(Authenticated());
+          emit(AuthSuccess());
         } else if (user == null) {
-          emit(UnAuthenticated());
+          emit(AuthInitial());
         }
       } catch (e) {
-        emit(AuthError(message: 'User not found or invalid credentials.'));
+        emit(AuthFailure(message: 'User not found or invalid credentials.'));
       }
     });
 
     // Text visibility toggle (e.g., for password visibility)
-    on<TextVisibility>((event, emit) {
+    on<PasswordVisibilityToggled>((event, emit) {
       emit(
         state.copyWith(
           obscureText: !state.obscureText,
@@ -105,14 +71,14 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       );
     });
 
-    on<ConfirmPass>((event, emit) async {
+    on<ConfirmPassVisibilityToggled>((event, emit) async {
       emit(state.copyWith(confirmPass: !state.confirmPass));
     });
 
-    on<LogOut>((event, emit) async {
-      emit(AuthLoading());
+    on<LoggedOut>((event, emit) async {
+      emit(AuthInProgress());
       await _auth.signOut();
-      emit(LogOutUser());
+      emit(AuthLogOutSuccess());
     });
   }
 }

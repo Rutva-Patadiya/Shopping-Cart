@@ -1,27 +1,27 @@
 //equatable used
 import 'package:equatable/equatable.dart';
 
-class ProductFilterEvent extends Equatable {
+class FilterProductEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class LoadInitialProducts extends ProductFilterEvent {}
+class InitialProductLoaded extends FilterProductEvent {}
 
-class FilterProducts extends ProductFilterEvent {
+class ProductFilteredEvent extends FilterProductEvent{
   final String category;
 
-  FilterProducts(this.category);
+  ProductFilteredEvent(this.category);
 
   @override
   List<Object?> get props => [category];
 }
 
-class SearchProduct extends ProductFilterEvent {
+class ProductSearchedEvent extends FilterProductEvent {
   final String query;
   final String category;
 
-  SearchProduct(this.query, this.category);
+  ProductSearchedEvent(this.query, this.category);
 
   @override
   List<Object?> get props => [query];

@@ -11,6 +11,7 @@ class AuthState extends Equatable {
     this.confirmPass = true,
   });
 
+  //here just copied the state because,what if i need to change only the obscure text
   AuthState copyWith({
     bool? isLoading,
     bool? obscureText,
@@ -27,18 +28,18 @@ class AuthState extends Equatable {
   List<Object> get props => [isLoading, obscureText, confirmPass];
 }
 
-class AuthLoading extends AuthState {}
+class AuthInitial extends AuthState {}
+class AuthInProgress extends AuthState {}
 
-class Authenticated extends AuthState {}
+class AuthSuccess extends AuthState {}
 
-class UnAuthenticated extends AuthState {}
-
-class UserCreated extends AuthState {}
-
-class LogOutUser extends AuthState {}
-
-class AuthError extends AuthState {
+class AuthFailure extends AuthState {
   final String message;
 
-  const AuthError({required this.message});
+  const AuthFailure({required this.message});
 }
+
+class AuthRegistrationSuccess extends AuthState {}
+
+class AuthLogOutSuccess extends AuthState {}
+

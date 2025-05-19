@@ -16,20 +16,6 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
-        // automaticallyImplyLeading: false,
-        // leading: IconButton(
-        //   onPressed: () {},
-        //   icon: Icon(Icons.arrow_circle_left_outlined),
-        //  ),
-
-        //for left arrow
-        // leading: CircleAvatar(
-        //   backgroundColor: Colors.white,
-        //   child: IconButton(
-        //     onPressed: () {},
-        //     icon: Icon(Icons.arrow_back_outlined),
-        //   ),
-        // ),
         backgroundColor: Colors.white,
       ),
       body: Column(
@@ -51,7 +37,7 @@ class ProfilePage extends StatelessWidget {
                 // backgroundColor: AppColors.lGreen,
               ),
               onPressed: () {
-                context.read<LoginBloc>().add(LogOut());
+                context.read<LoginBloc>().add(LoggedOut());
                 Navigator.popAndPushNamed(context, Login.route);
               },
               child: Text("Log out", style: TextStyle(height: 0.5)),

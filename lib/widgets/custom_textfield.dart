@@ -7,27 +7,29 @@ class CustomTextField extends StatelessWidget {
   final String? label;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final TextEditingController controller;
-  final String hint;
+  final String? hint;
   final FormFieldValidator? validator;
   final TextStyle? hintStyle;
   final Widget? suffixIcon;
+  final InputDecoration? decoration;
 
   // final double? width;
 
   const CustomTextField({
     super.key,
-    required this.label,
-    required this.keyboardType,
-    required this.hint,
-    required this.hintStyle,
+     this.label,
+    this.hint,
+    this.hintStyle,
     required this.obscureText,
+    this.decoration,
+    this.keyboardType,
     required this.controller,
-    required this.prefixIcon,
-    required this.suffixIcon,
+    this.prefixIcon,
+    this.suffixIcon,
     required this.validator,
-    // required this.width,
+
   });
 
   @override
@@ -65,9 +67,8 @@ class CustomTextField extends StatelessWidget {
           cursorColor: Colors.blueAccent,
           style: TTextTheme.lightTextTheme.bodyLarge,
 
-          decoration: InputDecoration(
+          decoration:decoration ?? InputDecoration(
             isDense: true,
-            // labelText: label,
             hintText: hint,
             hintStyle: hintStyle,
             prefixIcon: Padding(

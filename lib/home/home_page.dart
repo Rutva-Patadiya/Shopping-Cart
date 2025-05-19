@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/core/utils/theme/text_theme.dart';
+import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/widgets/custom_action_chip.dart';
 
-import '../cart/bloc/add_to_cart_bloc.dart';
-import '../cart/bloc/add_to_cart_state.dart';
-import '../cart/cart_page.dart';
-import '../core/utils/theme/text_theme.dart';
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
 import '../product/bloc/filter_product_state.dart';
+import '../product/data/datasources/product_data_sources.dart';
+import '../product/product_card.dart';
 import '../product/product_list.dart';
 import '../widgets/custom_textfield.dart';
 
@@ -25,6 +26,7 @@ class HomePageState extends State<HomePage> {
   int currentIndex = 0;
   TextEditingController searchController = TextEditingController();
 
+final dataSources=ProductDataSources();
   @override
   void initState() {
     super.initState();
@@ -34,12 +36,12 @@ class HomePageState extends State<HomePage> {
       setState(() {});
       String query = searchController.text;
 
-      context.read<ProductBloc>().add(SearchProduct(query, selectedCategory));
+      context.read<ProductBloc>().add(ProductSearchedEvent(query, selectedCategory));
     });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProductBloc>().add(LoadInitialProducts());
+      context.read<ProductBloc>().add(InitialProductLoaded());
     });
   }
 
@@ -48,7 +50,7 @@ class HomePageState extends State<HomePage> {
     setState(() {
       selectedCategory = category;
     });
-    context.read<ProductBloc>().add(FilterProducts(selectedCategory));
+    context.read<ProductBloc>().add(ProductFilteredEvent(selectedCategory));
   }
 
   @override
@@ -57,21 +59,17 @@ class HomePageState extends State<HomePage> {
       body: Column(
         children: [
           SizedBox(height: 32),
-          Padding(
-            padding: const EdgeInsets.only(left: 14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    child: CustomTextField(
-                      label: null,
-                      keyboardType: TextInputType.name,
-                      hint: "Enter Product",
-                      hintStyle: TTextTheme.lightTextTheme.titleSmall,
-                      obscureText: false,
-                      controller: searchController,
-                      prefixIcon: Icons.search,
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomTextField(
+
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: Icon(Icons.search,size:20),
                       suffixIcon:
                           searchController.text.isNotEmpty
                               ? IconButton(
@@ -81,136 +79,146 @@ class HomePageState extends State<HomePage> {
                                 icon: Icon(Icons.clear, size: 20),
                               )
                               : null,
-                      validator: null,
-                      // width: null,
+                      hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(color:Colors.grey),
+                      hintText: "Search",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(100),
+                        borderSide: BorderSide(color:AppColors.grey)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(100),
+                        borderSide: BorderSide(color: Colors.blue, width: 2),
+                      ),
                     ),
+                    obscureText: false,
+
+                    validator: null,
+                    // width: null,
                   ),
                 ),
-
-                BlocBuilder<AddToCartBloc, AddToCartState>(
-                  builder: (context, state) {
-                    int count = 0;
-                    bool isGreater = false;
-
-                    if (state is CartLoaded) {
-                      count = state.cartItems.length;
-                      isGreater = count > 9;
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 22),
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, CartPage.route);
-                              },
-
-                              child: Icon(
-                                Icons.shopping_cart_outlined,
-                                size: 32,
-                              ),
-                            ),
-                          ),
-                          if (count > 0)
-                            Positioned(
-                              top: 4,
-                              right: 4,
-                              // bottom: 4,
-                              child: Badge(
-                                // backgroundColor: Colors.re,
-                                label: Text(
-                                  isGreater ? '9+' : '$count',
-                                  style: TextTheme.of(context).labelSmall
-                                      ?.copyWith(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                // GestureDetector(child: CircleAvatar()),
-              ],
-            ),
+              ),
+            ],
           ),
 
           SizedBox(height: 16),
-
           Padding(
-            padding: const EdgeInsets.only(left: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  ActionChip(
-                    backgroundColor: Colors.white,
-                    label: Text("All"),
-                    onPressed: () {
-                      onCategoryChanged("All");
-                    },
-                  ),
-                  ActionChip(
-                    backgroundColor: Colors.white,
-                    label: Text(""),
-                    onPressed: () {
-                      onCategoryChanged("Electronic");
-                    },
-                  ),
-                  ActionChip(
-                    backgroundColor: Colors.white,
-                    label: Text("Clothing"),
-                    onPressed: () {
-                      onCategoryChanged("Clothing");
-                    },
-                  ),
-
-                  // CustomButton(
-                  //   name: "All",
-                  //   isSelected: selectedCategory == "All",
-                  //   onPressed: () {
-                  //     _onCategoryChanged("All");
-                  //   },
-                  // ),
-                  // CustomButton(
-                  //   name: "Electronic",
-                  //   isSelected: selectedCategory == "Electronic",
-                  //   onPressed: () {
-                  //     _onCategoryChanged("Electronic");
-                  //   },
-                  // ),
-                ],
+              child: CategoryChips(
+                onCategoryChanged: (selectedId) {
+                  onCategoryChanged(selectedId);
+                },
               ),
             ),
           ),
 
+
+
           Expanded(
             child: BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) {
-                if (state is ProductLoading) {
+                if (state is ProductLoadInProgress) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is ProductLoaded) {
+                } else if (state is ProductLoadSuccess) {
                   final products = state.filteredProducts;
-                  return ListView.builder(
-                    padding: EdgeInsets.only(top: 6),
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(12),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 0.7,
+                    ),
                     itemCount: products.length,
-                    itemBuilder:
-                        (context, index) => ProductList(
-                          product: products[index],
-                        ), //after converting the products in the list it can be accessed using an index number
+                    itemBuilder: (context, index) {
+                      return ProductCard(product: products[index]);
+                    },
                   );
-                } else if (state is ProductError) {
+                } else if (state is ProductLoadFailure) {
                   return Center(child: Text(state.message));
                 }
                 return const SizedBox.shrink();
               },
             ),
           ),
+
         ],
-      ),
+      )
     );
   }
 }
+//
+// Expanded(
+// child: BlocBuilder<ProductBloc, ProductState>(
+// builder: (context, state) {
+// if (state is ProductLoadInProgress) {
+// return const Center(child: CircularProgressIndicator());
+// } else if (state is ProductLoadSuccess) {
+// final products = state.filteredProducts;
+// return ListView.builder(
+// padding: EdgeInsets.only(top: 6),
+// itemCount: products.length,
+// itemBuilder:
+// (context, index) => ProductList(
+// product: products[index],
+// ), //after converting the products in the list it can be accessed using an index number
+// );
+// } else if (state is ProductLoadFailure) {
+// return Center(child: Text(state.message));
+// }
+// return const SizedBox.shrink();
+// },
+// ),
+// ),
+// BlocBuilder<AddToCartBloc, AddToCartState>(
+              //   builder: (context, state) {
+              //     int count = 0;
+              //     bool isGreater = false;
+              //
+              //     if (state is CartLoaded) {
+              //       count = state.cartItems.length;
+              //       isGreater = count > 9;
+              //     }
+
+                  // return Padding(
+                  //   padding: const EdgeInsets.only(top: 22),
+                  //   child: Stack(
+                  //     children: [
+                  //       Container(
+                  //         margin: EdgeInsets.symmetric(horizontal: 10),
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             Navigator.pushNamed(context, CartPage.route);
+                  //           },
+                  //
+                  //           child: Icon(
+                  //             Icons.shopping_cart_outlined,
+                  //             size: 32,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       if (count > 0)
+                  //         Positioned(
+                  //           top: 4,
+                  //           right: 4,
+                  //           // bottom: 4,
+                  //           child: Badge(
+                  //             // backgroundColor: Colors.re,
+                  //             label: Text(
+                  //               isGreater ? '9+' : '$count',
+                  //               style: TextTheme.of(context).labelSmall
+                  //                   ?.copyWith(fontWeight: FontWeight.w400),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //     ],
+                  //   ),
+                  // );
+          //       },
+          //     ),
+          //     // GestureDetector(child: CircleAvatar()),
+

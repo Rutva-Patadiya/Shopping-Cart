@@ -24,7 +24,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Your Cart"),
-        backgroundColor: AppColors.lGreen,
+        backgroundColor: Colors.brown,
       ),
       body: BlocBuilder<AddToCartBloc, AddToCartState>(
         builder: (context, state) {
@@ -73,7 +73,7 @@ class _CartPageState extends State<CartPage> {
                                 child: InkWell(
                                   onTap: () {
                                     context.read<AddToCartBloc>().add(
-                                      RemoveFromCart(product),
+                                      RemoveFromCartEvent(product),
                                     );
                                   },
 
@@ -102,7 +102,7 @@ class _CartPageState extends State<CartPage> {
                                 child: InkWell(
                                   onTap: () {
                                     context.read<AddToCartBloc>().add(
-                                      AddToCart(product),
+                                      AddToCartEvent(product),
                                     );
                                   },
                                   child: Icon(

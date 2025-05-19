@@ -13,6 +13,7 @@ class Product extends Equatable {
     required this.imageUrl,
   });
 
+  //handles only products should be added in cart
   @override
   List<Object?> get props => [name];
 }

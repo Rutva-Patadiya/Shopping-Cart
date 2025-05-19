@@ -27,11 +27,11 @@ class Login extends StatelessWidget {
       listener: (context, state) {
         log("State received: $state");
 
-        if (state is Authenticated) {
+        if (state is AuthSuccess) {
           Navigator.popAndPushNamed(context, ProductPage.route);
-        } else if (state is UnAuthenticated) {
+        } else if (state is AuthInitial) {
           Navigator.popAndPushNamed(context, Login.route);
-        } else if (state is AuthError) {
+        } else if (state is AuthFailure) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -79,6 +79,7 @@ class Login extends StatelessWidget {
                           }
                           return null;
                         },
+                        decoration: null,
                         prefixIcon: Icons.mail_outline,
                         suffixIcon: null,
                       ),
@@ -89,7 +90,6 @@ class Login extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
-                            // width: null,
                             label: "Password",
                             keyboardType: TextInputType.text,
                             hint: "Enter Password",
@@ -109,6 +109,7 @@ class Login extends StatelessWidget {
                               }
                               return null;
                             },
+                            decoration: null,
                             prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -119,7 +120,7 @@ class Login extends StatelessWidget {
                                 size: 25,
                               ),
                               onPressed: () {
-                                context.read<LoginBloc>().add(TextVisibility());
+                                context.read<LoginBloc>().add(PasswordVisibilityToggled());
                               },
                             ),
                           );
@@ -146,7 +147,7 @@ class Login extends StatelessWidget {
 
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
-                          return state is AuthLoading
+                          return state is AuthInProgress
                               ? const Center(child: CircularProgressIndicator())
                               : Padding(
                                 padding: const EdgeInsets.only(left: 1.0),
@@ -156,7 +157,7 @@ class Login extends StatelessWidget {
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
                                         context.read<LoginBloc>().add(
-                                          LoginRequested(
+                                          LoginStarted(
                                             _emailController.text,
                                             _passwordController.text,
                                           ),

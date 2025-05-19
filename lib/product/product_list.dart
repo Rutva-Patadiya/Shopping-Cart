@@ -57,7 +57,9 @@ class ProductList extends StatelessWidget {
               ElevatedButton(
                 onPressed:
                     () => {
-                      context.read<AddToCartBloc>().add(AddToCart(product)),
+                      context.read<AddToCartBloc>().add(
+                        AddToCartEvent(product),
+                      ),
                     },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(24, 24),

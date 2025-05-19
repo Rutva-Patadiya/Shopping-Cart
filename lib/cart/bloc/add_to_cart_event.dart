@@ -1,23 +1,23 @@
 import 'package:equatable/equatable.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
 
-class AddToCartEvent extends Equatable {
+class CartEvent extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [];
 }
 
-class AddToCart extends AddToCartEvent {
+class AddToCartEvent extends CartEvent {
   final Product product;
 
-  AddToCart(this.product);
+  AddToCartEvent(this.product);
 
   @override
   List<Object?> get props => [product];
 }
 
-class RemoveFromCart extends AddToCartEvent {
+class RemoveFromCartEvent extends CartEvent {
   final Product product;
 
-  RemoveFromCart(this.product);
+  RemoveFromCartEvent(this.product);
 }

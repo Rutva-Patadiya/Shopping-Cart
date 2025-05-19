@@ -1,3 +1,5 @@
+import 'package:shopping_cart/product/data/models/category_model.dart';
+
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repositories.dart';
 import '../datasources/product_data_sources.dart';
@@ -15,4 +17,14 @@ class ProductRepositoryImpl implements ProductRepository {
 
     return models.map((model) => model.toEntity()).toList();
   }
+
+  //
+  // @override
+  // Future<List<CategoryModel>> getCategories() async
+  // {
+  //   final models= await remoteDataSource.fetchCategories();
+  //
+  //   return models.map((models) => models.toEntity()).toList();
+  // }
+
 }

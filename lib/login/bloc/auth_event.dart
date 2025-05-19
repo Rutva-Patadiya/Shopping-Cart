@@ -4,30 +4,30 @@ abstract class AuthEvent {}
 
 class AppStarted extends AuthEvent {}
 
-class SignUpRequested extends AuthEvent {
+class SignUpStarted extends AuthEvent {
   final String email;
   final String password;
 
-  SignUpRequested(this.email, this.password);
+  SignUpStarted(this.email, this.password);
 }
 
-class LoginRequested extends AuthEvent {
+class LoginStarted extends AuthEvent {
   final String email;
   final String password;
 
-  LoginRequested(this.email, this.password);
+  LoginStarted(this.email, this.password);
 
   List<Object> get props => [email, password];
 }
 
 //obscure text visibility
-class TextVisibility extends AuthEvent {
-  TextVisibility();
+class PasswordVisibilityToggled extends AuthEvent {
+ PasswordVisibilityToggled();
 
   List<Object> get props => [];
 }
 
 //textvisibility of confirm pass
-class ConfirmPass extends AuthEvent {}
+class ConfirmPassVisibilityToggled extends AuthEvent {}
 
-class LogOut extends AuthEvent {}
+class LoggedOut extends AuthEvent {}

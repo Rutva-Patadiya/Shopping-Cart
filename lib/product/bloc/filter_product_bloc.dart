@@ -5,26 +5,26 @@ import '../domain/entities/product.dart';
 import 'filter_product_event.dart';
 import 'filter_product_state.dart';
 
-class ProductBloc extends Bloc<ProductFilterEvent, ProductState> {
+class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository repository;
 
-  ProductBloc(this.repository) : super(ProductLoading()) {
-    on<LoadInitialProducts>((event, emit) async {
+  ProductBloc(this.repository) : super(ProductLoadInProgress()) {
+    on<InitialProductLoaded>((event, emit) async {
       try {
         final allProducts = await repository.getProducts();
         emit(
-          ProductLoaded(
+          ProductLoadSuccess(
             allProducts: allProducts,
             filteredProducts: allProducts,
           ),
         );
       } catch (e) {
-        emit(ProductError('Failed to load initial products: $e'));
+        emit(ProductLoadFailure('Failed to load initial products: $e'));
       }
     });
 
-    on<SearchProduct>((event, emit) async {
-      emit(ProductLoading());
+    on<ProductSearchedEvent>((event, emit) async {
+      emit(ProductLoadInProgress());
       final List<Product> allProducts = await repository.getProducts();
       // emit(
       //   ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
@@ -45,20 +45,20 @@ class ProductBloc extends Bloc<ProductFilterEvent, ProductState> {
               )
               .toList();
       emit(
-        ProductLoaded(
+        ProductLoadSuccess(
           allProducts: allProducts,
           filteredProducts: searchFiltered,
         ),
       );
     });
-    on<FilterProducts>((event, emit) async {
-      emit(ProductLoading());
+    on<ProductFilteredEvent>((event, emit) async {
+      emit(ProductLoadInProgress());
       try {
         final List<Product> allProducts = await repository.getProducts();
 
         if (event.category == "All") {
           emit(
-            ProductLoaded(
+            ProductLoadSuccess(
               allProducts: allProducts,
               filteredProducts: allProducts,
             ),
@@ -70,11 +70,11 @@ class ProductBloc extends Bloc<ProductFilterEvent, ProductState> {
                   .toList();
 
           emit(
-            ProductLoaded(allProducts: allProducts, filteredProducts: filtered),
+            ProductLoadSuccess(allProducts: allProducts, filteredProducts: filtered),
           );
         }
       } catch (e) {
-        emit(ProductError('Failed to fetch products: $e'));
+        emit(ProductLoadFailure('Failed to fetch products: $e'));
       }
     });
   }

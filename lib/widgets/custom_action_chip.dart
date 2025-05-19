@@ -1,24 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 
-class ActionChip extends StatelessWidget {
-  final Widget label;
-  final VoidCallback onPressed;
-  final Color backgroundColor;
+import '../product/data/datasources/product_data_sources.dart';
+import '../product/data/models/category_model.dart';
 
-  const ActionChip({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    required this.backgroundColor,
-  });
+class CategoryChips extends StatefulWidget {
+  final Function(String categoryId) onCategoryChanged;
+
+  const CategoryChips({super.key, required this.onCategoryChanged});
+
+  @override
+  State<CategoryChips> createState() => _CategoryChipsState();
+}
+
+class _CategoryChipsState extends State<CategoryChips> {
+  late Future<List<CategoryModel>> _categoryFuture;
+  final ProductDataSources dataSource = ProductDataSources(); // Create instance
+  String selectedCategoryId = "All";
+
+  @override
+  void initState() {
+    super.initState();
+    _categoryFuture = dataSource.fetchCategories(); // Call your method
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ActionChip(
-      backgroundColor: Colors.white,
-      label: label,
-      onPressed: () {
-        onPressed();
+    return FutureBuilder<List<CategoryModel>>(
+      future: _categoryFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const Text("Error fetching categories");
+        }
+
+        final categories = snapshot.data!;
+
+        return Wrap(
+          spacing: 8.0,
+          children: [
+            ActionChip(
+              label: Text(
+                "All",
+                style: TTextTheme.lightTextTheme.labelLarge?.copyWith(
+                  color:
+                      selectedCategoryId == "All" ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+              backgroundColor:
+                  selectedCategoryId == "All" ? Colors.brown : Colors.white,
+              onPressed: () {
+                setState(() {
+                  selectedCategoryId = "All";
+                });
+                widget.onCategoryChanged("All");
+              },
+            ),
+
+            ...categories.map((category) {
+              return ActionChip(
+                label: Text(
+                  category.name,
+                  style: TTextTheme.lightTextTheme.labelLarge?.copyWith(
+                    color:
+                        selectedCategoryId == category.id
+                            ? Colors.white
+                            : Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                backgroundColor:
+                    selectedCategoryId == category.id
+                        ? Colors.brown
+                        : Colors.white,
+                onPressed: () {
+                  setState(() {
+                    selectedCategoryId = category.id;
+                  });
+
+                  widget.onCategoryChanged(category.id);
+                },
+              );
+            }),
+          ],
+        );
       },
     );
   }
