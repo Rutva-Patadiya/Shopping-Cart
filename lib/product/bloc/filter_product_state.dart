@@ -13,14 +13,18 @@ class ProductLoadInProgress extends ProductState {}
 class ProductLoadSuccess extends ProductState {
   final List<Product> allProducts;
   final List<Product> filteredProducts;
+  final String selectedCategory;
+  final String searchQuery;
 
   ProductLoadSuccess({
     required this.allProducts,
     required this.filteredProducts,
+    required this.selectedCategory,
+    required this.searchQuery,
   });
 
   @override
-  List<Object?> get props => [allProducts, filteredProducts];
+  List<Object?> get props => [allProducts, filteredProducts, selectedCategory];
 }
 
 class ProductLoadFailure extends ProductState {

@@ -6,10 +6,10 @@ class CategoryIcon extends StatefulWidget {
   const CategoryIcon({super.key});
 
   @override
-  State<CategoryIcon> createState() => _CategoryChipsState();
+  State<CategoryIcon> createState() => _CategoryIconState();
 }
 
-class _CategoryChipsState extends State<CategoryIcon> {
+class _CategoryIconState extends State<CategoryIcon> {
   late Future<List<CategoryModel>> _categoryFuture;
   final ProductDataSources dataSource = ProductDataSources(); // Create instance
   String selectedCategory = "All";

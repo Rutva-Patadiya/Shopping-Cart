@@ -18,6 +18,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           ProductLoadSuccess(
             allProducts: allProducts,
             filteredProducts: allProducts,
+            selectedCategory: "All",
+            searchQuery: "",
           ),
         );
       } catch (e) {
@@ -26,17 +28,14 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     });
 
     on<ProductSearchedEvent>((event, emit) async {
-      emit(ProductLoadInProgress());
+      // emit(ProductLoadInProgress());
       try {
         final List<Product> allProducts = await repository.getProducts();
-        // emit(
-        //   ProductLoaded(allProducts: allProducts, filteredProducts: allProducts),
-        // );
-        // if (state is ProductLoaded) {
+
         final categoryFiltered =
             allProducts.where((product) {
               return event.category == "All" ||
-                  product.category == event.category;
+                  product.categoryName == event.category;
             }).toList();
 
         final searchFiltered =
@@ -51,6 +50,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           ProductLoadSuccess(
             allProducts: allProducts,
             filteredProducts: searchFiltered,
+            selectedCategory: event.category,
+            searchQuery: event.query,
           ),
         );
       } catch (e) {
@@ -68,12 +69,14 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             ProductLoadSuccess(
               allProducts: allProducts,
               filteredProducts: allProducts,
+              selectedCategory: "All",
+              searchQuery: "",
             ),
           );
         } else {
           final List<Product> filtered =
               allProducts.where((product) {
-                return product.category == event.categoryName;
+                return product.categoryName == event.categoryName;
               }).toList();
           log(event.categoryName);
 
@@ -81,6 +84,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             ProductLoadSuccess(
               allProducts: allProducts,
               filteredProducts: filtered,
+              selectedCategory: event.categoryName,
+              searchQuery: "",
             ),
           );
         }

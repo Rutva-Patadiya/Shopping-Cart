@@ -19,6 +19,17 @@ class ProductDataSources {
       return snapshot.docs
           .map((doc) => ProductModel.fromFirestore(doc.data()))
           .toList();
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        if (kDebugMode) {
+          print('Permission denied: ${e.message}');
+        }
+      } else if (e.code == 'unavailable') {
+        if (kDebugMode) {
+          print('Unavailable: ${e.message}');
+        }
+      }
+      return [];
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -38,6 +49,17 @@ class ProductDataSources {
       return snapshot.docs
           .map((doc) => CategoryModel.fromFirestore(doc))
           .toList();
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        if (kDebugMode) {
+          print('Permission denied: ${e.message}');
+        }
+      } else if (e.code == 'unavailable') {
+        if (kDebugMode) {
+          print('Unavailable: ${e.message}');
+        }
+      }
+      return [];
     } catch (e) {
       if (kDebugMode) {
         print(e);

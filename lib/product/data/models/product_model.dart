@@ -1,37 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../domain/entities/product.dart';
 
 //converts the raw firebase data into dart classes
 class ProductModel {
-  final String name;
-  final String category;
-  final int price;
+  final DocumentReference categoryId;
+  final String categoryName;
   final String imageUrl;
+  final String name;
+  final int price;
 
   ProductModel({
-    required this.name,
-    required this.category,
-    required this.price,
+    required this.categoryId,
+    required this.categoryName,
     required this.imageUrl,
+    required this.name,
+    required this.price,
   });
 
   factory ProductModel.fromFirestore(Map<String, dynamic> data) {
-    print("Loaded product: ${data['name']}  ");
-    print("Loaded product: ${data['price']}  ");
-    print("Loaded product: ${data['image']}  ");
-    print("Loaded product: ${data['category_id'].path} ");
+    // print("Loaded product: ${data['name']}  ");
+    // print("Loaded product: ${data['price']}  ");
+    // print("Loaded product: ${data['image']}  ");
+    // print("Loaded product: ${data['category_id'].path} ");
 
     return ProductModel(
+      categoryId: data['category_id'],
+      categoryName: data['category_name'] ?? '',
       name: data['name'] ?? '',
-      category: data['category_id'].path ?? '',
-      price: data['price'] ?? 0,
       imageUrl: data['image'] ?? '',
+      price: data['price'] ?? 0,
     );
   }
 
   Product toEntity() {
     return Product(
+      categoryId: categoryId,
       name: name,
-      category: category,
+      categoryName: categoryName,
       price: price,
       imageUrl: imageUrl,
     );

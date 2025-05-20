@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final TextEditingController controller;
   final String? hint;
+  final Color? cursorColor;
   final FormFieldValidator? validator;
   final TextStyle? hintStyle;
   final Widget? suffixIcon;
@@ -19,7 +20,8 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
-     this.label,
+    this.cursorColor,
+    this.label,
     this.hint,
     this.hintStyle,
     required this.obscureText,
@@ -29,7 +31,6 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     required this.validator,
-
   });
 
   @override
@@ -64,20 +65,22 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           //to validate when user interacts
-          cursorColor: Colors.blueAccent,
+          cursorColor: cursorColor ?? Colors.blueAccent,
           style: TTextTheme.lightTextTheme.bodyLarge,
 
-          decoration:decoration ?? InputDecoration(
-            isDense: true,
-            hintText: hint,
-            hintStyle: hintStyle,
-            prefixIcon: Padding(
-              padding: EdgeInsets.only(top: 1),
-              child: Icon(prefixIcon, color: Colors.grey, size: 25),
-            ),
-            suffixIcon: suffixIcon,
-            border: OutlineInputBorder(),
-          ),
+          decoration:
+              decoration ??
+              InputDecoration(
+                isDense: true,
+                hintText: hint,
+                hintStyle: hintStyle,
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(top: 1),
+                  child: Icon(prefixIcon, color: Colors.grey, size: 25),
+                ),
+                suffixIcon: suffixIcon,
+                border: OutlineInputBorder(),
+              ),
         ),
       ],
     );
