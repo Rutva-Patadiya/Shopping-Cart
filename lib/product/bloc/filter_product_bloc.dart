@@ -7,18 +7,21 @@ import '../domain/entities/product.dart';
 import 'filter_product_event.dart';
 import 'filter_product_state.dart';
 
+//The bloc class is for managing the product related operation
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository repository;
 
   ProductBloc(this.repository) : super(ProductLoadInProgress()) {
+    //Initially loads the products
     on<InitialProductLoaded>((event, emit) async {
+      log('');
       try {
         final allProducts = await repository.getProducts();
         emit(
           ProductLoadSuccess(
             allProducts: allProducts,
             filteredProducts: allProducts,
-            selectedCategory: "All",
+            selectedCategory: "",
             searchQuery: "",
           ),
         );
@@ -27,6 +30,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       }
     });
 
+    //It handles product search
     on<ProductSearchedEvent>((event, emit) async {
       // emit(ProductLoadInProgress());
       try {
@@ -58,8 +62,10 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         emit(ProductLoadFailure('Failed to fetch products: $e'));
       }
     });
+
+    // Loads all products from the repository when the app starts or is refreshed.
     on<ProductFilteredEvent>((event, emit) async {
-      print("Filtering products by category: ${event.categoryName}");
+      log("Filtering products by category: ${event.categoryName}");
 
       emit(ProductLoadInProgress());
       try {

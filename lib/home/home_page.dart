@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
@@ -6,12 +8,12 @@ import 'package:shopping_cart/core/utils/theme/theme.dart';
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
 import '../product/bloc/filter_product_state.dart';
-import '../product/category_icon_list.dart';
+import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
 import '../product/product_card.dart';
-import '../widgets/custom_action_chip.dart';
 import '../widgets/custom_textfield.dart';
 
+//Shows Home page when we successfully logged in
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -34,11 +36,13 @@ class HomePageState extends State<HomePage> {
     searchController.addListener(() {
       setState(() {});
       final query = searchController.text;
-      // final state = context.read<ProductBloc>().state;
-      // if (query.isNotEmpty) {
-      // if (state is ProductLoadSuccess) {
+      log(
+        "UI Dispatching ProductSearchedEvent with query: '$query', category: 'All'",
+      );
+
       context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
     });
+
     //addPostFrameCallback means it will call something when the whole UI is loaded.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductBloc>().add(InitialProductLoaded());
@@ -54,7 +58,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: TAppTheme.lightTheme.colorScheme.background,
       body: Column(
         children: [
           SizedBox(height: 32),
@@ -64,11 +67,14 @@ class HomePageState extends State<HomePage> {
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 16),
                   child: CustomTextField(
-                    cursorColor: Colors.brown,
                     controller: searchController,
                     decoration: InputDecoration(
                       isDense: true,
-                      prefixIcon: Icon(Icons.search, size: 20),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 32,
+                        color: AppColors.brown,
+                      ),
                       suffixIcon:
                           searchController.text.isNotEmpty
                               ? IconButton(
@@ -82,20 +88,9 @@ class HomePageState extends State<HomePage> {
                         color: Colors.grey,
                       ),
                       hintText: "Search",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: AppColors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.brown, width: 2),
-                      ),
                     ),
                     obscureText: false,
-                    validator: null,
+
                     // width: null,
                   ),
                 ),
@@ -119,36 +114,17 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          CategoryIcon(),
+
+          // Shows the list of categories dynamically
+          CategoryList(),
           SizedBox(height: 16),
-          BlocBuilder<ProductBloc, ProductState>(
-            builder: (context, state) {
-              String selectedCategory = "All";
-              if (state is ProductLoadSuccess) {
-                selectedCategory = state.selectedCategory;
-              }
 
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: CategoryChips(
-                    selectedCategory: selectedCategory,
-                    onCategoryChanged: (category) {
-                      // Dispatch event to update selected category in BLoC
-                      context.read<ProductBloc>().add(
-                        ProductFilteredEvent(category),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-
+          // Shows the list of products in grid view
           Expanded(
             child: BlocBuilder<ProductBloc, ProductState>(
               builder: (context, state) {
+                log("State received: $state");
+                // log(context as String);
                 if (state is ProductLoadInProgress) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is ProductLoadSuccess) {

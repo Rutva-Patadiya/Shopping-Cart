@@ -12,6 +12,7 @@ import 'bloc/auth_bloc.dart';
 import 'bloc/auth_event.dart';
 import 'bloc/auth_state.dart';
 
+//Login Page for User
 class Login extends StatelessWidget {
   Login({super.key});
 
@@ -120,7 +121,9 @@ class Login extends StatelessWidget {
                                 size: 25,
                               ),
                               onPressed: () {
-                                context.read<LoginBloc>().add(PasswordVisibilityToggled());
+                                context.read<LoginBloc>().add(
+                                  PasswordVisibilityToggled(),
+                                );
                               },
                             ),
                           );

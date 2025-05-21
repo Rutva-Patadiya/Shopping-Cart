@@ -140,7 +140,9 @@ class SignupPage extends StatelessWidget {
                                 size: 25,
                               ),
                               onPressed: () {
-                                context.read<LoginBloc>().add(PasswordVisibilityToggled());
+                                context.read<LoginBloc>().add(
+                                  PasswordVisibilityToggled(),
+                                );
                               },
                             ),
                           );
@@ -182,7 +184,9 @@ class SignupPage extends StatelessWidget {
                                 size: 25,
                               ),
                               onPressed: () {
-                                context.read<LoginBloc>().add(ConfirmPassVisibilityToggled());
+                                context.read<LoginBloc>().add(
+                                  ConfirmPassVisibilityToggled(),
+                                );
                               },
                             ),
                           );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_cart/home/home_page.dart';
 
 import '../cart/cart_page.dart';
+import '../core/utils/theme/theme.dart';
 import '../profile_page/profile_page.dart';
 
 class ProductPage extends StatefulWidget {
@@ -21,11 +22,10 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       body: <Widget>[HomePage(), CartPage(), ProfilePage()][currentIndex],
 
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+        padding: const EdgeInsets.only(left: 32, right: 32, bottom: 24),
         child: Container(
           height: 52,
           decoration: BoxDecoration(
@@ -33,7 +33,7 @@ class _ProductPageState extends State<ProductPage> {
             borderRadius: BorderRadius.circular(40),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildNavItem(icon: Icons.home, index: 0),
               _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
@@ -55,6 +55,7 @@ class _ProductPageState extends State<ProductPage> {
         });
       },
       child: Container(
+        margin: EdgeInsets.all(4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
@@ -63,7 +64,7 @@ class _ProductPageState extends State<ProductPage> {
         child: Icon(
           icon,
           size: 24,
-          color: isSelected ? Colors.brown : Colors.grey[400],
+          color: isSelected ? AppColors.brown : Colors.grey[400],
         ),
       ),
     );

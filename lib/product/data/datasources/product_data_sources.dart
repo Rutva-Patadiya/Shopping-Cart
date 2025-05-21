@@ -16,29 +16,17 @@ class ProductDataSources {
       final snapshot =
           await FirebaseFirestore.instance.collection(productCollection).get();
       // loops over each document & docs:property of snapshot & give list of all the product documents Each doc contains fields like Name..
+
       return snapshot.docs
           .map((doc) => ProductModel.fromFirestore(doc.data()))
           .toList();
-    } on FirebaseException catch (e) {
-      if (e.code == 'permission-denied') {
-        if (kDebugMode) {
-          print('Permission denied: ${e.message}');
-        }
-      } else if (e.code == 'unavailable') {
-        if (kDebugMode) {
-          print('Unavailable: ${e.message}');
-        }
-      }
-      return [];
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      handleException(e);
       return [];
     }
   }
 
-  //this is for fetching the category name
+  //This Method fetches the categories from the firebase
   Future<List<CategoryModel>> fetchCategories() async {
     try {
       final snapshot =
@@ -49,22 +37,24 @@ class ProductDataSources {
       return snapshot.docs
           .map((doc) => CategoryModel.fromFirestore(doc))
           .toList();
-    } on FirebaseException catch (e) {
-      if (e.code == 'permission-denied') {
-        if (kDebugMode) {
-          print('Permission denied: ${e.message}');
-        }
-      } else if (e.code == 'unavailable') {
-        if (kDebugMode) {
-          print('Unavailable: ${e.message}');
-        }
-      }
-      return [];
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      handleException(e);
       return [];
+    }
+  }
+
+  //It will be called when there is an exception
+  void handleException(e) {
+    if (e is FirebaseException) {
+      if (e.code == 'permission-denied') {
+        if (kDebugMode) print('Permission denied: ${e.message}');
+      } else if (e.code == 'unavailable') {
+        if (kDebugMode) print('Unavailable: ${e.message}');
+      } else {
+        if (kDebugMode) print('FirebaseException: ${e.message}');
+      }
+    } else {
+      if (kDebugMode) print('Unknown exception: $e');
     }
   }
 }

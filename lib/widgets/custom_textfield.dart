@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shopping_cart/core/utils/theme/theme.dart';
 
 import '../core/utils/theme/text_theme.dart';
 
@@ -20,7 +21,7 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
-    this.cursorColor,
+    this.cursorColor = AppColors.brown,
     this.label,
     this.hint,
     this.hintStyle,
@@ -30,7 +31,7 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     this.prefixIcon,
     this.suffixIcon,
-    required this.validator,
+    this.validator,
   });
 
   @override
@@ -48,11 +49,7 @@ class CustomTextField extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 4, left: 2),
           child: Text(
             label ?? ' ',
-            style:
-            // style: TextTheme.of(
-            //   context,
-            // ).titleLarge?.copyWith(fontFamily: 'Poppins-Light'),
-            TTextTheme.lightTextTheme.headlineLarge?.copyWith(
+            style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
               fontFamily: 'Poppins-Light',
             ),
           ),
@@ -76,10 +73,9 @@ class CustomTextField extends StatelessWidget {
                 hintStyle: hintStyle,
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(top: 1),
-                  child: Icon(prefixIcon, color: Colors.grey, size: 25),
+                  child: Icon(prefixIcon, color: AppColors.brown, size: 25),
                 ),
                 suffixIcon: suffixIcon,
-                border: OutlineInputBorder(),
               ),
         ),
       ],

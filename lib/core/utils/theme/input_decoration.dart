@@ -5,29 +5,27 @@ class TInputDecoration {
   TInputDecoration._();
 
   static InputDecorationTheme lightInputDecorationTheme = InputDecorationTheme(
-    // hintStyle: TTextTheme.lightTextTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-    // hintStyle: TTextTheme.lightTextTheme.bodySmall?.copyWith(color:Colors.black38),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Colors.blue),
+      borderRadius: BorderRadius.circular(50),
+      borderSide: BorderSide(color: AppColors.grey),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(width: 1, color: AppColors.border),
+      borderRadius: BorderRadius.circular(50),
+      borderSide: BorderSide(width: 1, color: AppColors.grey),
     ),
 
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(width: 2, color: AppColors.bgAccent),
+      borderRadius: BorderRadius.circular(50),
+      borderSide: BorderSide(width: 2, color: AppColors.brown),
     ),
 
     errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(50),
       borderSide: BorderSide(width: 2, color: Colors.redAccent),
     ),
 
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(50),
       borderSide: BorderSide(width: 2, color: Colors.redAccent),
     ),
   );

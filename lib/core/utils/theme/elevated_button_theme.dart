@@ -15,7 +15,7 @@ class TElevatedButtonTheme {
       foregroundColor: Colors.white,
       padding: EdgeInsets.only(top: 10),
       minimumSize: const Size(350, 50),
-      backgroundColor: AppColors.bgAccent,
+      backgroundColor: AppColors.brown,
     ),
   );
 }
