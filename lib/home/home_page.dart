@@ -1,17 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
-import 'package:shopping_cart/product/product_page.dart';
+import 'package:shopping_cart/l10n/translation_extension.dart';
 
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
-import '../product/bloc/filter_product_state.dart';
 import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
-import '../product/product_card.dart';
+import '../product/product_gridview.dart';
 import '../widgets/custom_textfield.dart';
 
 //Shows Home page when we successfully logged in
@@ -26,27 +23,32 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   // String selectedCategory = "All";
-  int currentIndex = 0;
-  TextEditingController searchController = TextEditingController();
 
+  TextEditingController searchController = TextEditingController();
+  bool _isInitialized = false;
   final dataSources = ProductDataSources();
 
   @override
   void initState() {
     super.initState();
-    searchController.addListener(() {
-      setState(() {});
-      final query = searchController.text;
-      log(
-        "UI Dispatching ProductSearchedEvent with query: '$query', category: 'All'",
-      );
 
-      // context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
-    });
+    // searchController.addListener(() {
+    //   setState(() {});
+    //   final query = searchController.text;
+    //   log(
+    //     "UI Dispatching ProductSearchedEvent with query: '$query', category: 'All'",
+    //   );
+    //
+    //   context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
+    // });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProductBloc>().add(InitialProductLoaded());
+      if (!_isInitialized) {
+        context.read<ProductBloc>().add(InitialProductLoaded());
+        context.read<CategoryBloc>().add(CategoryLoadedEvent());
+        _isInitialized = true;
+      }
     });
   }
 
@@ -88,7 +90,7 @@ class HomePageState extends State<HomePage> {
                       hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                         color: Colors.grey,
                       ),
-                      hintText: "Search",
+                      hintText: context.loc.searchHint,
                     ),
                     obscureText: false,
 
@@ -107,7 +109,7 @@ class HomePageState extends State<HomePage> {
             child: Row(
               children: [
                 Text(
-                  "Category",
+                  context.loc.categories,
                   style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -116,42 +118,44 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
+          SizedBox(height: 16),
+
           // Shows the list of categories dynamically
           CategoryList(),
-          SizedBox(height: 16),
+          // SizedBox(height: 16),
 
           // Shows the list of products in grid view
           Expanded(
-            child: BlocBuilder<ProductBloc, ProductState>(
-              builder: (context, state) {
-                log("State received: $state");
-                // log(context as String);
-                if (state is ProductLoadInProgress) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ProductLoadSuccess) {
-                  final products = state.filteredProducts;
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(12),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.7,
-                        ),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: products[index]);
-                    },
-                  );
-                } else if (state is ProductLoadFailure) {
-                  return Center(child: Text(state.message));
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+            child: ProductGridView(),
+            // child: BlocBuilder<ProductBloc, ProductState>(
+            //   builder: (context, state) {
+            //     log("State received: $state");
+            //     // log(context as String);
+            //     if (state is ProductLoadInProgress) {
+            //       return const Center(child: CircularProgressIndicator());
+            //     } else if (state is ProductLoadSuccess) {
+            //       final products = state.filteredProducts;
+            //       return GridView.builder(
+            //         padding: const EdgeInsets.all(12),
+            //         gridDelegate:
+            //             const SliverGridDelegateWithFixedCrossAxisCount(
+            //               crossAxisCount: 2,
+            //               mainAxisSpacing: 16,
+            //               crossAxisSpacing: 16,
+            //               childAspectRatio: 0.7,
+            //             ),
+            //         itemCount: products.length,
+            //         itemBuilder: (context, index) {
+            //           return ProductCard(product: products[index]);
+            //         },
+            //       );
+            //     } else if (state is ProductLoadFailure) {
+            //       return Center(child: Text(state.message));
+            //     }
+            //     return const SizedBox.shrink();
+            //   },
+            // ),
           ),
-
         ],
       ),
     );

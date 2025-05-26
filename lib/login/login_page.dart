@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/l10n/translation_extension.dart';
 import 'package:shopping_cart/product/product_page.dart';
 import 'package:shopping_cart/signup/signup_page.dart';
 
@@ -36,6 +37,8 @@ class Login extends StatelessWidget {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
+        } else if (state is AuthLogOutSuccess) {
+          Navigator.popAndPushNamed(context, Login.route);
         }
       },
       child: Scaffold(
@@ -52,7 +55,7 @@ class Login extends StatelessWidget {
                       const SizedBox(height: 30),
 
                       Text(
-                        "Log in to Shopping Cart",
+                        context.loc.loginTitle,
                         style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -62,27 +65,25 @@ class Login extends StatelessWidget {
 
                       CustomTextField(
                         // width: null,
-                        label: "Email",
+                        label: context.loc.emailLabel,
                         keyboardType: TextInputType.emailAddress,
-                        hint: "abc@example.com",
+                        hint: context.loc.emailHint,
                         hintStyle: TTextTheme.lightTextTheme.bodyLarge
                             ?.copyWith(color: Colors.black38),
                         obscureText: false,
                         controller: _emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter email';
+                            return context.loc.enterEmailValidation;
                           }
                           String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
                           RegExp regex = RegExp(pattern);
                           if (!regex.hasMatch(value)) {
-                            return 'Enter a valid email address';
+                            return context.loc.enterEmailValidation;
                           }
                           return null;
                         },
-                        decoration: null,
                         prefixIcon: Icons.mail_outline,
-                        suffixIcon: null,
                       ),
 
                       const SizedBox(height: 16),
@@ -91,22 +92,22 @@ class Login extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
-                            label: "Password",
+                            label: context.loc.passwordLabel,
                             keyboardType: TextInputType.text,
-                            hint: "Enter Password",
+                            hint: context.loc.passwordHint,
                             hintStyle: TTextTheme.lightTextTheme.bodyLarge
                                 ?.copyWith(color: Colors.black38),
                             obscureText: state.obscureText,
                             controller: _passwordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter password';
+                                return context.loc.validPasswordValidation;
                               }
                               String pattern =
                                   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
                               RegExp regex = RegExp(pattern);
                               if (!regex.hasMatch(value)) {
-                                return 'Enter a valid password';
+                                return context.loc.validPasswordValidation;
                               }
                               return null;
                             },
@@ -139,7 +140,7 @@ class Login extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            "Forgot Password?",
+                            context.loc.forgotPassword,
                             style: TTextTheme.lightTextTheme.labelMedium
                                 ?.copyWith(color: AppColors.bgAccent),
                           ),
@@ -170,7 +171,7 @@ class Login extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.only(bottom: 6),
                                       child: Text(
-                                        "Log In",
+                                        context.loc.loginButton,
                                         style: TextStyle(color: Colors.white),
                                         strutStyle: const StrutStyle(
                                           leading: 1.5,
@@ -189,7 +190,7 @@ class Login extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            "Don't have an account?",
+                            context.loc.noAccountText,
                             style: TTextTheme.lightTextTheme.labelMedium
                                 ?.copyWith(color: AppColors.bgAccent),
                           ),

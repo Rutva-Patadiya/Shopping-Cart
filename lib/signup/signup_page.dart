@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/l10n/translation_extension.dart';
 
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
@@ -29,9 +30,9 @@ class SignupPage extends StatelessWidget {
         log("State received: $state");
 
         if (state is AuthRegistrationSuccess) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("User Successfully created")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.loc.registrationSuccess)),
+          );
           Navigator.popAndPushNamed(context, Login.route);
         } else if (state is AuthFailure) {
           ScaffoldMessenger.of(
@@ -53,23 +54,23 @@ class SignupPage extends StatelessWidget {
                       const SizedBox(height: 30),
 
                       Text(
-                        "Sign Up Page",
+                        context.loc.signupTitle,
                         style: TTextTheme.lightTextTheme.displayMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 30),
 
                       CustomTextField(
-                        label: "Name",
+                        label: context.loc.nameLabel,
                         keyboardType: TextInputType.name,
-                        hint: "Enter your name",
+                        hint: context.loc.nameHint,
                         hintStyle: TTextTheme.lightTextTheme.bodyLarge
                             ?.copyWith(color: Colors.black38),
                         obscureText: false,
                         controller: _nameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter name';
+                            return context.loc.enterNameValidation;
                           }
                           return null;
                         },
@@ -81,21 +82,21 @@ class SignupPage extends StatelessWidget {
                       SizedBox(height: 16),
                       CustomTextField(
                         // width: null,
-                        label: "Email",
+                        label: context.loc.emailLabel,
                         keyboardType: TextInputType.emailAddress,
-                        hint: "abc@example.com",
+                        hint: context.loc.emailHint,
                         hintStyle: TTextTheme.lightTextTheme.bodyLarge
                             ?.copyWith(color: Colors.black38),
                         obscureText: false,
                         controller: _emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter email';
+                            return context.loc.validPasswordValidation;
                           }
                           String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
                           RegExp regex = RegExp(pattern);
                           if (!regex.hasMatch(value)) {
-                            return 'Enter a valid email address';
+                            return context.loc.validEmailValidation;
                           }
                           return null;
                         },
@@ -110,22 +111,22 @@ class SignupPage extends StatelessWidget {
                         builder: (context, state) {
                           return CustomTextField(
                             // width: null,
-                            label: "Password",
+                            label: context.loc.passwordLabel,
                             keyboardType: TextInputType.text,
-                            hint: "Password",
+                            hint: context.loc.passwordHint,
                             hintStyle: TTextTheme.lightTextTheme.bodyLarge
                                 ?.copyWith(color: Colors.black38),
                             obscureText: state.obscureText,
                             controller: _passwordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter password';
+                                return context.loc.validPasswordValidation;
                               }
                               String pattern =
                                   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
                               RegExp regex = RegExp(pattern);
                               if (!regex.hasMatch(value)) {
-                                return 'Enter a valid password';
+                                return context.loc.validPasswordValidation;
                               }
                               return null;
                             },
@@ -154,22 +155,21 @@ class SignupPage extends StatelessWidget {
                       BlocBuilder<LoginBloc, AuthState>(
                         builder: (context, state) {
                           return CustomTextField(
-                            // width: null,
-                            label: "Confirm Password",
+                            label: context.loc.confirmPasswordLabel,
                             keyboardType: TextInputType.text,
-                            hint: "Confirm Password",
+                            hint: context.loc.passwordHint,
                             hintStyle: TTextTheme.lightTextTheme.bodyLarge
                                 ?.copyWith(color: Colors.black38),
                             obscureText: state.confirmPass,
                             controller: _conPasswordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter password';
+                                return context.loc.validPasswordValidation;
                               }
 
                               // RegExp regex = RegExp(pattern);
                               if (value != _passwordController.text) {
-                                return 'Password must match';
+                                return context.loc.confirmPasswordValidation;
                               }
                               return null;
                             },
@@ -211,10 +211,10 @@ class SignupPage extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: const Padding(
+                                  child: Padding(
                                     padding: EdgeInsets.only(bottom: 6),
                                     child: Text(
-                                      "Sign Up",
+                                      context.loc.signUpButton,
                                       style: TextStyle(color: Colors.white),
                                       strutStyle: StrutStyle(leading: 1.5),
                                     ),
@@ -233,7 +233,7 @@ class SignupPage extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            "Already Signed Up? Click here to login",
+                            context.loc.alreadySignedUpText,
                             style: TTextTheme.lightTextTheme.labelMedium
                                 ?.copyWith(
                                   color: AppColors.darkBlue,

@@ -6,7 +6,6 @@ import '../models/product_model.dart';
 
 // This class fetches data from Firebase Fire store, which contains the product details.
 class ProductDataSources {
-  //need to define collection name as const because when we change the name of collection it should be changed everywhere
   static const productCollection = "products";
   static const categoriesCollection = "categories";
 

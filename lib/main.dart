@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopping_cart/home/home_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
+import 'package:shopping_cart/signup/signup_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'cart/bloc/add_to_cart_bloc.dart';
@@ -15,7 +17,7 @@ import 'login/bloc/auth_event.dart';
 Future<void> main() async {
   //ensure flutter sets up
   WidgetsFlutterBinding.ensureInitialized();
-  //initialize the firebase sdk (storage,authentication and all
+  //initialize the firebase sdk (storage,authentication and all)
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -33,6 +35,7 @@ class MyApp extends StatelessWidget {
           create:
               (_) => ProductBloc(ProductRepositoryImpl(ProductDataSources())),
         ),
+        BlocProvider<CategoryBloc>(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => AddToCartBloc()),
       ],
       child: MaterialApp(
@@ -41,20 +44,18 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: HomePage(),
+        home: SignupPage(),
+
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'), // English
+        ],
       ),
     );
   }
 }
-
-// ProductBloc
-// ↓ calls
-// ProductRepositoryImpl
-// ↓ calls
-// ProductDataSources
-// ↓ calls
-// FirebaseFirestore.collection("products").get()
-// ↓ returns
-// List<ProductModel> → .toEntity()
-// ↓ returns
-// List<Product> → used in UI state

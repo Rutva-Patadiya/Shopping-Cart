@@ -5,6 +5,7 @@ import '../cart/cart_page.dart';
 import '../core/utils/theme/theme.dart';
 import '../profile_page/profile_page.dart';
 
+//contains the page with bottom navigation bar
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
 
@@ -22,6 +23,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true, //to make bottom navigation transparent
       body: <Widget>[HomePage(), CartPage(), ProfilePage()][currentIndex],
 
       bottomNavigationBar: Padding(
@@ -29,7 +31,7 @@ class _ProductPageState extends State<ProductPage> {
         child: Container(
           height: 52,
           decoration: BoxDecoration(
-            color: Colors.black87,
+            color: Colors.black,
             borderRadius: BorderRadius.circular(40),
           ),
           child: Row(

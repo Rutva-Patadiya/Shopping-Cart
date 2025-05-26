@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/l10n/translation_extension.dart';
 
 import '../login/bloc/auth_bloc.dart';
 import '../login/bloc/auth_event.dart';
@@ -15,7 +16,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text(context.loc.profileTitle),
         backgroundColor: Colors.white,
       ),
       body: Column(
@@ -29,7 +30,7 @@ class ProfilePage extends StatelessWidget {
           ),
 
           SizedBox(height: 10),
-          Text("Esther Howard"),
+          Text(context.loc.profileName),
           SizedBox(height: 64),
           Center(
             child: ElevatedButton(
@@ -40,7 +41,10 @@ class ProfilePage extends StatelessWidget {
                 context.read<LoginBloc>().add(LoggedOut());
                 Navigator.popAndPushNamed(context, Login.route);
               },
-              child: Text("Log out", style: TextStyle(height: 0.5)),
+              child: Text(
+                context.loc.logOutButton,
+                style: TextStyle(height: 0.5),
+              ),
             ),
           ),
         ],

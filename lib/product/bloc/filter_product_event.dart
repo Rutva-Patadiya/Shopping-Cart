@@ -8,6 +8,17 @@ class FilterProductEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CategoryEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class CategoryLoadedEvent extends CategoryEvent {
+  // final String errorMessage;
+
+  CategoryLoadedEvent();
+}
+
 //triggers when the app loads
 class InitialProductLoaded extends FilterProductEvent {}
 

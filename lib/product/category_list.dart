@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_event.dart';
-import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
-import 'package:shopping_cart/product/data/models/category_model.dart';
 
 import '../core/utils/theme/theme.dart';
 import 'bloc/filter_product_bloc.dart';
+import 'bloc/filter_product_state.dart';
+import 'data/datasources/product_data_sources.dart';
+import 'data/models/category_model.dart';
 
+//shows the category list on home page
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
 
@@ -24,24 +26,25 @@ class _CategoryListState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
-    _categoryFuture = dataSource.fetchCategories(); // Call your method
+
+    //loads the category list AT initial level
+    context.read<CategoryBloc>().add(CategoryLoadedEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CategoryModel>>(
-      future: _categoryFuture,
-      builder: (context, snapshot) {
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return const CircularProgressIndicator();
-        // }
+    return BlocBuilder<CategoryBloc, CategoryState>(
+      builder: (context, state) {
+        List<CategoryModel> categories = [];
 
-        if (snapshot.hasError || !snapshot.hasData) {
-          return const Text("Error fetching categories");
+        if (state is CategoryLoadInProgress) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CategoryLoadSuccess) {
+          categories = state.categories;
+        } else if (categories.isEmpty) {
+          return Text("No categories found");
         }
 
-        final categories = snapshot.data!;
-        //used listview
         return SizedBox(
           height: 80,
           child: ListView.builder(
@@ -82,7 +85,12 @@ class _CategoryListState extends State<CategoryList> {
                     ),
                   ),
 
-                  Text(categories[index].name),
+                  Text(
+                    categories[index].name,
+                    style: TextTheme.of(
+                      context,
+                    ).labelSmall?.copyWith(fontWeight: FontWeight.w500),
+                  ),
                 ],
               );
             },

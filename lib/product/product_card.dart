@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_cart/core/utils/theme/text_theme.dart';
+import 'package:shopping_cart/core/utils/theme/theme.dart';
 
 import 'domain/entities/product.dart';
 
+//card of product details
 class ProductCard extends StatelessWidget {
   final Product product;
 
@@ -48,7 +51,7 @@ class ProductCard extends StatelessWidget {
                 child: const Icon(
                   Icons.favorite_border,
                   size: 20,
-                  color: Colors.black,
+                  color: Colors.brown,
                 ),
               ),
             ),
@@ -62,19 +65,21 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
             ),
             const Spacer(),
+            Icon(Icons.star, color: Colors.amber, size: 20),
+            SizedBox(width: 4),
             Text(
-              "\$${product.price}",
-              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+              "4.9",
+              style: TTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                color: AppColors.grey2,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
-        Row(
-          children: const [
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            SizedBox(width: 4),
-            Text("4.9", style: TextStyle(fontSize: 14)),
-          ],
+
+        Text(
+          "\$${product.price}",
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         ),
       ],
     );
