@@ -21,11 +21,3 @@ class Product extends Equatable {
   List<Object?> get props => [name, categoryId, price, imageUrl, categoryName];
 }
 
-// Future<String> get categoryName async {
-//   final categoryDoc = await category.get();
-//   return categoryDoc.get('name');
-// }
-// Future<String> getCategoryName() async {
-//   final categoryDoc = await category.get();
-//   return categoryDoc.get('name') ?? 'Unknown';
-// }

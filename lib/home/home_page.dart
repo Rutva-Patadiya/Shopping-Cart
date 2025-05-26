@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/product/product_page.dart';
 
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
@@ -40,7 +41,7 @@ class HomePageState extends State<HomePage> {
         "UI Dispatching ProductSearchedEvent with query: '$query', category: 'All'",
       );
 
-      context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
+      // context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
     });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
@@ -50,10 +51,10 @@ class HomePageState extends State<HomePage> {
   }
 
   //for highlight the button which is selected
-  void onCategoryChanged(String category) {
-    final query = searchController.text;
-    context.read<ProductBloc>().add(ProductSearchedEvent(query, category));
-  }
+  // void onCategoryChanged(String category) {
+  //   final query = searchController.text;
+  //   context.read<ProductBloc>().add(ProductSearchedEvent(query, category));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +151,7 @@ class HomePageState extends State<HomePage> {
               },
             ),
           ),
+
         ],
       ),
     );

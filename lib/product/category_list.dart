@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/bloc/filter_product_event.dart';
@@ -18,6 +19,7 @@ class _CategoryListState extends State<CategoryList> {
   late Future<List<CategoryModel>> _categoryFuture;
   final ProductDataSources dataSource = ProductDataSources(); // Create instance
   // String selectedCategory = "Clothing";
+  static const collectionName = 'categories';
 
   @override
   void initState() {
@@ -52,9 +54,12 @@ class _CategoryListState extends State<CategoryList> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      final categoryReference = FirebaseFirestore.instance
+                          .collection(collectionName)
+                          .doc(category.id);
                       // selectedCategory = category.name;
                       context.read<ProductBloc>().add(
-                        ProductFilteredEvent(category.name),
+                        ProductFilteredEvent(category.name, categoryReference),
                       );
                     },
                     child: Container(
