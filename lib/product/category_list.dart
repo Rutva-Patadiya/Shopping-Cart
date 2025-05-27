@@ -18,15 +18,12 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  late Future<List<CategoryModel>> _categoryFuture;
   final ProductDataSources dataSource = ProductDataSources(); // Create instance
-  // String selectedCategory = "Clothing";
   static const collectionName = 'categories';
 
   @override
   void initState() {
     super.initState();
-
     //loads the category list AT initial level
     context.read<CategoryBloc>().add(CategoryLoadedEvent());
   }
@@ -34,15 +31,15 @@ class _CategoryListState extends State<CategoryList> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
-      builder: (context, state) {
+      builder: (context, categoryState) {
         List<CategoryModel> categories = [];
 
-        if (state is CategoryLoadInProgress) {
+        if (categoryState is CategoryLoadInProgress) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is CategoryLoadSuccess) {
-          categories = state.categories;
+        } else if (categoryState is CategoryLoadSuccess) {
+          categories = categoryState.categories;
         } else if (categories.isEmpty) {
-          return Text("No categories found");
+          return const Text("No categories found");
         }
 
         return SizedBox(
@@ -52,39 +49,38 @@ class _CategoryListState extends State<CategoryList> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: categories.length,
             itemBuilder: (context, index) {
-              final category = categories[index];
               return Column(
                 children: [
                   GestureDetector(
                     onTap: () {
                       final categoryReference = FirebaseFirestore.instance
                           .collection(collectionName)
-                          .doc(category.id);
-                      // selectedCategory = category.name;
+                          .doc(categories[index].id);
+
                       context.read<ProductBloc>().add(
-                        ProductFilteredEvent(category.name, categoryReference),
+                        ProductFilteredEvent(
+                          categories[index].name,
+                          categoryReference,
+                        ),
                       );
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 16,
                       ),
-                      margin: EdgeInsets.only(left: 12, right: 12),
+                      margin: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         color: AppColors.lightBrown,
                       ),
-
-                      //displays image of categories
                       child: Image.network(
-                        category.image,
+                        categories[index].image,
                         height: 28,
                         color: AppColors.brown,
                       ),
                     ),
                   ),
-
                   Text(
                     categories[index].name,
                     style: TextTheme.of(

@@ -78,7 +78,7 @@ class Login extends StatelessWidget {
                           }
                           String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
                           RegExp regex = RegExp(pattern);
-                          if (!regex.hasMatch(value)) {
+                          if (!regex.hasMatch(value) && value.isEmpty) {
                             return context.loc.enterEmailValidation;
                           }
                           return null;
@@ -106,7 +106,7 @@ class Login extends StatelessWidget {
                               String pattern =
                                   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
                               RegExp regex = RegExp(pattern);
-                              if (!regex.hasMatch(value)) {
+                              if (!regex.hasMatch(value) && value.isEmpty) {
                                 return context.loc.validPasswordValidation;
                               }
                               return null;

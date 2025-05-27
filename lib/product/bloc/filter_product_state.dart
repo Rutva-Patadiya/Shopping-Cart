@@ -23,18 +23,15 @@ class ProductLoadInProgress extends ProductState {}
 
 class ProductLoadSuccess extends ProductState {
   final List<Product> allProducts;
-
-  // final List<CategoryModel> categories;
   final List<Product> filteredProducts;
-  final String categoryName;
+  final String? categoryName;
   final DocumentReference? categoryId;
   final String searchQuery;
 
   ProductLoadSuccess({
     required this.allProducts,
-    // required this.categories,
     required this.filteredProducts,
-    required this.categoryName,
+    this.categoryName,
     required this.categoryId,
     required this.searchQuery,
   });
@@ -46,7 +43,6 @@ class ProductLoadSuccess extends ProductState {
     categoryId,
     categoryName,
     searchQuery,
-    // categories,
   ];
 }
 
@@ -57,6 +53,7 @@ class ProductLoadFailure extends ProductState {
   ProductLoadFailure(this.errorMessage);
 }
 
+//category list bloc
 class CategoryLoadInProgress extends CategoryState {}
 
 class CategoryLoadSuccess extends CategoryState {

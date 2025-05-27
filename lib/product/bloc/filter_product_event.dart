@@ -8,27 +8,36 @@ class FilterProductEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class CategoryEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class CategoryLoadedEvent extends CategoryEvent {
-  // final String errorMessage;
-
-  CategoryLoadedEvent();
-}
-
 //triggers when the app loads
 class InitialProductLoaded extends FilterProductEvent {}
 
 //triggers when user select the image of category
 class ProductFilteredEvent extends FilterProductEvent {
   final String categoryName;
-  final DocumentReference categoryId;
+  final DocumentReference? categoryId;
 
   ProductFilteredEvent(this.categoryName, this.categoryId);
 
   @override
   List<Object?> get props => [categoryName];
+}
+
+class CategoryEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class CategoryLoadedEvent extends CategoryEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+// searches the product when user type product name
+class ProductSearchedEvent extends FilterProductEvent {
+  final String query;
+
+  ProductSearchedEvent(this.query);
+
+  @override
+  List<Object?> get props => [query];
 }

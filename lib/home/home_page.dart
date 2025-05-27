@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
@@ -22,8 +24,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  // String selectedCategory = "All";
-
   TextEditingController searchController = TextEditingController();
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
@@ -32,15 +32,13 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // searchController.addListener(() {
-    //   setState(() {});
-    //   final query = searchController.text;
-    //   log(
-    //     "UI Dispatching ProductSearchedEvent with query: '$query', category: 'All'",
-    //   );
-    //
-    //   context.read<ProductBloc>().add(ProductSearchedEvent(query, "All"));
-    // });
+    searchController.addListener(() {
+      setState(() {});
+      final query = searchController.text;
+      log("UI Dispatching ProductSearchedEvent with query: $query");
+
+      context.read<ProductBloc>().add(ProductSearchedEvent(query));
+    });
 
     //addPostFrameCallback means it will call something when the whole UI is loaded.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -51,12 +49,6 @@ class HomePageState extends State<HomePage> {
       }
     });
   }
-
-  //for highlight the button which is selected
-  // void onCategoryChanged(String category) {
-  //   final query = searchController.text;
-  //   context.read<ProductBloc>().add(ProductSearchedEvent(query, category));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +75,11 @@ class HomePageState extends State<HomePage> {
                               ? IconButton(
                                 onPressed: () {
                                   searchController.clear();
+
+                                  //reload all products after clearing search
+                                  context.read<ProductBloc>().add(
+                                    InitialProductLoaded(),
+                                  );
                                 },
                                 icon: Icon(Icons.clear, size: 20),
                               )
@@ -122,40 +119,9 @@ class HomePageState extends State<HomePage> {
 
           // Shows the list of categories dynamically
           CategoryList(),
-          // SizedBox(height: 16),
 
           // Shows the list of products in grid view
-          Expanded(
-            child: ProductGridView(),
-            // child: BlocBuilder<ProductBloc, ProductState>(
-            //   builder: (context, state) {
-            //     log("State received: $state");
-            //     // log(context as String);
-            //     if (state is ProductLoadInProgress) {
-            //       return const Center(child: CircularProgressIndicator());
-            //     } else if (state is ProductLoadSuccess) {
-            //       final products = state.filteredProducts;
-            //       return GridView.builder(
-            //         padding: const EdgeInsets.all(12),
-            //         gridDelegate:
-            //             const SliverGridDelegateWithFixedCrossAxisCount(
-            //               crossAxisCount: 2,
-            //               mainAxisSpacing: 16,
-            //               crossAxisSpacing: 16,
-            //               childAspectRatio: 0.7,
-            //             ),
-            //         itemCount: products.length,
-            //         itemBuilder: (context, index) {
-            //           return ProductCard(product: products[index]);
-            //         },
-            //       );
-            //     } else if (state is ProductLoadFailure) {
-            //       return Center(child: Text(state.message));
-            //     }
-            //     return const SizedBox.shrink();
-            //   },
-            // ),
-          ),
+          Expanded(child: ProductGridView()),
         ],
       ),
     );

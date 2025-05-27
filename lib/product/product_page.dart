@@ -29,7 +29,7 @@ class _ProductPageState extends State<ProductPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 32, right: 32, bottom: 24),
         child: Container(
-          height: 52,
+          height: 64,
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(40),
@@ -57,8 +57,8 @@ class _ProductPageState extends State<ProductPage> {
         });
       },
       child: Container(
-        margin: EdgeInsets.all(4),
-        padding: const EdgeInsets.all(12),
+        margin: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
           shape: BoxShape.circle,

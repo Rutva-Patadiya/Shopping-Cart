@@ -16,6 +16,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc() : super(CategoryLoadInProgress()) {
     on<CategoryLoadedEvent>((event, emit) async {
       List<CategoryModel> categories = [];
+
       try {
         categories = await dataSources.fetchCategories();
         emit(CategoryLoadSuccess(categories));
@@ -45,7 +46,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             // categories: _categories,
             allProducts: allProducts,
             filteredProducts: allProducts,
-            categoryName: "",
+            categoryName: "All",
             categoryId: null,
             searchQuery: "",
           ),
@@ -55,48 +56,97 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       }
     });
 
-    // Loads all products from the repository when the app starts or is refreshed.
-    on<ProductFilteredEvent>((event, emit) async {
-      log("Filtering products by category: ${event.categoryName}");
+    // Loads all products from the repository when the app starts
 
-      emit(ProductLoadInProgress());
+    on<ProductFilteredEvent>((event, emit) async {
+      final currentState = state;
+      final previousSearchQuery =
+          currentState is ProductLoadSuccess ? currentState.searchQuery : "";
+
+      // emit(ProductLoadInProgress());
 
       try {
-        final List<Product> allProducts = await repository.getProducts();
-        if (event.categoryName == allCategories) {
+        final allProducts = await repository.getProducts();
+
+        List<Product> filtered = allProducts;
+
+        // Apply filter category wise first
+        if (event.categoryId != null) {
+          filtered =
+              filtered.where((p) => p.categoryId == event.categoryId).toList();
+        }
+
+        // Apply previous search filter
+        if (previousSearchQuery.isNotEmpty) {
+          filtered =
+              filtered
+                  .where(
+                    (p) => p.name.toLowerCase().contains(
+                      previousSearchQuery.toLowerCase(),
+                    ),
+                  )
+                  .toList();
+        }
+
+        emit(
+          ProductLoadSuccess(
+            allProducts: allProducts,
+            filteredProducts: filtered,
+            categoryId: event.categoryId,
+            categoryName: event.categoryName,
+            searchQuery: previousSearchQuery,
+          ),
+        );
+      } catch (e) {
+        emit(ProductLoadFailure('Failed to filter products'));
+      }
+    });
+
+    //It handles product search
+
+    on<ProductSearchedEvent>((event, emit) async {
+      final currentState = state;
+
+      if (currentState is ProductLoadSuccess) {
+        // emit(ProductLoadInProgress());
+
+        try {
+          final allProducts = await repository.getProducts();
+
+          List<Product> filtered = allProducts;
+
+          // Reuse current category filter
+          if (currentState.categoryId != null) {
+            filtered =
+                filtered
+                    .where((p) => p.categoryId == currentState.categoryId)
+                    .toList();
+          }
+
+          // Apply new search query (even if it's empty)
+          if (event.query.isNotEmpty) {
+            filtered =
+                filtered
+                    .where(
+                      (p) => p.name.toLowerCase().contains(
+                        event.query.toLowerCase(),
+                      ),
+                    )
+                    .toList();
+          }
+
           emit(
             ProductLoadSuccess(
-              // categories: _categories,
-              allProducts: allProducts,
-              filteredProducts: allProducts,
-              categoryName: event.categoryName,
-              categoryId: event.categoryId,
-
-              searchQuery: "",
-            ),
-          );
-        } else {
-          final List<Product> filtered =
-              allProducts.where((product) {
-                log(
-                  "Comparing category IDs: ${product.categoryId} == ${event.categoryId}",
-                );
-                return product.categoryId == event.categoryId;
-              }).toList();
-
-          emit(
-            ProductLoadSuccess(
-              // categories: _categories,
               allProducts: allProducts,
               filteredProducts: filtered,
-              categoryName: event.categoryName,
-              categoryId: event.categoryId,
-              searchQuery: "",
+              categoryId: currentState.categoryId,
+              categoryName: currentState.categoryName,
+              searchQuery: event.query, // <- save new query (even if empty)
             ),
           );
+        } catch (e) {
+          emit(ProductLoadFailure('Failed to filter products'));
         }
-      } catch (e) {
-        emit(ProductLoadFailure('Failed to fetch products:'));
       }
     });
   }
