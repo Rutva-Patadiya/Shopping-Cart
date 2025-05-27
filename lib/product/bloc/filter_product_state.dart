@@ -55,12 +55,7 @@ class ProductLoadFailure extends ProductState {
   final String errorMessage;
 
   ProductLoadFailure(this.errorMessage);
-
-  // @override
-  // List<Object?> get props => [errorKey];
 }
-
-// class CategoryLoadInitial extends CategoryState {}
 
 class CategoryLoadInProgress extends CategoryState {}
 
