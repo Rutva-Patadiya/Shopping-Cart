@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
+
 import 'elevated_button_theme.dart';
 import 'input_decoration.dart';
 
 class AppColors {
   static const Color bgAccent = Color(0xFF1976D2); //blue700 border focus
   static const Color border = Color(0XFFD6D6D6); //grey300
-  static const Color grey2 = Color(0xFF9E9E9E);//grey button
+  static const Color grey2 = Color(0xFF9E9E9E); //grey button
   static const Color greyColor = Color(0xFFBDBDBD); //grey button
   static const Color lightGrey = Color(0xFFF7F7F7);
   static const Color grey = Color(0xFFEEEEEE);
   static const Color blue = Color(0XFF2196F3);
   static const Color skyBlue = Color(0XFF304FFF);
+  static const Color brown = Colors.brown;
+  static const Color lightBrown = Color(0xFFF7F2ED);
   static const Color lightYellow = Color(0XFFFFFDE7);
   static const Color lightBlue = Color(0xFF82B1FF);
   static const Color lightPurple = Color(0xFF8D9CFF);
