@@ -35,7 +35,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductDataSources dataSources = ProductDataSources();
   static const allCategories = "All";
 
-  ProductBloc(this.repository) : super(ProductLoadInProgress()) {
+  ProductBloc(this.repository) : super(ProductInitial()) {
     //Initially loads the products
     on<InitialProductLoaded>((event, emit) async {
       log('Initial Product Loaded');

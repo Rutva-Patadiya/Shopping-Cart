@@ -30,5 +30,6 @@
   "categories": "Category",
   "failedToLoadProducts": "Failed to load initial products",
   "noData": "No data found",
-  "noInternet": "No internet connection"
+  "noInternet": "No internet connection",
+  "location": "Location"
 }

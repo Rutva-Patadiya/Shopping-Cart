@@ -16,6 +16,8 @@ abstract class CategoryState extends Equatable {
   List<Object?> get props => [];
 }
 
+class ProductInitial extends ProductState {}
+
 //emits when the state is loading
 class ProductLoadInProgress extends ProductState {}
 
@@ -52,6 +54,8 @@ class ProductLoadFailure extends ProductState {
 
   ProductLoadFailure(this.errorMessage);
 }
+
+class CategoryInitial extends CategoryState {}
 
 //category list bloc
 class CategoryLoadInProgress extends CategoryState {}

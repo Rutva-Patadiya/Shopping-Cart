@@ -9,7 +9,6 @@ import 'bloc/filter_product_state.dart';
 import 'data/datasources/product_data_sources.dart';
 import 'data/models/category_model.dart';
 
-//shows the category list on home page
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
 
@@ -18,13 +17,12 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  final ProductDataSources dataSource = ProductDataSources(); // Create instance
+  final ProductDataSources dataSource = ProductDataSources();
   static const collectionName = 'categories';
 
   @override
   void initState() {
     super.initState();
-    //loads the category list AT initial level
     context.read<CategoryBloc>().add(CategoryLoadedEvent());
   }
 
@@ -32,67 +30,243 @@ class _CategoryListState extends State<CategoryList> {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, categoryState) {
-        List<CategoryModel> categories = [];
+        return BlocBuilder<ProductBloc, ProductState>(
+          builder: (context, productState) {
+            List<CategoryModel> categories = [];
+            DocumentReference? selectedCategoryId;
+            bool isAllSelected = true;
 
-        if (categoryState is CategoryLoadInProgress) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (categoryState is CategoryLoadSuccess) {
-          categories = categoryState.categories;
-        } else if (categories.isEmpty) {
-          return const Text("No categories found");
-        }
+            if (productState is ProductLoadSuccess) {
+              selectedCategoryId = productState.categoryId;
+              //if the categoryid is null that means nothing is selected
+              isAllSelected = selectedCategoryId == null;
+            }
 
-        return SizedBox(
-          height: 80,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      final categoryReference = FirebaseFirestore.instance
-                          .collection(collectionName)
-                          .doc(categories[index].id);
+            if (categoryState is CategoryLoadInProgress) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (categoryState is CategoryLoadSuccess) {
+              categories = categoryState.categories;
+            } else if (categories.isEmpty) {
+              return const Text("No categories found");
+            }
 
-                      context.read<ProductBloc>().add(
-                        ProductFilteredEvent(
-                          categories[index].name,
-                          categoryReference,
+            return SizedBox(
+              height: 80,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: categories.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    // First item: "All"
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            context.read<ProductBloc>().add(
+                              ProductFilteredEvent('All', null),
+                            );
+                          },
+                          child: AnimatedContainer(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color:
+                                  isAllSelected
+                                      ? AppColors.brown
+                                      : AppColors.lightBrown,
+                            ),
+                            duration: const Duration(milliseconds: 100),
+                            child: Icon(
+                              Icons.all_inclusive,
+                              size: 28,
+                              color:
+                                  isAllSelected
+                                      ? Colors.white
+                                      : AppColors.brown,
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Text(
+                            'All',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  isAllSelected
+                                      ? AppColors.brown
+                                      : Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  // Regular categories
+                  final category = categories[index - 1];
+                  final categoryRef = FirebaseFirestore.instance
+                      .collection(collectionName)
+                      .doc(category.id);
+                  final isSelected = selectedCategoryId?.id == categoryRef.id;
+
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.read<ProductBloc>().add(
+                            ProductFilteredEvent(category.name, categoryRef),
+                          );
+                        },
+                        child: AnimatedContainer(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 14,
+                          ),
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color:
+                                isSelected
+                                    ? AppColors.brown
+                                    : AppColors.lightBrown,
+                          ),
+                          duration: const Duration(milliseconds: 100),
+                          child: Image.network(
+                            category.image,
+                            height: 28,
+                            color: isSelected ? Colors.white : AppColors.brown,
+                          ),
+                        ),
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: AppColors.lightBrown,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text(
+                          category.name,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color:
+                                isSelected ? AppColors.brown : Colors.black87,
+                          ),
+                        ),
                       ),
-                      child: Image.network(
-                        categories[index].image,
-                        height: 28,
-                        color: AppColors.brown,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    categories[index].name,
-                    style: TextTheme.of(
-                      context,
-                    ).labelSmall?.copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ],
-              );
-            },
-          ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
   }
 }
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:shopping_cart/product/bloc/filter_product_event.dart';
+//
+// import '../core/utils/theme/theme.dart';
+// import 'bloc/filter_product_bloc.dart';
+// import 'bloc/filter_product_state.dart';
+// import 'data/datasources/product_data_sources.dart';
+// import 'data/models/category_model.dart';
+//
+// //shows the category list on home page
+// class CategoryList extends StatefulWidget {
+//   const CategoryList({super.key});
+//
+//   @override
+//   State<CategoryList> createState() => _CategoryListState();
+// }
+//
+// class _CategoryListState extends State<CategoryList> {
+//   final ProductDataSources dataSource = ProductDataSources(); // Create instance
+//   static const collectionName = 'categories';
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     //loads the category list AT initial level
+//     context.read<CategoryBloc>().add(CategoryLoadedEvent());
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<CategoryBloc, CategoryState>(
+//       builder: (context, categoryState) {
+//         List<CategoryModel> categories = [];
+//
+//         if (categoryState is CategoryLoadInProgress) {
+//           return const Center(child: CircularProgressIndicator());
+//         } else if (categoryState is CategoryLoadSuccess) {
+//           categories = categoryState.categories;
+//         } else if (categories.isEmpty) {
+//           return const Text("No categories found");
+//         }
+//
+//         return SizedBox(
+//           height: 80,
+//           child: ListView.builder(
+//             scrollDirection: Axis.horizontal,
+//             padding: const EdgeInsets.symmetric(horizontal: 12),
+//             itemCount: categories.length,
+//             itemBuilder: (context, index) {
+
+//               return Column(
+//                 children: [
+//                   GestureDetector(
+//                     onTap: () {
+//                       final categoryReference = FirebaseFirestore.instance
+//                           .collection(collectionName)
+//                           .doc(categories[index].id);
+//
+//                       context.read<ProductBloc>().add(
+//                         ProductFilteredEvent(
+//                           categories[index].name,
+//                           categoryReference,
+//                         ),
+//                       );
+//                     },
+//                     child: Container(
+//                       padding: const EdgeInsets.symmetric(
+//                         horizontal: 16,
+//                         vertical: 16,
+//                       ),
+//                       margin: const EdgeInsets.symmetric(horizontal: 12),
+//                       decoration: BoxDecoration(
+//                         borderRadius: BorderRadius.circular(50),
+//                         color: AppColors.lightBrown,
+//                       ),
+//                       child: Image.network(
+//                         categories[index].image,
+//                         height: 28,
+//                         color: AppColors.brown,
+//                       ),
+//                     ),
+//                   ),
+//                   Text(
+//                     categories[index].name,
+//                     style: TextTheme.of(
+//                       context,
+//                     ).labelSmall?.copyWith(fontWeight: FontWeight.w500),
+//                   ),
+//                 ],
+//               );
+//             },
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

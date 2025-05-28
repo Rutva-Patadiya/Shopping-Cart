@@ -45,15 +45,17 @@ class CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4, left: 2),
-          child: Text(
-            label ?? ' ',
-            style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
-              fontFamily: 'Poppins-Light',
-            ),
-          ),
-        ),
+        (label != null)
+            ? Padding(
+              padding: const EdgeInsets.only(bottom: 4, left: 2),
+              child: Text(
+                label ?? '',
+                style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
+                  fontFamily: 'Poppins-Light',
+                ),
+              ),
+            )
+            : const SizedBox(),
         // SizedBox(height: 5),
         TextFormField(
           keyboardType: keyboardType,

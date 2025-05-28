@@ -27,7 +27,7 @@ class _ProductPageState extends State<ProductPage> {
       body: <Widget>[HomePage(), CartPage(), ProfilePage()][currentIndex],
 
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 32, right: 32, bottom: 24),
+        padding: const EdgeInsets.only(left: 26, right: 26, bottom: 24),
         child: Container(
           height: 64,
           decoration: BoxDecoration(

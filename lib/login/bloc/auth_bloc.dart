@@ -9,7 +9,6 @@ import 'auth_state.dart';
 class LoginBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
   LoginBloc() : super(const AuthState()) {
     on<SignUpStarted>((event, emit) async {
       emit(
@@ -52,7 +51,7 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
         log('Password: ${event.password}');
 
         if (user != null) {
-          emit(AuthSuccess());
+          emit(AuthSuccess(email: event.email, password: event.password));
         } else if (user == null) {
           emit(AuthInitial());
         }

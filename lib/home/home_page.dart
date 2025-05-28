@@ -5,13 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
+import 'package:shopping_cart/widgets/dropdown_button.dart';
 
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
 import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
-import '../product/product_gridview.dart';
 import '../widgets/custom_textfield.dart';
+import '../widgets/filter_button.dart';
+import '../widgets/product_gridview.dart';
 
 //Shows Home page when we successfully logged in
 class HomePage extends StatefulWidget {
@@ -27,16 +29,15 @@ class HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
+  String selectedValue = "New York, USA";
 
   @override
   void initState() {
     super.initState();
 
     searchController.addListener(() {
-      setState(() {});
       final query = searchController.text;
-      log("UI Dispatching ProductSearchedEvent with query: $query");
-
+      log("Event: Product Searched event");
       context.read<ProductBloc>().add(ProductSearchedEvent(query));
     });
 
@@ -55,47 +56,75 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 32),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  child: CustomTextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 32,
-                        color: AppColors.brown,
-                      ),
-                      suffixIcon:
-                          searchController.text.isNotEmpty
-                              ? IconButton(
-                                onPressed: () {
-                                  searchController.clear();
-
-                                  //reload all products after clearing search
-                                  context.read<ProductBloc>().add(
-                                    InitialProductLoaded(),
-                                  );
-                                },
-                                icon: Icon(Icons.clear, size: 20),
-                              )
-                              : null,
-                      hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
-                        color: Colors.grey,
-                      ),
-                      hintText: context.loc.searchHint,
-                    ),
-                    obscureText: false,
-
-                    // width: null,
+          // SizedBox(height: 32),
+          Padding(
+            padding: const EdgeInsets.only(top: 56, left: 24),
+            child: Row(
+              children: [
+                Text(
+                  context.loc.location,
+                  style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                    color: Colors.black45,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+
+          // //DropDown Button for location selection
+          DropDownButton(),
+
+          SizedBox(height: 12),
+
+          //custom search bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                // Container(
+                Expanded(
+                  child: ValueListenableBuilder(
+                    valueListenable: searchController,
+                    builder:
+                        (context, value, child) => CustomTextField(
+                          controller: searchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: AppColors.brown,
+                            ),
+                            suffixIcon:
+                                searchController.text.isNotEmpty
+                                    ? IconButton(
+                                      onPressed: () {
+                                        searchController.clear();
+
+                                        //reload all products after clearing search
+                                        context.read<ProductBloc>().add(
+                                          InitialProductLoaded(),
+                                        );
+                                      },
+                                      icon: Icon(Icons.clear, size: 20),
+                                    )
+                                    : null,
+                            hintStyle: TTextTheme.lightTextTheme.bodyLarge
+                                ?.copyWith(color: Colors.black45),
+                            hintText: context.loc.searchHint,
+                          ),
+                          obscureText: false,
+
+                          // width: null,
+                        ),
+                  ),
+                ),
+
+                //filter button
+                FilterButton(),
+              ],
+            ),
           ),
 
           SizedBox(height: 16),
@@ -115,7 +144,7 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 8),
 
           // Shows the list of categories dynamically
           CategoryList(),

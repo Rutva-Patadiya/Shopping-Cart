@@ -31,11 +31,7 @@ class TTextTheme {
 
     //grey text button
     labelMedium: TextStyle(fontSize: 14),
-    labelSmall: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w100,
-      color: Colors.black,
-    ),
+    labelSmall: TextStyle(fontSize: 12, color: Colors.black),
   );
 
   static TextTheme darkTextTheme = TextTheme(

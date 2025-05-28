@@ -20,7 +20,7 @@ class ProductCard extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.brown,
+                  color: Colors.transparent,
                   // Change this to your desired border color
                   width: 2, // Border width
                 ),
@@ -31,11 +31,7 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Image.network(
-                    product.imageUrl,
-
-                    // fit: BoxFit.cover,
-                  ),
+                  child: Image.network(product.imageUrl, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -65,7 +61,7 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
             ),
             const Spacer(),
-            Icon(Icons.star, color: Colors.amber, size: 20),
+            Icon(Icons.star_rate_rounded, color: Colors.amber, size: 24),
             SizedBox(width: 4),
             Text(
               "4.9",

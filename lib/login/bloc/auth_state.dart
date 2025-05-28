@@ -29,9 +29,15 @@ class AuthState extends Equatable {
 }
 
 class AuthInitial extends AuthState {}
+
 class AuthInProgress extends AuthState {}
 
-class AuthSuccess extends AuthState {}
+class AuthSuccess extends AuthState {
+  String? email;
+  String? password;
+
+  AuthSuccess({this.email, this.password});
+}
 
 class AuthFailure extends AuthState {
   final String message;
@@ -42,4 +48,3 @@ class AuthFailure extends AuthState {
 class AuthRegistrationSuccess extends AuthState {}
 
 class AuthLogOutSuccess extends AuthState {}
-

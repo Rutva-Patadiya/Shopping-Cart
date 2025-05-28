@@ -8,7 +8,7 @@ class ProductModel {
   final String categoryName;
   final String imageUrl;
   final String name;
-  final int price;
+  final double price;
 
   ProductModel({
     required this.categoryId,
@@ -29,7 +29,7 @@ class ProductModel {
       categoryName: data['category_name'] ?? '',
       name: data['name'] ?? '',
       imageUrl: data['image'] ?? '',
-      price: data['price'] ?? 0,
+      price: data['price'] ?? 0.0,
     );
   }
 
