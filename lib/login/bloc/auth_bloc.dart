@@ -33,7 +33,7 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
         user.updatePhotoURL(
           "https://img.freepik.com/free-photo/soybean-oil-soybean-food-beverage-products-food-nutrition-concept_1150-26348.jpg?ga=GA1.1.1440446866.1746703288&semt=ais_hybrid&w=740",
         );
-        emit(AuthSuccess(photoUrl: user.photoURL!));
+        emit(AuthSuccess(photoUrl: user.photoURL));
       } else if (user == null) {
         emit(AuthInitial());
         await _auth.signOut();
