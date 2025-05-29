@@ -127,6 +127,8 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
+          // SizedBox(height: 16),
+          // CarouselImages(),
           SizedBox(height: 16),
 
           Container(

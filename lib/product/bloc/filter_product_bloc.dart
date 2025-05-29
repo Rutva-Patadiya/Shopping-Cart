@@ -52,7 +52,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           ),
         );
       } catch (e) {
-        emit(ProductLoadFailure('Failed to fetch products'));
+        emit(ProductLoadFailure(e.toString()));
       }
     });
 

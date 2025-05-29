@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shopping_cart/login/login_page.dart';
 import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/data/repositories/product_repositories_impl.dart';
-import 'package:shopping_cart/signup/signup_page.dart';
 import 'package:shopping_cart/utils/router_utils.dart';
 
 import 'cart/bloc/add_to_cart_bloc.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         theme: TAppTheme.lightTheme,
         onGenerateRoute: onGenerateRoutes,
         // Apply current locale
-        home: SignupPage(),
+        home: Login(),
 
         localizationsDelegates: const [
           AppLocalizations.delegate,

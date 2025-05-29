@@ -18,18 +18,18 @@ class ProductModel {
     required this.price,
   });
 
+  //converts the raw firebase data into dart object
   factory ProductModel.fromFirestore(Map<String, dynamic> data) {
-    // print("Loaded product: ${data['name']}  ");
-    // print("Loaded product: ${data['price']}  ");
-    // print("Loaded product: ${data['image']}  ");
-    // print("Loaded product: ${data['category_id'].path} ");
-
     return ProductModel(
-      categoryId: data['category_id'],
+      categoryId: data['category_id'] ?? '',
       categoryName: data['category_name'] ?? '',
       name: data['name'] ?? '',
       imageUrl: data['image'] ?? '',
-      price: data['price'] ?? 0.0,
+      //handles price type int to double conversion
+      price:
+          (data['price'] is int)
+              ? data['price'].toDouble()
+              : data['price'] ?? 0.0,
     );
   }
 

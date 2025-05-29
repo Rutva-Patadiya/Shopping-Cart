@@ -7,13 +7,16 @@ class AppStarted extends AuthEvent {}
 class SignUpStarted extends AuthEvent {
   final String email;
   final String password;
+  final String name;
 
-  SignUpStarted(this.email, this.password);
+  SignUpStarted(this.email, this.password, this.name);
 }
 
 class LoginStarted extends AuthEvent {
   final String email;
   final String password;
+
+  // final String? name;
 
   LoginStarted(this.email, this.password);
 
@@ -22,7 +25,7 @@ class LoginStarted extends AuthEvent {
 
 //obscure text visibility
 class PasswordVisibilityToggled extends AuthEvent {
- PasswordVisibilityToggled();
+  PasswordVisibilityToggled();
 
   List<Object> get props => [];
 }

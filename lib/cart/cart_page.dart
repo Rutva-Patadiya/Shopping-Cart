@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shopping_cart/cart/bloc/add_to_cart_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
+import '../core/utils/theme/text_theme.dart';
 import 'bloc/add_to_cart_event.dart';
 import 'bloc/add_to_cart_state.dart';
 
@@ -26,7 +27,12 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your Cart"),
+        title: Text(
+          "Your Cart",
+          style: TTextTheme.lightTextTheme.headlineLarge?.copyWith(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: AppColors.brown,
       ),
       body: BlocBuilder<AddToCartBloc, AddToCartState>(

@@ -207,6 +207,7 @@ class SignupPage extends StatelessWidget {
                                         SignUpStarted(
                                           _emailController.text,
                                           _passwordController.text,
+                                          _nameController.text,
                                         ),
                                       );
                                     }

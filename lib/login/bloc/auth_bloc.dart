@@ -29,7 +29,11 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       final user = _auth.currentUser;
 
       if (user != null) {
-        emit(AuthSuccess());
+        user.updateDisplayName("Rutva Patadiya");
+        user.updatePhotoURL(
+          "https://img.freepik.com/free-photo/soybean-oil-soybean-food-beverage-products-food-nutrition-concept_1150-26348.jpg?ga=GA1.1.1440446866.1746703288&semt=ais_hybrid&w=740",
+        );
+        emit(AuthSuccess(photoUrl: user.photoURL!));
       } else if (user == null) {
         emit(AuthInitial());
         await _auth.signOut();
@@ -40,18 +44,38 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthInProgress());
 
       try {
+        //if user exists with correct credentials then stores user credentials in it
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: event.email,
           password: event.password,
         );
 
         final user = userCredential.user;
-
+        final token = await user?.getIdToken();
+        // final displayName = user?.displayName;
+        // final imageUrl = user?.photoURL;
         log('Email: ${event.email}');
         log('Password: ${event.password}');
 
+        log('Token: $token');
+
         if (user != null) {
-          emit(AuthSuccess(email: event.email, password: event.password));
+          user.updateDisplayName("Rutva Patadiya");
+          user.updatePhotoURL(
+            "https://cdn-icons-png.flaticon.com/128/12118/12118541.png",
+          );
+          //reload the user
+          await user.reload();
+          final updated = _auth.currentUser;
+          emit(
+            AuthSuccess(
+              email: event.email,
+              password: event.password,
+              name: updated?.displayName,
+              photoUrl: updated?.photoURL,
+            ),
+          );
+          log('displayName: ${user.displayName}');
         } else if (user == null) {
           emit(AuthInitial());
         }

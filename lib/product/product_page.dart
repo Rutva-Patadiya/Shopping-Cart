@@ -3,6 +3,8 @@ import 'package:shopping_cart/home/home_page.dart';
 
 import '../cart/cart_page.dart';
 import '../core/utils/theme/theme.dart';
+import '../favorite_page/favorite_page.dart';
+import '../message_page/message_page.dart';
 import '../profile_page/profile_page.dart';
 
 //contains the page with bottom navigation bar
@@ -16,7 +18,6 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  // String selectedCategory = "All";
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
 
@@ -24,7 +25,14 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true, //to make bottom navigation transparent
-      body: <Widget>[HomePage(), CartPage(), ProfilePage()][currentIndex],
+      body:
+          <Widget>[
+            HomePage(),
+            CartPage(),
+            FavoritePage(),
+            MessagePage(),
+            ProfilePage(),
+          ][currentIndex],
 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 26, right: 26, bottom: 24),
@@ -39,7 +47,9 @@ class _ProductPageState extends State<ProductPage> {
             children: [
               _buildNavItem(icon: Icons.home, index: 0),
               _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
-              _buildNavItem(icon: Icons.person, index: 2),
+              _buildNavItem(icon: Icons.favorite_border_rounded, index: 2),
+              _buildNavItem(icon: Icons.message_outlined, index: 3),
+              _buildNavItem(icon: Icons.person, index: 4),
             ],
           ),
         ),
