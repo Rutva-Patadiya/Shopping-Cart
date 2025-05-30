@@ -34,24 +34,22 @@ class _ProductPageState extends State<ProductPage> {
             ProfilePage(),
           ][currentIndex],
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 26, right: 26, bottom: 24),
-        child: Container(
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildNavItem(icon: Icons.home, index: 0),
-              _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
-              _buildNavItem(icon: Icons.favorite_border_rounded, index: 2),
-              _buildNavItem(icon: Icons.message_outlined, index: 3),
-              _buildNavItem(icon: Icons.person, index: 4),
-            ],
-          ),
+      bottomNavigationBar: Container(
+        // height: 64,
+        margin: EdgeInsets.only(top: 16, bottom: 16, right: 20, left: 20),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildNavItem(icon: Icons.home, index: 0),
+            _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
+            _buildNavItem(icon: Icons.favorite_border_rounded, index: 2),
+            _buildNavItem(icon: Icons.message_outlined, index: 3),
+            _buildNavItem(icon: Icons.person_outline_outlined, index: 4),
+          ],
         ),
       ),
     );
@@ -76,7 +74,7 @@ class _ProductPageState extends State<ProductPage> {
         child: Icon(
           icon,
           size: 24,
-          color: isSelected ? AppColors.brown : Colors.grey[400],
+          color: isSelected ? AppColors.brown : Colors.white60,
         ),
       ),
     );

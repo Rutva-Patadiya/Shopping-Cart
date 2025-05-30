@@ -21,7 +21,6 @@ class ProductCard extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.transparent,
-                  // Change this to your desired border color
                   width: 2, // Border width
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -64,7 +63,7 @@ class ProductCard extends StatelessWidget {
             Icon(Icons.star_rate_rounded, color: Colors.amber, size: 24),
             SizedBox(width: 4),
             Text(
-              "4.9",
+              product.rating.toString(),
               style: TTextTheme.lightTextTheme.bodyMedium?.copyWith(
                 color: AppColors.grey2,
               ),

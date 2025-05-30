@@ -9,6 +9,7 @@ class ProductModel {
   final String imageUrl;
   final String name;
   final double price;
+  final double rating;
 
   ProductModel({
     required this.categoryId,
@@ -16,6 +17,7 @@ class ProductModel {
     required this.imageUrl,
     required this.name,
     required this.price,
+    required this.rating,
   });
 
   //converts the raw firebase data into dart object
@@ -30,6 +32,10 @@ class ProductModel {
           (data['price'] is int)
               ? data['price'].toDouble()
               : data['price'] ?? 0.0,
+      rating:
+          (data['rating'] is int)
+              ? data['rating'].toDouble()
+              : data['rating'] ?? 0.0,
     );
   }
 
@@ -40,6 +46,7 @@ class ProductModel {
       categoryName: categoryName,
       price: price,
       imageUrl: imageUrl,
+      rating: rating,
     );
   }
 }

@@ -33,12 +33,15 @@ class AuthInitial extends AuthState {}
 class AuthInProgress extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  String? email;
-  String? password;
-  String? name;
+  final String? email;
+  final String? name;
   final String? photoUrl;
 
-  AuthSuccess({this.email, this.password, this.name, required this.photoUrl});
+  const AuthSuccess({
+    required this.email,
+    required this.name,
+    required this.photoUrl,
+  });
 }
 
 class AuthFailure extends AuthState {

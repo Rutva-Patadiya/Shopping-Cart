@@ -30,7 +30,7 @@ class PasswordVisibilityToggled extends AuthEvent {
   List<Object> get props => [];
 }
 
-//textvisibility of confirm pass
+//text visibility of confirm pass
 class ConfirmPassVisibilityToggled extends AuthEvent {}
 
 class LoggedOut extends AuthEvent {}

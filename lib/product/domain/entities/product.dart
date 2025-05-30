@@ -7,6 +7,7 @@ class Product extends Equatable {
   final String imageUrl;
   final String name;
   final double price;
+  final double? rating;
 
   const Product({
     required this.categoryId,
@@ -14,6 +15,7 @@ class Product extends Equatable {
     required this.price,
     required this.imageUrl,
     required this.name,
+    required this.rating,
   });
 
   //handles only products should be added in cart

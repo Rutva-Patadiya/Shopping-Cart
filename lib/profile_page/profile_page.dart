@@ -32,13 +32,6 @@ class ProfilePage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  // CircleAvatar(
-                  //   backgroundColor: AppColors.lGreen,
-                  //   maxRadius: 30,
-                  //   child: Image(image: NetworkImage(state.photoUrl)),
-                  //   // height: 30,
-                  //   // width: 30,
-                  // ),
                   SizedBox(height: 10),
 
                   state is AuthSuccess
@@ -46,7 +39,7 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Center(
                             child: Text(
-                              'Email : ${state.email}  ${'\nPassword : ${state.password}'}  ${'\n Name: ${state.name}'}',
+                              'Email : ${state.email}  ${'\n Name: ${state.name}'}',
                             ),
                           ),
                           CircleAvatar(

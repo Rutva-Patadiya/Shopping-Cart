@@ -29,18 +29,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
 //The bloc class is for managing the product related operation
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
-  final ProductRepository repository;
-
-  // final List<CategoryModel> _categories = [];
-  final ProductDataSources dataSources = ProductDataSources();
+  final ProductRepository productRepository;
   static const allCategories = "All";
 
-  ProductBloc(this.repository) : super(ProductInitial()) {
+  ProductBloc({required this.productRepository}) : super(ProductInitial()) {
     //Initially loads the products
     on<InitialProductLoaded>((event, emit) async {
       log('Initial Product Loaded');
       try {
-        final allProducts = await repository.getProducts();
+        final allProducts = await productRepository.getProducts();
         emit(
           ProductLoadSuccess(
             // categories: _categories,
@@ -66,7 +63,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       // emit(ProductLoadInProgress());
 
       try {
-        final allProducts = await repository.getProducts();
+        final allProducts = await productRepository.getProducts();
 
         List<Product> filtered = allProducts;
 
@@ -76,7 +73,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
               filtered.where((p) => p.categoryId == event.categoryId).toList();
         }
 
-        // Apply previous search filter
+        // Apply search filter
         if (previousSearchQuery.isNotEmpty) {
           filtered =
               filtered
@@ -108,10 +105,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       final currentState = state;
 
       if (currentState is ProductLoadSuccess) {
-        // emit(ProductLoadInProgress());
-
         try {
-          final allProducts = await repository.getProducts();
+          final allProducts = await productRepository.getProducts();
 
           List<Product> filtered = allProducts;
 

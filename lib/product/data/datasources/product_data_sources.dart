@@ -7,17 +7,7 @@ import '../models/product_model.dart';
 // This class fetches data from Firebase Fire store, which contains the product details.
 class ProductDataSources {
   static const productCollection = "products";
-  static const usersCollection = "users";
   static const categoriesCollection = "categories";
-
-  //
-  // Future<UserModel> setUserDetails() async {
-  //   final snapshot =
-  //       await FirebaseFirestore.instance
-  //           .collection(usersCollection)
-  //           .doc("users")
-  //           .set();
-  // }
 
   Future<List<ProductModel>> fetchProducts() async {
     try {

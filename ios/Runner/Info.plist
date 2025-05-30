@@ -3,6 +3,8 @@
 <plist version="1.0">
 <dict>
 
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to show coordinates.</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
@@ -11,8 +12,10 @@ import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
 import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
+import '../widgets/carousel_images.dart';
 import '../widgets/custom_textfield.dart';
 import '../widgets/filter_button.dart';
+import '../widgets/location_service.dart';
 import '../widgets/product_gridview.dart';
 
 //Shows Home page when we successfully logged in
@@ -27,9 +30,11 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
+
+  //for fetching current location
+  Position? _currentPosition;
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
-  String selectedValue = "New York, USA";
 
   @override
   void initState() {
@@ -51,6 +56,22 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _getCurrentLocation() async {
+    try {
+      final position = await LocationService.getCurrentLocation();
+      if (!mounted) return;
+      setState(() {
+        _currentPosition = position;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,11 +82,27 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 56, left: 24),
             child: Row(
               children: [
-                Text(
-                  context.loc.location,
-                  style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                    color: Colors.black45,
-                    fontWeight: FontWeight.w400,
+                GestureDetector(
+                  onTap: _getCurrentLocation,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.loc.location,
+                        style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      if (_currentPosition != null)
+                        Text(
+                          'Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}',
+                          style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -127,10 +164,10 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
-          // SizedBox(height: 16),
-          // CarouselImages(),
           SizedBox(height: 16),
+          CarouselImages(),
 
+          // SizedBox(height: 16),
           Container(
             margin:
                 EdgeInsets.symmetric(horizontal: 16, vertical: 4).copyWith(),

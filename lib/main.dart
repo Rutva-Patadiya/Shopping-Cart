@@ -33,7 +33,9 @@ class MyApp extends StatelessWidget {
         // immediately sends a LoadProducts event to the bloc right after it's created,
         BlocProvider<ProductBloc>(
           create:
-              (_) => ProductBloc(ProductRepositoryImpl(ProductDataSources())),
+              (_) => ProductBloc(
+                productRepository: ProductRepositoryImpl(ProductDataSources()),
+              ),
         ),
         BlocProvider<CategoryBloc>(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => AddToCartBloc()),
