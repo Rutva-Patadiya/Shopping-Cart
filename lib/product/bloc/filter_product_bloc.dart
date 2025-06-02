@@ -9,11 +9,16 @@ import '../domain/entities/product.dart';
 import 'filter_product_event.dart';
 import 'filter_product_state.dart';
 
-//category bloc is for managing the category related operation
-class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
+//The bloc class is for managing the product & category related operation
+class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
+  final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
+  static const allCategories = "All";
 
-  CategoryBloc() : super(CategoryLoadInProgress()) {
+  ProductBloc({required this.productRepository})
+    : super(ProductLoadInProgress()) {
+    //Initially loads the products
+
     on<CategoryLoadedEvent>((event, emit) async {
       List<CategoryModel> categories = [];
 
@@ -24,23 +29,14 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         emit(CategoryLoadFailure("Failed to load categories"));
       }
     });
-  }
-}
-
-//The bloc class is for managing the product related operation
-class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
-  final ProductRepository productRepository;
-  static const allCategories = "All";
-
-  ProductBloc({required this.productRepository}) : super(ProductInitial()) {
-    //Initially loads the products
     on<InitialProductLoaded>((event, emit) async {
       log('Initial Product Loaded');
       try {
         final allProducts = await productRepository.getProducts();
+        emit(ProductLoadInProgress());
         emit(
           ProductLoadSuccess(
-            // categories: _categories,
+            categories: await dataSources.fetchCategories(),
             allProducts: allProducts,
             filteredProducts: allProducts,
             categoryName: "All",
@@ -59,7 +55,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       final currentState = state;
       final previousSearchQuery =
           currentState is ProductLoadSuccess ? currentState.searchQuery : "";
-
       // emit(ProductLoadInProgress());
 
       try {
@@ -87,6 +82,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
         emit(
           ProductLoadSuccess(
+            categories: await dataSources.fetchCategories(),
             allProducts: allProducts,
             filteredProducts: filtered,
             categoryId: event.categoryId,
@@ -132,6 +128,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
           emit(
             ProductLoadSuccess(
+              categories: await dataSources.fetchCategories(),
               allProducts: allProducts,
               filteredProducts: filtered,
               categoryId: currentState.categoryId,

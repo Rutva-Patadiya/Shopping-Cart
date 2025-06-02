@@ -11,10 +11,10 @@ abstract class ProductState extends Equatable {
   List<Object?> get props => [];
 }
 
-abstract class CategoryState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+// abstract class CategoryState extends Equatable {
+//   @override
+//   List<Object?> get props => [];
+// }
 
 class ProductInitial extends ProductState {}
 
@@ -29,6 +29,7 @@ class ProductLoadSuccess extends ProductState {
   final String? categoryName;
   final DocumentReference? categoryId;
   final String searchQuery;
+  final List<CategoryModel> categories;
 
   ProductLoadSuccess({
     required this.allProducts,
@@ -36,6 +37,7 @@ class ProductLoadSuccess extends ProductState {
     this.categoryName,
     required this.categoryId,
     required this.searchQuery,
+    required this.categories,
   });
 
   @override
@@ -45,6 +47,7 @@ class ProductLoadSuccess extends ProductState {
     categoryId,
     categoryName,
     searchQuery,
+    categories,
   ];
 }
 
@@ -55,18 +58,18 @@ class ProductLoadFailure extends ProductState {
   ProductLoadFailure(this.errorMessage);
 }
 
-class CategoryInitial extends CategoryState {}
+class CategoryInitial extends ProductState {}
 
 //category list bloc
-class CategoryLoadInProgress extends CategoryState {}
+class CategoryLoadInProgress extends ProductState {}
 
-class CategoryLoadSuccess extends CategoryState {
+class CategoryLoadSuccess extends ProductState {
   final List<CategoryModel> categories;
 
   CategoryLoadSuccess(this.categories);
 }
 
-class CategoryLoadFailure extends CategoryState {
+class CategoryLoadFailure extends ProductState {
   final String message;
 
   CategoryLoadFailure(this.message);

@@ -22,12 +22,7 @@ class ProductFilteredEvent extends FilterProductEvent {
   List<Object?> get props => [categoryName];
 }
 
-class CategoryEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class CategoryLoadedEvent extends CategoryEvent {
+class CategoryLoadedEvent extends FilterProductEvent {
   @override
   List<Object?> get props => [];
 }

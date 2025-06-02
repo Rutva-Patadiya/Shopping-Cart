@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
-import 'package:shopping_cart/widgets/dropdown_button.dart';
 
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
@@ -33,6 +33,8 @@ class HomePageState extends State<HomePage> {
 
   //for fetching current location
   Position? _currentPosition;
+  Placemark? placeMark;
+
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
 
@@ -50,8 +52,9 @@ class HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_isInitialized) {
         context.read<ProductBloc>().add(InitialProductLoaded());
-        context.read<CategoryBloc>().add(CategoryLoadedEvent());
+        // context.read<ProductBloc>().add(CategoryLoadedEvent());
         _isInitialized = true;
+        _getCurrentLocation();
       }
     });
   }
@@ -59,9 +62,17 @@ class HomePageState extends State<HomePage> {
   Future<void> _getCurrentLocation() async {
     try {
       final position = await LocationService.getCurrentLocation();
+
       if (!mounted) return;
+
+      List<Placemark> placeMarks = await placemarkFromCoordinates(
+        position?.latitude ?? 0.0,
+        position?.longitude ?? 0.0,
+      );
+
       setState(() {
         _currentPosition = position;
+        placeMark = placeMarks.isEmpty ? null : placeMarks.first;
       });
     } catch (e) {
       if (mounted) {
@@ -82,38 +93,39 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 56, left: 24),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: _getCurrentLocation,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.loc.location,
+                      style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    if (_currentPosition != null)
                       Text(
-                        context.loc.location,
+                        'Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}',
                         style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      if (_currentPosition != null)
-                        Text(
-                          'Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}',
-                          style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
               ],
             ),
           ),
 
-          // //DropDown Button for location selection
-          DropDownButton(),
-
+          //
           SizedBox(height: 12),
 
+          Row(
+            children: [
+              Icon(Icons.location_on, color: AppColors.brown, size: 24),
+              Text(placeMark == null ? "" : placeMark!.locality ?? ""),
+            ],
+          ),
           //custom search bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
