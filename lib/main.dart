@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(create: (_) => LoginBloc()..add(AppStarted())),
-        // immediately sends a LoadProducts event to the bloc right after it's created,
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -42,9 +41,7 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en'), // English
-        ],
+        supportedLocales: const [Locale('en')],
       ),
     );
   }

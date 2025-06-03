@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 
 import '../product/bloc/filter_product_bloc.dart';
 import '../product/bloc/filter_product_event.dart';
@@ -11,18 +12,18 @@ import '../product/data/models/category_model.dart';
 class CategoryList extends StatelessWidget {
   const CategoryList({super.key});
 
-  static const collectionName = 'categories';
-
   @override
   Widget build(BuildContext context) {
     return BlocSelector<ProductBloc, ProductState, Map<String, dynamic>>(
       selector: (state) {
-        if (state is ProductLoadSuccess) {
+        //if checks that state is ProductLoadSuccess and if categories is not empty
+        if (state is ProductLoadSuccess && state.categories.isNotEmpty) {
           return {
             'categories': state.categories,
             'selectedCategoryId': state.categoryId,
           };
         }
+        //if productloadsuccess and categories is empty
         return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
       },
       builder: (context, data) {
@@ -30,18 +31,6 @@ class CategoryList extends StatelessWidget {
         final selectedCategoryId =
             data['selectedCategoryId'] as DocumentReference?;
         final isAllSelected = selectedCategoryId == null;
-
-        // return BlocSelector<ProductBloc, CategoryState, List<CategoryModel>>(
-        //   selector: (state) {
-        //     if (state is CategoryLoadSuccess) {
-        //       return state.categories;
-        //     }
-        //     return [];
-        //   },
-        //   builder: (context, categories) {
-        //     if (categories.isEmpty) {
-        //       return const Center(child: CircularProgressIndicator());
-        //     }
 
         return SizedBox(
           height: 80,
@@ -98,7 +87,7 @@ class CategoryList extends StatelessWidget {
 
               final category = categories[index - 1];
               final categoryRef = FirebaseFirestore.instance
-                  .collection(collectionName)
+                  .collection(ProductDataSources.categoriesCollection)
                   .doc(category.id);
               final isSelected = selectedCategoryId?.id == categoryRef.id;
 

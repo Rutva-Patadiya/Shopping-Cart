@@ -9,16 +9,18 @@ class SignUpStarted extends AuthEvent {
   final String password;
   final String name;
 
-  SignUpStarted(this.email, this.password, this.name);
+  SignUpStarted({
+    required this.email,
+    required this.password,
+    required this.name,
+  });
 }
 
 class LoginStarted extends AuthEvent {
   final String email;
   final String password;
 
-  // final String? name;
-
-  LoginStarted(this.email, this.password);
+  LoginStarted({required this.email, required this.password});
 
   List<Object> get props => [email, password];
 }
@@ -26,8 +28,6 @@ class LoginStarted extends AuthEvent {
 //obscure text visibility
 class PasswordVisibilityToggled extends AuthEvent {
   PasswordVisibilityToggled();
-
-  List<Object> get props => [];
 }
 
 //text visibility of confirm pass

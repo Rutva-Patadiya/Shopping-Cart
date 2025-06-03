@@ -25,6 +25,7 @@ class LoginBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    // It will be called when the app starts to check if the user is already logged in
     on<AppStarted>((event, emit) async {
       final user = _auth.currentUser;
 

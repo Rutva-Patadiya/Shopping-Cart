@@ -205,9 +205,9 @@ class SignupPage extends StatelessWidget {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<LoginBloc>().add(
                                         SignUpStarted(
-                                          _emailController.text,
-                                          _passwordController.text,
-                                          _nameController.text,
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                          name: _nameController.text,
                                         ),
                                       );
                                     }

@@ -22,11 +22,6 @@ class ProductFilteredEvent extends FilterProductEvent {
   List<Object?> get props => [categoryName];
 }
 
-class CategoryLoadedEvent extends FilterProductEvent {
-  @override
-  List<Object?> get props => [];
-}
-
 // searches the product when user type product name
 class ProductSearchedEvent extends FilterProductEvent {
   final String query;

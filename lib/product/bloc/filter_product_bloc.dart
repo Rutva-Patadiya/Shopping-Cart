@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
-import 'package:shopping_cart/product/data/models/category_model.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../domain/entities/product.dart';
@@ -19,16 +18,16 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     : super(ProductLoadInProgress()) {
     //Initially loads the products
 
-    on<CategoryLoadedEvent>((event, emit) async {
-      List<CategoryModel> categories = [];
-
-      try {
-        categories = await dataSources.fetchCategories();
-        emit(CategoryLoadSuccess(categories));
-      } catch (e) {
-        emit(CategoryLoadFailure("Failed to load categories"));
-      }
-    });
+    // on<CategoryLoadedEvent>((event, emit) async {
+    //   List<CategoryModel> categories = [];
+    //
+    //   try {
+    //     categories = await dataSources.fetchCategories();
+    //     emit(CategoryLoadSuccess(categories));
+    //   } catch (e) {
+    //     emit(CategoryLoadFailure("Failed to load categories"));
+    //   }
+    // });
     on<InitialProductLoaded>((event, emit) async {
       log('Initial Product Loaded');
       try {
@@ -55,7 +54,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       final currentState = state;
       final previousSearchQuery =
           currentState is ProductLoadSuccess ? currentState.searchQuery : "";
-      // emit(ProductLoadInProgress());
 
       try {
         final allProducts = await productRepository.getProducts();
@@ -80,6 +78,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
                   .toList();
         }
 
+        //after filtering, emits the ProductLoadSuccess state
         emit(
           ProductLoadSuccess(
             categories: await dataSources.fetchCategories(),

@@ -31,10 +31,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
-  //for fetching current location
-  Position? _currentPosition;
-  Placemark? placeMark;
-
+  Position? _currentPosition; //for fetching raw location
+  Placemark? placeMark; //for fetching human readable location
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
 
@@ -52,9 +50,8 @@ class HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_isInitialized) {
         context.read<ProductBloc>().add(InitialProductLoaded());
-        // context.read<ProductBloc>().add(CategoryLoadedEvent());
         _isInitialized = true;
-        _getCurrentLocation();
+        _getCurrentLocation(); //when the UI is ready,it will fetch location
       }
     });
   }
@@ -65,6 +62,7 @@ class HomePageState extends State<HomePage> {
 
       if (!mounted) return;
 
+      //convert raw location(lat,lng) to human readable
       List<Placemark> placeMarks = await placemarkFromCoordinates(
         position?.latitude ?? 0.0,
         position?.longitude ?? 0.0,
@@ -88,7 +86,6 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         children: [
-          // SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.only(top: 56, left: 24),
             child: Row(
@@ -116,13 +113,18 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
-          //
           SizedBox(height: 12),
 
           Row(
             children: [
-              Icon(Icons.location_on, color: AppColors.brown, size: 24),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.location_on,
+                  color: AppColors.brown,
+                  size: 24,
+                ),
+              ),
               Text(placeMark == null ? "" : placeMark!.locality ?? ""),
             ],
           ),
@@ -131,7 +133,6 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                // Container(
                 Expanded(
                   child: ValueListenableBuilder(
                     valueListenable: searchController,
@@ -150,7 +151,6 @@ class HomePageState extends State<HomePage> {
                                     ? IconButton(
                                       onPressed: () {
                                         searchController.clear();
-
                                         //reload all products after clearing search
                                         context.read<ProductBloc>().add(
                                           InitialProductLoaded(),
@@ -164,8 +164,6 @@ class HomePageState extends State<HomePage> {
                             hintText: context.loc.searchHint,
                           ),
                           obscureText: false,
-
-                          // width: null,
                         ),
                   ),
                 ),
@@ -177,9 +175,10 @@ class HomePageState extends State<HomePage> {
           ),
 
           SizedBox(height: 16),
+
+          //Carousel slider to show the list of images
           CarouselImages(),
 
-          // SizedBox(height: 16),
           Container(
             margin:
                 EdgeInsets.symmetric(horizontal: 16, vertical: 4).copyWith(),

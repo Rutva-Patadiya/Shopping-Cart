@@ -56,15 +56,13 @@ class Login extends StatelessWidget {
 
                       Text(
                         context.loc.loginTitle,
-                        style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TTextTheme.lightTextTheme.displayMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 26),
 
                       CustomTextField(
-                        // width: null,
                         label: context.loc.emailLabel,
                         keyboardType: TextInputType.emailAddress,
                         hint: context.loc.emailHint,
@@ -162,8 +160,8 @@ class Login extends StatelessWidget {
                                       if (_formKey.currentState!.validate()) {
                                         context.read<LoginBloc>().add(
                                           LoginStarted(
-                                            _emailController.text,
-                                            _passwordController.text,
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
                                           ),
                                         );
                                       }

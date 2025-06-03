@@ -20,7 +20,8 @@ class FilterButton extends StatelessWidget {
       child: IconButton(
         icon: const Icon(Icons.tune_outlined, color: Colors.white),
         onPressed: () {
-          context.read<ProductBloc>().add(InitialProductLoaded());
+          //It will filter the products by all categories
+          context.read<ProductBloc>().add(ProductFilteredEvent('All', null));
         },
       ),
     );
