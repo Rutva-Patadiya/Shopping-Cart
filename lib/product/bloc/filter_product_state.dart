@@ -58,11 +58,6 @@ class ProductLoadFailure extends ProductState {
   ProductLoadFailure(this.errorMessage);
 }
 
-// class CategoryInitial extends ProductState {}
-
-//category list bloc
-// class CategoryLoadInProgress extends ProductState {}
-
 class CategoryLoadFailure extends ProductState {
   final String message;
 

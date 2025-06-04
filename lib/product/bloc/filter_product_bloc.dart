@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
+import '../data/models/category_model.dart';
 import '../domain/entities/product.dart';
 import 'filter_product_event.dart';
 import 'filter_product_state.dart';
@@ -13,29 +14,31 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
   static const allCategories = "All";
+  static List<CategoryModel>? _cacheCategories;
+  static List<Product>? _cacheProducts;
 
   ProductBloc({required this.productRepository})
     : super(ProductLoadInProgress()) {
     //Initially loads the products
 
-    // on<CategoryLoadedEvent>((event, emit) async {
-    //   List<CategoryModel> categories = [];
-    //
-    //   try {
-    //     categories = await dataSources.fetchCategories();
-    //     emit(CategoryLoadSuccess(categories));
-    //   } catch (e) {
-    //     emit(CategoryLoadFailure("Failed to load categories"));
-    //   }
-    // });
     on<InitialProductLoaded>((event, emit) async {
+      //for storing the categories
+      final List<CategoryModel> categories;
       log('Initial Product Loaded');
+      emit(ProductLoadInProgress());
       try {
-        final allProducts = await productRepository.getProducts();
-        emit(ProductLoadInProgress());
+        final allProducts =
+            _cacheProducts ??= await productRepository.getProducts();
+        categories = _cacheCategories ??= await dataSources.fetchCategories();
+
+        if (categories.isEmpty) {
+          emit(ProductLoadFailure("No categories & products found"));
+          return;
+        }
+
         emit(
           ProductLoadSuccess(
-            categories: await dataSources.fetchCategories(),
+            categories: categories,
             allProducts: allProducts,
             filteredProducts: allProducts,
             categoryName: "All",
@@ -56,7 +59,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           currentState is ProductLoadSuccess ? currentState.searchQuery : "";
 
       try {
-        final allProducts = await productRepository.getProducts();
+        final allProducts =
+            _cacheProducts ??= await productRepository.getProducts();
 
         List<Product> filtered = allProducts;
 
@@ -81,7 +85,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         //after filtering, emits the ProductLoadSuccess state
         emit(
           ProductLoadSuccess(
-            categories: await dataSources.fetchCategories(),
+            categories:
+                _cacheCategories ??= await dataSources.fetchCategories(),
             allProducts: allProducts,
             filteredProducts: filtered,
             categoryId: event.categoryId,
@@ -101,7 +106,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
       if (currentState is ProductLoadSuccess) {
         try {
-          final allProducts = await productRepository.getProducts();
+          final allProducts =
+              _cacheProducts ??= await productRepository.getProducts();
 
           List<Product> filtered = allProducts;
 
@@ -127,7 +133,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
           emit(
             ProductLoadSuccess(
-              categories: await dataSources.fetchCategories(),
+              categories:
+                  _cacheCategories ??= await dataSources.fetchCategories(),
               allProducts: allProducts,
               filteredProducts: filtered,
               categoryId: currentState.categoryId,

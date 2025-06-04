@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/product/product_details.dart';
 
 import 'domain/entities/product.dart';
 
@@ -17,20 +18,28 @@ class ProductCard extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.transparent,
-                  width: 2, // Border width
+            GestureDetector(
+              onTap:
+                  () => Navigator.pushNamed(
+                    context,
+                    ProductDetailsPage.route,
+                    arguments: product,
+                  ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.transparent,
+                    width: 2, // Border width
+                  ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                borderRadius: BorderRadius.circular(10),
-              ),
 
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.network(product.imageUrl, fit: BoxFit.cover),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.network(product.imageUrl, fit: BoxFit.cover),
+                  ),
                 ),
               ),
             ),
