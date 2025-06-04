@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 
-import '../product/bloc/filter_product_bloc.dart';
-import '../product/bloc/filter_product_event.dart';
-import '../product/bloc/filter_product_state.dart';
+import '../product/bloc/product_bloc.dart';
+import '../product/bloc/product_event.dart';
+import '../product/bloc/product_state.dart';
 import '../product/data/models/category_model.dart';
 
 class CategoryList extends StatelessWidget {
@@ -24,9 +24,9 @@ class CategoryList extends StatelessWidget {
           };
         }
 
-        if (state is CategoryLoadFailure) {
-          return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
-        }
+        // if (state is CategoryLoadFailure) {
+        //   return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
+        // }
         //if productloadsuccess and categories is empty
         return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
       },
@@ -39,6 +39,7 @@ class CategoryList extends StatelessWidget {
         return SizedBox(
           height: 80,
           child: ListView.builder(
+            shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: categories.length + 1,

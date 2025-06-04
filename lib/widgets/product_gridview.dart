@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopping_cart/product/bloc/filter_product_bloc.dart';
-import 'package:shopping_cart/product/bloc/filter_product_state.dart';
+import 'package:shopping_cart/product/bloc/product_bloc.dart';
+import 'package:shopping_cart/product/bloc/product_state.dart';
 import 'package:shopping_cart/product/product_card.dart';
 
 import '../product/domain/entities/product.dart';
@@ -15,7 +15,7 @@ class ProductGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text("harsh"),
+        const Text("abc"),
 
         Expanded(
           child: BlocBuilder<ProductBloc, ProductState>(
@@ -46,6 +46,7 @@ class ProductGridView extends StatelessWidget {
                   }
 
                   return GridView.builder(
+                    shrinkWrap: true,
                     padding: const EdgeInsets.all(12),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(

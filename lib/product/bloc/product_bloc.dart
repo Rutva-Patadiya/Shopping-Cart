@@ -6,8 +6,8 @@ import 'package:shopping_cart/product/domain/repositories/product_repositories.d
 
 import '../data/models/category_model.dart';
 import '../domain/entities/product.dart';
-import 'filter_product_event.dart';
-import 'filter_product_state.dart';
+import 'product_event.dart';
+import 'product_state.dart';
 
 //The bloc class is for managing the product & category related operation
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {

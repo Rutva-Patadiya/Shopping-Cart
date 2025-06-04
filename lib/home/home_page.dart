@@ -8,8 +8,8 @@ import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
 
-import '../product/bloc/filter_product_bloc.dart';
-import '../product/bloc/filter_product_event.dart';
+import '../product/bloc/product_bloc.dart';
+import '../product/bloc/product_event.dart';
 import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
 import '../widgets/carousel_images.dart';

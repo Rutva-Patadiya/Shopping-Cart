@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/utils/theme/theme.dart';
-import '../product/bloc/filter_product_bloc.dart';
-import '../product/bloc/filter_product_event.dart';
+import '../product/bloc/product_bloc.dart';
+import '../product/bloc/product_event.dart';
 
 class FilterButton extends StatelessWidget {
   const FilterButton({super.key});

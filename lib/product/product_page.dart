@@ -7,7 +7,7 @@ import '../core/utils/theme/theme.dart';
 import '../favorite_page/favorite_page.dart';
 import '../message_page/message_page.dart';
 import '../profile_page/profile_page.dart';
-import 'bloc/filter_product_bloc.dart';
+import 'bloc/product_bloc.dart';
 import 'data/datasources/product_data_sources.dart';
 import 'data/repositories/product_repositories_impl.dart';
 
