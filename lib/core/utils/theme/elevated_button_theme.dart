@@ -6,17 +6,16 @@ class TElevatedButtonTheme {
   TElevatedButtonTheme._();
 
   static final lightElevatedButtonTheme = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(textStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
+    style: ElevatedButton.styleFrom(
+      textStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.bold,
         letterSpacing: 1.3,
-        ),
-
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.only(top: 10),
-        minimumSize: const Size(350, 50),
-        backgroundColor: AppColors.bgAccent
       ),
-    );
 
-
+      foregroundColor: Colors.white,
+      padding: EdgeInsets.only(top: 10),
+      minimumSize: const Size(350, 50),
+      backgroundColor: AppColors.brown,
+    ),
+  );
 }

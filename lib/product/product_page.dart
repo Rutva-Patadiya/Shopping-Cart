@@ -1,94 +1,163 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_cart/product/product_list.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_cart/home/home_page.dart';
 
-import '../core/utils/theme/text_theme.dart';
+import '../cart/cart_page.dart';
 import '../core/utils/theme/theme.dart';
-import '../signup/signup_page.dart';
+import '../favorite_page/favorite_page.dart';
+import '../message_page/message_page.dart';
+import '../profile_page/profile_page.dart';
+import 'bloc/filter_product_bloc.dart';
+import 'data/datasources/product_data_sources.dart';
+import 'data/repositories/product_repositories_impl.dart';
 
-class ProductList extends StatelessWidget {
-  const ProductList({super.key});
+//contains the page with bottom navigation bar
+class ProductPage extends StatefulWidget {
+  const ProductPage({super.key});
 
   static const route = '/product';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 32),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            child: CustomTextField(
-              label: null,
-              keyboardType: TextInputType.name,
-              hint: "Enter Product",
-              hintStyle: TTextTheme.lightTextTheme.titleSmall,
-              obscureText: false,
-              controller: SearchController(),
-              prefixIcon: Icons.search,
-              suffixIcon: null,
-              validator: null,
-            ),
-          ),
+  State<ProductPage> createState() => _ProductPageState();
+}
 
-          SizedBox(height: 16),
+class _ProductPageState extends State<ProductPage> {
+  int currentIndex = 0;
 
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CustomButton(name: "All"),
-                CustomButton(name: "Electronic"),
-                CustomButton(name: "Clothing"),
-                CustomButton(name: "Grocery"),
-              ],
-            ),
-          ),
-          // Product list
-          Expanded(
-            child: ListView.builder(
-              itemCount: allProducts.length,
-              itemBuilder: (context, index) {
-                return ProductCard(product: allProducts[index]);
-              },
-            ),
+  late final List<Widget> pages;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize pages once
+    pages = [
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ProductBloc>(
+            create:
+                (_) => ProductBloc(
+                  productRepository: ProductRepositoryImpl(
+                    ProductDataSources(),
+                  ),
+                ),
           ),
         ],
+        child: HomePage(),
+      ),
+      CartPage(),
+      FavoritePage(),
+      MessagePage(),
+      ProfilePage(),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      body: IndexedStack(index: currentIndex, children: pages),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(top: 16, bottom: 16, right: 20, left: 20),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildNavItem(icon: Icons.home, index: 0),
+            _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
+            _buildNavItem(icon: Icons.favorite_border_rounded, index: 2),
+            _buildNavItem(icon: Icons.message_outlined, index: 3),
+            _buildNavItem(icon: Icons.person_outline_outlined, index: 4),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({required IconData icon, required int index}) {
+    final bool isSelected = currentIndex == index;
+
+    return GestureDetector(
+      onTap: () => setState(() => currentIndex = index),
+      child: Container(
+        margin: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 24,
+          color: isSelected ? AppColors.brown : Colors.white60,
+        ),
       ),
     );
   }
 }
 
-class CustomButton extends StatelessWidget {
-  final String name;
-
-  const CustomButton({super.key, required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 6),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.grey,
-              // Override background color
-              foregroundColor: Colors.black,
-              // Override text/icon color
-              minimumSize: Size(30, 40),
-              // Override size
-              textStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0.5,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            ),
-            onPressed: () {},
-            child: Text(name),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class _ProductPageState extends State<ProductPage> {
+//   TextEditingController searchController = TextEditingController();
+//   int currentIndex = 0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       extendBody: true, //to make bottom navigation transparent
+//       body:
+//           <Widget>[
+//             HomePage(),
+//             CartPage(),
+//             FavoritePage(),
+//             MessagePage(),
+//             ProfilePage(),
+//           ][currentIndex],
+//
+//       bottomNavigationBar: Container(
+//         // height: 64,
+//         margin: EdgeInsets.only(top: 16, bottom: 16, right: 20, left: 20),
+//         decoration: BoxDecoration(
+//           color: Colors.black,
+//           borderRadius: BorderRadius.circular(40),
+//         ),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             _buildNavItem(icon: Icons.home, index: 0),
+//             _buildNavItem(icon: Icons.shopping_bag_outlined, index: 1),
+//             _buildNavItem(icon: Icons.favorite_border_rounded, index: 2),
+//             _buildNavItem(icon: Icons.message_outlined, index: 3),
+//             _buildNavItem(icon: Icons.person_outline_outlined, index: 4),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildNavItem({required IconData icon, required int index}) {
+//     bool isSelected = currentIndex == index;
+//
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           currentIndex = index;
+//         });
+//       },
+//       child: Container(
+//         margin: EdgeInsets.all(6),
+//         padding: const EdgeInsets.all(14),
+//         decoration: BoxDecoration(
+//           color: isSelected ? Colors.white : Colors.transparent,
+//           shape: BoxShape.circle,
+//         ),
+//         child: Icon(
+//           icon,
+//           size: 24,
+//           color: isSelected ? AppColors.brown : Colors.white60,
+//         ),
+//       ),
+//     );
+//   }
