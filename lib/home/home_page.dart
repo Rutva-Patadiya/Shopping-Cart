@@ -123,7 +123,7 @@ class HomePageState extends State<HomePage> {
                       child: Text(
                         placeMark == null
                             ? 'Fetching location...'
-                            : '${placeMark!.name} ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
+                            : '${placeMark!.street} ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
                         style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
                           color: Colors.black54,
                           fontWeight: FontWeight.w400,
@@ -167,7 +167,6 @@ class HomePageState extends State<HomePage> {
             SliverToBoxAdapter(child: CarouselImages()),
 
             // Product GridView
-            SliverToBoxAdapter(child: SizedBox(height: 8)),
             SliverToBoxAdapter(child: ProductGridView()),
           ],
         ),
