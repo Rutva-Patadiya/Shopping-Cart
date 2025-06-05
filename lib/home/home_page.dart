@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
 
+import '../core/utils/theme/text_theme.dart';
 import '../product/bloc/product_bloc.dart';
 import '../product/bloc/product_event.dart';
 import '../product/category_list.dart';
@@ -31,7 +30,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
-  Position? _currentPosition; //for fetching raw location
   Placemark? placeMark; //for fetching human readable location
   bool _isInitialized = false;
   final dataSources = ProductDataSources();
@@ -69,7 +67,6 @@ class HomePageState extends State<HomePage> {
       );
 
       setState(() {
-        _currentPosition = position;
         placeMark = placeMarks.isEmpty ? null : placeMarks.first;
       });
     } catch (e) {
@@ -83,126 +80,191 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 56, left: 24),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.loc.location,
-                      style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.w400,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            // Location Display
+            SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 22, top: 16),
+                        child: Text(
+                          placeMark == null
+                              ? 'Fetching location...'
+                              : '${placeMark!.name}',
+                          style: TTextTheme.lightTextTheme.labelMedium
+                              ?.copyWith(fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Icon(
+                      Icons.location_on,
+                      color: AppColors.brown,
+                      size: 24,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text(
+                        placeMark == null
+                            ? 'Fetching location...'
+                            : '${placeMark!.name} ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
+                        style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (_currentPosition != null)
-                      Text(
-                        'Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}',
-                        style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Sticky Search Bar
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _StickySearchBarDelegate(searchController),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Row(
+                  children: [
+                    Text(
+                      context.loc.categories,
+                      style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.location_on,
-                  color: AppColors.brown,
-                  size: 24,
-                ),
               ),
-              Text(placeMark == null ? "" : placeMark!.locality ?? ""),
-            ],
-          ),
-          //custom search bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: searchController,
-                    builder:
-                        (context, value, child) => CustomTextField(
-                          controller: searchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            prefixIcon: Icon(
-                              Icons.search,
-                              size: 28,
-                              color: AppColors.brown,
-                            ),
-                            suffixIcon:
-                                searchController.text.isNotEmpty
-                                    ? IconButton(
-                                      onPressed: () {
-                                        searchController.clear();
-                                        //reload all products after clearing search
-                                        context.read<ProductBloc>().add(
-                                          InitialProductLoaded(),
-                                        );
-                                      },
-                                      icon: Icon(Icons.clear, size: 20),
-                                    )
-                                    : null,
-                            hintStyle: TTextTheme.lightTextTheme.bodyLarge
-                                ?.copyWith(color: Colors.black45),
-                            hintText: context.loc.searchHint,
-                          ),
-                          obscureText: false,
-                        ),
-                  ),
-                ),
+            ),
+            // Sticky Category List
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _StickyCategoryDelegate(),
+            ),
 
-                //filter button
-                FilterButton(),
-              ],
+            // Carousel Images
+            SliverToBoxAdapter(child: CarouselImages()),
+
+            // Product GridView
+            SliverToBoxAdapter(child: SizedBox(height: 8)),
+            SliverToBoxAdapter(child: ProductGridView()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StickySearchBarDelegate extends SliverPersistentHeaderDelegate {
+  final TextEditingController searchController;
+
+  _StickySearchBarDelegate(this.searchController);
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: searchController,
+              builder:
+                  (context, value, child) => CustomTextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 28,
+                        color: AppColors.brown,
+                      ),
+                      suffixIcon:
+                          searchController.text.isNotEmpty
+                              ? IconButton(
+                                onPressed: () {
+                                  searchController.clear();
+                                  // Reload all products on clear
+                                  context.read<ProductBloc>().add(
+                                    InitialProductLoaded(),
+                                  );
+                                },
+                                icon: Icon(Icons.clear, size: 20),
+                              )
+                              : null,
+                      hintText: context.loc.searchHint,
+                      hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
+                        color: Colors.black45,
+                      ),
+                    ),
+                    obscureText: false,
+                  ),
             ),
           ),
-
-          SizedBox(height: 16),
-
-          //Carousel slider to show the list of images
-          CarouselImages(),
-
-          Container(
-            margin:
-                EdgeInsets.symmetric(horizontal: 16, vertical: 4).copyWith(),
-            child: Row(
-              children: [
-                Text(
-                  context.loc.categories,
-                  style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(height: 8),
-
-          // Shows the list of categories dynamically
-          CategoryList(),
-
-          // Shows the list of products in grid view
-          Expanded(child: ProductGridView()),
+          FilterButton(),
         ],
       ),
     );
   }
+
+  @override
+  double get maxExtent => 80;
+
+  @override
+  double get minExtent => 80;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
+}
+
+class _StickyCategoryDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: const CategoryList(),
+    );
+  }
+
+  @override
+  double get maxExtent => 80;
+
+  @override
+  double get minExtent => 80;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
 }

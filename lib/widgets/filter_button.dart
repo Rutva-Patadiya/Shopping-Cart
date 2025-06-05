@@ -11,12 +11,13 @@ class FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // width: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         color: AppColors.brown,
       ),
 
-      margin: const EdgeInsets.only(left: 8),
+      margin: const EdgeInsets.only(left: 8, top: 2, bottom: 14),
       child: IconButton(
         icon: const Icon(Icons.tune_outlined, color: Colors.white),
         onPressed: () {

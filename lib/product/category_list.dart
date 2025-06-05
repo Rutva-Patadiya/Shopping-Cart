@@ -23,10 +23,6 @@ class CategoryList extends StatelessWidget {
             'selectedCategoryId': state.categoryId,
           };
         }
-
-        // if (state is CategoryLoadFailure) {
-        //   return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
-        // }
         //if productloadsuccess and categories is empty
         return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
       },
@@ -37,7 +33,7 @@ class CategoryList extends StatelessWidget {
         final isAllSelected = selectedCategoryId == null;
 
         return SizedBox(
-          height: 80,
+          height: 72,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -45,38 +41,38 @@ class CategoryList extends StatelessWidget {
             itemCount: categories.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        context.read<ProductBloc>().add(
-                          ProductFilteredEvent('All', null),
-                        );
-                      },
-                      child: AnimatedContainer(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 14,
-                        ),
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color:
-                              isAllSelected
-                                  ? AppColors.brown
-                                  : AppColors.lightBrown,
-                        ),
-                        duration: const Duration(milliseconds: 100),
-                        child: Icon(
-                          Icons.all_inclusive,
-                          size: 28,
-                          color: isAllSelected ? Colors.white : AppColors.brown,
+                return SizedBox(
+                  width: 72,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.read<ProductBloc>().add(
+                            ProductFilteredEvent('All', null),
+                          );
+                        },
+                        child: AnimatedContainer(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color:
+                                isAllSelected
+                                    ? AppColors.brown
+                                    : AppColors.lightBrown,
+                          ),
+                          duration: const Duration(milliseconds: 100),
+                          child: Icon(
+                            Icons.all_inclusive,
+                            size: 28,
+                            color:
+                                isAllSelected ? Colors.white : AppColors.brown,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Text(
+                      const SizedBox(height: 2),
+                      Text(
                         'All',
                         style: TextTheme.of(context).labelSmall?.copyWith(
                           fontSize: 10,
@@ -85,8 +81,8 @@ class CategoryList extends StatelessWidget {
                               isAllSelected ? AppColors.brown : Colors.black87,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               }
 
@@ -96,45 +92,49 @@ class CategoryList extends StatelessWidget {
                   .doc(category.id);
               final isSelected = selectedCategoryId?.id == categoryRef.id;
 
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      context.read<ProductBloc>().add(
-                        ProductFilteredEvent(category.name, categoryRef),
-                      );
-                    },
-                    child: AnimatedContainer(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 14,
-                      ),
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color:
-                            isSelected ? AppColors.brown : AppColors.lightBrown,
-                      ),
-                      duration: const Duration(milliseconds: 100),
-                      child: Image.network(
-                        category.image,
-                        height: 28,
-                        color: isSelected ? Colors.white : AppColors.brown,
+              return SizedBox(
+                width: 72,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        context.read<ProductBloc>().add(
+                          ProductFilteredEvent(category.name, categoryRef),
+                        );
+                      },
+                      child: AnimatedContainer(
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color:
+                              isSelected
+                                  ? AppColors.brown
+                                  : AppColors.lightBrown,
+                        ),
+                        duration: const Duration(milliseconds: 100),
+                        child: Image.network(
+                          category.image,
+                          height: 28,
+                          color: isSelected ? Colors.white : AppColors.brown,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Text(
+                    const SizedBox(height: 2),
+                    Text(
                       category.name,
                       style: TextTheme.of(context).labelSmall?.copyWith(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: isSelected ? AppColors.brown : Colors.black87,
                       ),
+                      // overflow: TextOverflow.ellipsis,
+                      // maxLines: 1,
+                      // textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           ),
