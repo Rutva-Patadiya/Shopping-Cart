@@ -107,23 +107,15 @@ class HomePageState extends State<HomePage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Row(
+              child: Row(g
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Icon(
-                      Icons.location_on,
-                      color: AppColors.brown,
-                      size: 24,
-                    ),
-                  ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.only(left: 18),
                       child: Text(
                         placeMark == null
                             ? 'Fetching location...'
-                            : '${placeMark!.street} ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
+                            : ' ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
                         style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
                           color: Colors.black54,
                           fontWeight: FontWeight.w400,
