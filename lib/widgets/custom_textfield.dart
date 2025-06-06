@@ -17,8 +17,6 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final InputDecoration? decoration;
 
-  // final double? width;
-
   const CustomTextField({
     super.key,
     this.cursorColor = AppColors.brown,
@@ -56,7 +54,6 @@ class CustomTextField extends StatelessWidget {
               ),
             )
             : const SizedBox(),
-        // SizedBox(height: 5),
         TextFormField(
           keyboardType: keyboardType,
           obscureText: obscureText,

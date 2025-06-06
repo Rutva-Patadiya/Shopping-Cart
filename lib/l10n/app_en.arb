@@ -31,5 +31,8 @@
   "failedToLoadProducts": "Failed to load initial products",
   "noData": "No data found",
   "noInternet": "No internet connection",
-  "location": "Location"
+  "location": "Location",
+  "productDetails": "Product Details",
+  "femaleStyle": "Female's Style",
+  "selectSize": "Select Size"
 }

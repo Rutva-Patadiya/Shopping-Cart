@@ -8,6 +8,7 @@ class Product extends Equatable {
   final String name;
   final double price;
   final double? rating;
+  final String productDetails;
 
   const Product({
     required this.categoryId,
@@ -16,9 +17,17 @@ class Product extends Equatable {
     required this.imageUrl,
     required this.name,
     required this.rating,
+    required this.productDetails,
   });
 
   //handles only products should be added in cart
   @override
-  List<Object?> get props => [name, categoryId, price, imageUrl, categoryName];
+  List<Object?> get props => [
+    name,
+    categoryId,
+    price,
+    imageUrl,
+    categoryName,
+    productDetails,
+  ];
 }

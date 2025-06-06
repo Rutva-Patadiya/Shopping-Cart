@@ -9,6 +9,7 @@ import 'package:shopping_cart/l10n/translation_extension.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../product/bloc/product_bloc.dart';
 import '../product/bloc/product_event.dart';
+import '../product/bloc/product_state.dart';
 import '../product/category_list.dart';
 import '../product/data/datasources/product_data_sources.dart';
 import '../widgets/carousel_images.dart';
@@ -86,45 +87,46 @@ class HomePageState extends State<HomePage> {
           slivers: [
             // Location Display
             SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 22, top: 16),
-                        child: Text(
-                          placeMark == null
-                              ? 'Fetching location...'
-                              : '${placeMark!.name}',
-                          style: TTextTheme.lightTextTheme.labelMedium
-                              ?.copyWith(fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Row(g
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 18),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, top: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      // Prevents overflow
                       child: Text(
                         placeMark == null
                             ? 'Fetching location...'
-                            : ' ${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
-                        style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                          color: Colors.black54,
+                            : '${placeMark!.name}',
+                        style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w400,
                         ),
+                        textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Row(
+                  children: [
+                    Text(
+                      placeMark == null
+                          ? 'Fetching location...'
+                          : '${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
+                      style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -159,7 +161,22 @@ class HomePageState extends State<HomePage> {
             SliverToBoxAdapter(child: CarouselImages()),
 
             // Product GridView
-            SliverToBoxAdapter(child: ProductGridView()),
+            // SliverToBoxAdapter(child: ProductGridView()),
+            SliverToBoxAdapter(
+              child: BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoadInProgress) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ProductLoadSuccess) {
+                    return ProductGridView();
+                  } else if (state is ProductLoadFailure) {
+                    return Center(child: Text('Error loading products'));
+                  } else {
+                    return SizedBox.shrink(); // fallback
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
