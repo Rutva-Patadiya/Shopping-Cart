@@ -57,7 +57,7 @@ class Login extends StatelessWidget {
                       Text(
                         context.loc.loginTitle,
                         style: TTextTheme.lightTextTheme.displayMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
 
                       const SizedBox(height: 26),
@@ -140,7 +140,7 @@ class Login extends StatelessWidget {
                           child: Text(
                             context.loc.forgotPassword,
                             style: TTextTheme.lightTextTheme.labelMedium
-                                ?.copyWith(color: AppColors.bgAccent),
+                                ?.copyWith(color: AppColors.bgAccent,fontWeight: FontWeight.w400),
                           ),
                         ),
                       ),
@@ -170,10 +170,7 @@ class Login extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 6),
                                       child: Text(
                                         context.loc.loginButton,
-                                        style: TextStyle(color: Colors.white),
-                                        strutStyle: const StrutStyle(
-                                          leading: 1.5,
-                                        ),
+                                        style: TextStyle(color: Colors.white,height: 0.6),
                                       ),
                                     ),
                                   ),
@@ -190,7 +187,7 @@ class Login extends StatelessWidget {
                           child: Text(
                             context.loc.noAccountText,
                             style: TTextTheme.lightTextTheme.labelMedium
-                                ?.copyWith(color: AppColors.bgAccent),
+                                ?.copyWith(color: AppColors.bgAccent,fontWeight: FontWeight.w400),
                           ),
                         ),
                       ),

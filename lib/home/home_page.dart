@@ -98,10 +98,9 @@ class HomePageState extends State<HomePage> {
                             ? 'Fetching location...'
                             : '${placeMark!.name}',
                         style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                         ),
                         textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -118,10 +117,7 @@ class HomePageState extends State<HomePage> {
                       placeMark == null
                           ? 'Fetching location...'
                           : '${placeMark!.subLocality} ${placeMark!.locality}, ${placeMark!.administrativeArea}, ${placeMark!.postalCode}, ${placeMark!.country}',
-                      style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: TTextTheme.lightTextTheme.labelSmall,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
                     ),

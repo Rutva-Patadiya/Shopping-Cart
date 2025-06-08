@@ -4,34 +4,30 @@ class TTextTheme {
   TTextTheme._();
 
   static TextTheme lightTextTheme = TextTheme(
-    titleMedium: TextStyle(fontSize: 32, fontFamily: 'Poppins'),
-    displayLarge: TextStyle(fontFamily: 'Poppins', fontSize: 28),
+    titleMedium: TextStyle(fontSize: 32),
+    displayLarge: TextStyle(fontSize: 28),
 
     displayMedium: TextStyle(fontSize: 24),
     displaySmall: TextStyle(fontSize: 22),
 
-    headlineLarge: TextStyle(fontSize: 20, color: Colors.black),
+    headlineLarge: TextStyle(fontSize: 20),
     headlineSmall: TextStyle(
       fontSize: 18,
-      color: Colors.black,
-      fontWeight: FontWeight.w400,
     ),
 
     bodyLarge: TextStyle(fontSize: 16),
 
-    bodyMedium: TextStyle(fontSize: 14, fontFamily: 'Poppins-Bold'),
+    bodyMedium: TextStyle(fontSize: 14),
 
-    bodySmall: TextStyle(fontSize: 12, color: Colors.black),
+    bodySmall: TextStyle(fontSize: 12),
 
     labelLarge: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.w100,
-      color: Colors.black,
     ),
 
     //grey text button
     labelMedium: TextStyle(fontSize: 14),
-    labelSmall: TextStyle(fontSize: 12, color: Colors.black),
+    labelSmall: TextStyle(fontSize: 12),
   );
 
   static TextTheme darkTextTheme = TextTheme(

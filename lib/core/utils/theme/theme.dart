@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_cart/core/utils/theme/progress_indicator.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 
 import 'elevated_button_theme.dart';
@@ -45,5 +46,6 @@ class TAppTheme {
     scaffoldBackgroundColor: Colors.white,
     elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
     inputDecorationTheme: TInputDecoration.lightInputDecorationTheme,
+    progressIndicatorTheme: TProgressIndicator.lightProgressIndicatorTheme,
   );
 }
