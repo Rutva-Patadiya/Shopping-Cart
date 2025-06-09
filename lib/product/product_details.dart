@@ -6,16 +6,35 @@ import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import '../widgets/custom_chips.dart';
 
-class ProductDetailsPage extends StatelessWidget {
-  static const route = "product_details";
-
+class ProductDetailsPage extends StatefulWidget {
   final Product product;
 
   const ProductDetailsPage({super.key, required this.product});
 
+  static const route = "product_details";
+
+  @override
+  State<ProductDetailsPage> createState() => _ProductDetailsPageState();
+}
+
+class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  //for highlight the selected size
+  String? selectedSize;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: 70,
+        width: 500,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.grey, width: 1),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+      ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -25,9 +44,10 @@ class ProductDetailsPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: CircleAvatar(
+                  radius: 20,
                   backgroundColor: Colors.white,
                   child: IconButton(
-                    icon: Icon(Icons.favorite_border, color: Colors.black),
+                    icon: Icon(Icons.favorite_border),
                     onPressed: () {},
                   ),
                 ),
@@ -35,7 +55,9 @@ class ProductDetailsPage extends StatelessWidget {
             ],
             title: Text(
               context.loc.productDetails,
-              style: TTextTheme.lightTextTheme.headlineLarge,
+              style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
             backgroundColor: AppColors.cream,
             leading: Padding(
@@ -56,8 +78,11 @@ class ProductDetailsPage extends StatelessWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(color: AppColors.cream),
                   child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.network(product.imageUrl, fit: BoxFit.cover),
+                    aspectRatio: 1.5,
+                    child: Image.network(
+                      widget.product.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Column(
@@ -67,7 +92,7 @@ class ProductDetailsPage extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            context.loc.femaleStyle,
+                            widget.product.productContext,
                             style: TTextTheme.lightTextTheme.bodyMedium
                                 ?.copyWith(color: Colors.black45),
                           ),
@@ -83,7 +108,7 @@ class ProductDetailsPage extends StatelessWidget {
                                   size: 24,
                                 ),
                                 Text(
-                                  product.rating.toString(),
+                                  widget.product.rating.toString(),
                                   style: TTextTheme.lightTextTheme.bodyMedium
                                       ?.copyWith(color: Colors.black38),
                                 ),
@@ -98,7 +123,7 @@ class ProductDetailsPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 16, top: 8),
                           child: Text(
-                            product.name,
+                            widget.product.name,
                             style: TTextTheme.lightTextTheme.headlineSmall
                                 ?.copyWith(
                                   color: Colors.black,
@@ -125,7 +150,7 @@ class ProductDetailsPage extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(left: 16, right: 8, top: 8),
                       child: Text(
-                        product.productDetails,
+                        widget.product.productDetails,
                         style: TTextTheme.lightTextTheme.bodyMedium?.copyWith(
                           color: Colors.black54,
                           height: 1.2,
@@ -161,77 +186,240 @@ class ProductDetailsPage extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          SizedBox(width: 8),
+                          SizedBox(width: 4),
                           CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "S";
+                                }),
                             label: Text(
                               "S",
                               style: TTextTheme.lightTextTheme.labelMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w500,
                                     height: -0.8,
+                                    color:
+                                        selectedSize == "S"
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                selectedSize == "S"
+                                    ? AppColors.brown
+                                    : Colors.white,
                             height: 32,
                             width: 32,
                           ),
                           CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "M";
+                                }),
                             label: Text(
                               "M",
                               style: TTextTheme.lightTextTheme.labelMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    height: -0.8,
+                                    // height: -0.8,
+                                    color:
+                                        selectedSize == "M"
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                selectedSize == "M"
+                                    ? AppColors.brown
+                                    : Colors.white,
+                            height: 32,
+                            width: 32,
+                          ),
+                          CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "L";
+                                }),
+                            label: Text(
+                              "L",
+                              style: TTextTheme.lightTextTheme.labelMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    // height: -0.8,
+                                    color:
+                                        selectedSize == "L"
+                                            ? Colors.white
+                                            : Colors.black,
+                                  ),
+                            ),
+                            backgroundColor:
+                                selectedSize == "L"
+                                    ? AppColors.brown
+                                    : Colors.white,
                             height: 32,
                             width: 32,
                           ),
 
                           CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "XL";
+                                }),
                             label: Text(
                               "XL",
                               style: TTextTheme.lightTextTheme.labelMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w500,
                                     height: -0.8,
+                                    color:
+                                        selectedSize == "XL"
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                selectedSize == "XL"
+                                    ? AppColors.brown
+                                    : Colors.white,
                             height: 32,
                             width: 32,
                           ),
                           SizedBox(width: 8),
                           CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "XXL";
+                                }),
                             label: Text(
                               "XXL",
                               style: TTextTheme.lightTextTheme.labelMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    height: -0.8,
+                                    height: -0.9,
+                                    color:
+                                        selectedSize == "XXL"
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                selectedSize == "XXL"
+                                    ? AppColors.brown
+                                    : Colors.white,
                             height: 32,
                             width: 32,
                           ),
-                          SizedBox(width: 12),
+                          SizedBox(width: 14),
                           CustomChips(
+                            onTap:
+                                () => setState(() {
+                                  selectedSize = "XXXL";
+                                }),
                             label: Text(
                               "XXXL",
                               style: TTextTheme.lightTextTheme.labelMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    height: -0.8,
+                                    height: -0.9,
+                                    color:
+                                        selectedSize == "XXXL"
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                selectedSize == "XXXL"
+                                    ? AppColors.brown
+                                    : Colors.white,
                             height: 32,
                             width: 32,
                           ),
                         ],
                       ),
+                    ),
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, top: 2),
+                          child: Text(
+                            context.loc.selectColor,
+                            style: TTextTheme.lightTextTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 16),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.brown,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.cream,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.creamColor,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.lightBrown,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.lightYellow,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 12),
+                          child: Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.orange,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

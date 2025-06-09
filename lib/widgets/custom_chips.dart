@@ -5,6 +5,7 @@ class CustomChips extends StatelessWidget {
   final Color? backgroundColor;
   final double height;
   final double width;
+  final VoidCallback? onTap;
 
   const CustomChips({
     super.key,
@@ -12,18 +13,25 @@ class CustomChips extends StatelessWidget {
     required this.backgroundColor,
     required this.height,
     required this.width,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ChipTheme(
-      data: ChipTheme.of(
-        context,
-      ).copyWith(backgroundColor: backgroundColor ?? Colors.white),
-      child: SizedBox(
-        height: height,
+    return GestureDetector(
+      onTap: onTap,
+      child: ChipTheme(
+        data: ChipTheme.of(
+          context,
+        ).copyWith(backgroundColor: backgroundColor ?? Colors.white),
+        child: SizedBox(
+          height: height,
 
-        child: Chip(label: Center(child: label), labelPadding: EdgeInsets.zero),
+          child: Chip(
+            label: Center(child: label),
+            labelPadding: EdgeInsets.zero,
+          ),
+        ),
       ),
     );
   }

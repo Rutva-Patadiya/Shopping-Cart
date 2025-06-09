@@ -11,6 +11,7 @@ class ProductModel {
   final double price;
   final double rating;
   final String productDetails;
+  final String productContext;
 
   ProductModel({
     required this.categoryId,
@@ -20,6 +21,7 @@ class ProductModel {
     required this.price,
     required this.rating,
     required this.productDetails,
+    required this.productContext,
   });
 
   //converts the raw firebase data into dart object
@@ -40,6 +42,7 @@ class ProductModel {
               : data['rating'] ?? 0.0,
 
       productDetails: data['product_details'] ?? '',
+      productContext: data['product_context'] ?? '',
     );
   }
 
@@ -52,6 +55,7 @@ class ProductModel {
       imageUrl: imageUrl,
       rating: rating,
       productDetails: productDetails,
+      productContext: productContext,
     );
   }
 }

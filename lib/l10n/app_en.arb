@@ -34,5 +34,6 @@
   "location": "Location",
   "productDetails": "Product Details",
   "femaleStyle": "Female's Style",
-  "selectSize": "Select Size"
+  "selectSize": "Select Size",
+  "selectColor": "Select Color"
 }
