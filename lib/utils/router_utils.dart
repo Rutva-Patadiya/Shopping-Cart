@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
 
+import '../cart/cart_page.dart';
+import '../home/home_page.dart';
 import '../login/login_page.dart';
 import '../product/product_details.dart';
 import '../product/product_page.dart';
@@ -23,8 +25,11 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
         builder: (context) => ProductDetailsPage(product: product),
       );
 
-    // case HomePage.route:
-    //   return MaterialPageRoute(builder: (context) => HomePage());
+    case HomePage.route:
+      return MaterialPageRoute(builder: (context) => HomePage());
+
+    case CartPage.route:
+      return MaterialPageRoute(builder: (context) => CartPage());
 
     // case AddProductPage.route:
     //   return MaterialPageRoute(builder: (context) => AddProductPage());

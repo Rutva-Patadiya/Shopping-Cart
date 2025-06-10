@@ -35,5 +35,7 @@
   "productDetails": "Product Details",
   "femaleStyle": "Female's Style",
   "selectSize": "Select Size",
-  "selectColor": "Select Color"
+  "selectColor": "Select Color",
+  "totalPrice": "Total Price",
+  "addToCart": "Add to Cart"
 }

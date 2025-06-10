@@ -14,8 +14,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
   static const allCategories = "All";
-  static List<CategoryModel>? _cacheCategories;
-  static List<Product>? _cacheProducts;
 
   ProductBloc({required this.productRepository})
     : super(ProductLoadInProgress()) {
@@ -27,9 +25,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       log('Initial Product Loaded');
       emit(ProductLoadInProgress());
       try {
-        final allProducts =
-            _cacheProducts ??= await productRepository.getProducts();
-        categories = _cacheCategories ??= await dataSources.fetchCategories();
+        final allProducts = await productRepository.getProducts();
+        categories = await dataSources.fetchCategories();
 
         if (categories.isEmpty) {
           emit(ProductLoadFailure("No categories & products found"));
@@ -59,8 +56,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           currentState is ProductLoadSuccess ? currentState.searchQuery : "";
 
       try {
-        final allProducts =
-            _cacheProducts ??= await productRepository.getProducts();
+        final allProducts = await productRepository.getProducts();
 
         List<Product> filtered = allProducts;
 
@@ -85,8 +81,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         //after filtering, emits the ProductLoadSuccess state
         emit(
           ProductLoadSuccess(
-            categories:
-                _cacheCategories ??= await dataSources.fetchCategories(),
+            categories: await dataSources.fetchCategories(),
             allProducts: allProducts,
             filteredProducts: filtered,
             categoryId: event.categoryId,
@@ -106,8 +101,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
       if (currentState is ProductLoadSuccess) {
         try {
-          final allProducts =
-              _cacheProducts ??= await productRepository.getProducts();
+          final allProducts = await productRepository.getProducts();
 
           List<Product> filtered = allProducts;
 
@@ -133,8 +127,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
           emit(
             ProductLoadSuccess(
-              categories:
-                  _cacheCategories ??= await dataSources.fetchCategories(),
+              categories: await dataSources.fetchCategories(),
               allProducts: allProducts,
               filteredProducts: filtered,
               categoryId: currentState.categoryId,
