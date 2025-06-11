@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_cart/favorite_page/favorite_page.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
+import 'package:shopping_cart/product/select_size_list.dart';
 
 import '../cart/cart_page.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
-import '../widgets/custom_chips.dart';
+import 'data/models/category_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
+  final CategoryModel category;
 
-  const ProductDetailsPage({super.key, required this.product});
+  const ProductDetailsPage({
+    super.key,
+    required this.product,
+    required this.category,
+  });
 
   static const route = "product_details";
 
@@ -183,6 +190,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             child: IconButton(
                               icon: Icon(Icons.favorite_border),
                               onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  FavoritePage.route,
+                                );
                                 // Your favorite action
                               },
                             ),
@@ -274,172 +285,178 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       height: 28,
                     ),
 
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 2),
-                          child: Text(
-                            context.loc.selectSize,
-                            style: TTextTheme.lightTextTheme.bodyLarge
-                                ?.copyWith(fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
+                    (widget.product.categoryName == "Clothing")
+                        ? SelectedSize(
+                          product: widget.product,
+                          category: widget.category,
+                        )
+                        : Center(child: Text("your category is not matched")),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 8,
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 4),
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "S";
-                                }),
-                            label: Text(
-                              "S",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.8,
-                                    color:
-                                        selectedSize == "S"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "S"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "M";
-                                }),
-                            label: Text(
-                              "M",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.8,
-                                    color:
-                                        selectedSize == "M"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "M"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "L";
-                                }),
-                            label: Text(
-                              "L",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.8,
-                                    color:
-                                        selectedSize == "L"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "L"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "XL";
-                                }),
-                            label: Text(
-                              "XL",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.8,
-                                    color:
-                                        selectedSize == "XL"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "XL"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-                          // SizedBox(width: 8),
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "XXL";
-                                }),
-                            label: Text(
-                              "XXL",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.9,
-                                    color:
-                                        selectedSize == "XXL"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "XXL"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-                          // SizedBox(width: 14),
-                          CustomChips(
-                            onTap:
-                                () => setState(() {
-                                  selectedSize = "XXXL";
-                                }),
-                            label: Text(
-                              "XXXL",
-                              style: TTextTheme.lightTextTheme.labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    // height: -0.9,
-                                    color:
-                                        selectedSize == "XXXL"
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                            ),
-                            backgroundColor:
-                                selectedSize == "XXXL"
-                                    ? AppColors.brown
-                                    : Colors.white,
-                            height: 32,
-                          ),
-                        ],
-                      ),
-                    ),
-
+                    // Row(
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(left: 16, top: 2),
+                    //       child: Text(
+                    //         context.loc.selectSize,
+                    //         style: TTextTheme.lightTextTheme.bodyLarge
+                    //             ?.copyWith(fontWeight: FontWeight.w500),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    //
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 4,
+                    //     vertical: 8,
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(width: 4),
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "S";
+                    //             }),
+                    //         label: Text(
+                    //           "S",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.8,
+                    //                 color:
+                    //                     selectedSize == "S"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "S"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "M";
+                    //             }),
+                    //         label: Text(
+                    //           "M",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.8,
+                    //                 color:
+                    //                     selectedSize == "M"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "M"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "L";
+                    //             }),
+                    //         label: Text(
+                    //           "L",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.8,
+                    //                 color:
+                    //                     selectedSize == "L"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "L"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "XL";
+                    //             }),
+                    //         label: Text(
+                    //           "XL",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.8,
+                    //                 color:
+                    //                     selectedSize == "XL"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "XL"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //       // SizedBox(width: 8),
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "XXL";
+                    //             }),
+                    //         label: Text(
+                    //           "XXL",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.9,
+                    //                 color:
+                    //                     selectedSize == "XXL"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "XXL"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //       // SizedBox(width: 14),
+                    //       CustomChips(
+                    //         onTap:
+                    //             () => setState(() {
+                    //               selectedSize = "XXXL";
+                    //             }),
+                    //         label: Text(
+                    //           "XXXL",
+                    //           style: TTextTheme.lightTextTheme.labelSmall
+                    //               ?.copyWith(
+                    //                 fontWeight: FontWeight.w500,
+                    //                 // height: -0.9,
+                    //                 color:
+                    //                     selectedSize == "XXXL"
+                    //                         ? Colors.white
+                    //                         : Colors.black,
+                    //               ),
+                    //         ),
+                    //         backgroundColor:
+                    //             selectedSize == "XXXL"
+                    //                 ? AppColors.brown
+                    //                 : Colors.white,
+                    //         height: 32,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Row(
                       children: [
                         Padding(

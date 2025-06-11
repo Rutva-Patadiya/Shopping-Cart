@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
 
 class CustomChips extends StatelessWidget {
-  final Text label;
+  final Widget label;
   final Color? backgroundColor;
   final double height;
   final VoidCallback? onTap;

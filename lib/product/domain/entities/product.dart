@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
 
-class Product extends Equatable {
+class Product {
   final DocumentReference categoryId;
   final String categoryName;
   final String imageUrl;
@@ -10,8 +9,9 @@ class Product extends Equatable {
   final double? rating;
   final String productDetails;
   final String productContext;
+  List<String>? size;
 
-  const Product({
+  Product({
     required this.categoryId,
     required this.categoryName,
     required this.price,
@@ -20,17 +20,18 @@ class Product extends Equatable {
     required this.rating,
     required this.productDetails,
     required this.productContext,
+    this.size,
   });
 
-  //handles only products should be added in cart
-  @override
-  List<Object?> get props => [
-    name,
-    categoryId,
-    price,
-    imageUrl,
-    categoryName,
-    productDetails,
-    productContext,
-  ];
+  // //handles only products should be added in cart
+  // @override
+  // List<Object?> get props => [
+  //   name,
+  //   categoryId,
+  //   price,
+  //   imageUrl,
+  //   categoryName,
+  //   productDetails,
+  //   productContext,
+  // ];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/core/utils/theme/text_theme.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
+import 'package:shopping_cart/product/data/models/category_model.dart';
 import 'package:shopping_cart/product/product_details.dart';
 
 import 'domain/entities/product.dart';
@@ -8,8 +9,13 @@ import 'domain/entities/product.dart';
 //card of product details
 class ProductCard extends StatelessWidget {
   final Product product;
+  final CategoryModel categoryModel;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.categoryModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class ProductCard extends StatelessWidget {
                   () => Navigator.pushNamed(
                     context,
                     ProductDetailsPage.route,
-                    arguments: product,
+                    arguments: {'product': product, 'category': categoryModel},
                   ),
               child: Container(
                 decoration: BoxDecoration(

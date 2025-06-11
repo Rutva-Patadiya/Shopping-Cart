@@ -5,6 +5,8 @@ import 'package:shopping_cart/core/utils/theme/theme.dart';
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
 
+  static const route = "/Favorite Page";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

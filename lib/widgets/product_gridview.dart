@@ -4,12 +4,15 @@ import 'package:shopping_cart/product/bloc/product_bloc.dart';
 import 'package:shopping_cart/product/bloc/product_state.dart';
 import 'package:shopping_cart/product/product_card.dart';
 
+import '../product/data/models/category_model.dart';
 import '../product/domain/entities/product.dart';
 
 //shows the gridview of products seperated widget
 
 class ProductGridView extends StatelessWidget {
-  const ProductGridView({super.key});
+  CategoryModel categoryModel;
+
+  ProductGridView({super.key, required this.categoryModel});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,10 @@ class ProductGridView extends StatelessWidget {
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {
-                return ProductCard(product: products[index]);
+                return ProductCard(
+                  product: products[index],
+                  categoryModel: categoryModel,
+                );
               },
             );
           },
