@@ -4,14 +4,8 @@ class CategoryModel {
   final String id;
   final String name;
   final String image;
-  final List<String> size;
 
-  CategoryModel({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.size,
-  });
+  CategoryModel({required this.id, required this.name, required this.image});
 
   factory CategoryModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -19,9 +13,6 @@ class CategoryModel {
       id: doc.id,
       name: data['name'] ?? '',
       image: data['image'] ?? '',
-      size: List<String>.from(
-        data['size'] ?? [],
-      ), // Parse the size list correctly
     );
   }
 }

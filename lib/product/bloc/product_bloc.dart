@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
+import 'package:shopping_cart/product/data/models/product_size_model.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../data/models/category_model.dart';
@@ -95,7 +96,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     });
 
     //It handles product search
-
     on<ProductSearchedEvent>((event, emit) async {
       final currentState = state;
 
@@ -138,6 +138,22 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         } catch (e) {
           emit(ProductLoadFailure('Failed to filter products'));
         }
+      }
+    });
+
+    on<ProductSizeLoaded>((event, emit) async {
+      final List<ProductSizeModel> productSize;
+
+      try {
+        productSize = await dataSources.fetchCategoryAndSizes(event.product);
+
+        // Collect all size strings
+        final List<String> sizeList =
+            productSize.expand((model) => model.sizes).toList();
+
+        emit(ProductSizeLoadSuccess(productSize: sizeList, selectedSize: ''));
+      } catch (e) {
+        emit(ProductLoadFailure("Failed to load sizes"));
       }
     });
   }

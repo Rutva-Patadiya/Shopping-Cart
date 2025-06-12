@@ -63,3 +63,13 @@ class CategoryLoadFailure extends ProductState {
 
   CategoryLoadFailure(this.message);
 }
+
+class ProductSizeLoadSuccess extends ProductState {
+  final List<String> productSize;
+  final String selectedSize;
+
+  ProductSizeLoadSuccess({
+    required this.productSize,
+    required this.selectedSize,
+  });
+}

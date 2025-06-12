@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+import '../domain/entities/product.dart';
+
 //equatable to compare the instance efficiently
 class FilterProductEvent extends Equatable {
   @override
@@ -30,4 +32,11 @@ class ProductSearchedEvent extends FilterProductEvent {
 
   @override
   List<Object?> get props => [query];
+}
+
+//to handle the size of the product
+class ProductSizeLoaded extends FilterProductEvent {
+  final Product product;
+
+  ProductSizeLoaded(this.product);
 }
