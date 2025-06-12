@@ -10,9 +10,9 @@ import '../product/domain/entities/product.dart';
 //shows the gridview of products seperated widget
 
 class ProductGridView extends StatelessWidget {
-  CategoryModel categoryModel;
+  // CategoryModel categoryModel;
 
-  ProductGridView({super.key, required this.categoryModel});
+  const ProductGridView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class ProductGridView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ProductCard(
                   product: products[index],
-                  categoryModel: categoryModel,
+                  // categoryModel: categoryModel,
                 );
               },
             );

@@ -12,7 +12,6 @@ class ProductModel {
   final double rating;
   final String productDetails;
   final String productContext;
-  List<String>? size;
 
   ProductModel({
     required this.categoryId,
@@ -23,7 +22,6 @@ class ProductModel {
     required this.rating,
     required this.productDetails,
     required this.productContext,
-    this.size,
   });
 
   //converts the raw firebase data into dart object
@@ -45,7 +43,6 @@ class ProductModel {
 
       productDetails: data['product_details'] ?? '',
       productContext: data['product_context'] ?? '',
-      size: data['size'] != null ? List<String>.from(data['size']) : [],
     );
   }
 
@@ -59,7 +56,6 @@ class ProductModel {
       rating: rating,
       productDetails: productDetails,
       productContext: productContext,
-      size: size,
     );
   }
 }

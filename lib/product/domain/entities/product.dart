@@ -9,7 +9,6 @@ class Product {
   final double? rating;
   final String productDetails;
   final String productContext;
-  List<String>? size;
 
   Product({
     required this.categoryId,
@@ -20,18 +19,17 @@ class Product {
     required this.rating,
     required this.productDetails,
     required this.productContext,
-    this.size,
   });
 
-  // //handles only products should be added in cart
-  // @override
-  // List<Object?> get props => [
-  //   name,
-  //   categoryId,
-  //   price,
-  //   imageUrl,
-  //   categoryName,
-  //   productDetails,
-  //   productContext,
-  // ];
+  //handles only products should be added in cart
+  @override
+  List<Object?> get props => [
+    name,
+    categoryId,
+    price,
+    imageUrl,
+    categoryName,
+    productDetails,
+    productContext,
+  ];
 }

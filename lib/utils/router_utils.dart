@@ -23,11 +23,11 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
 
     case ProductDetailsPage.route:
       final product = routeSettings.arguments as Product;
-      final category = routeSettings.arguments as CategoryModel;
+      // final category = routeSettings.arguments as CategoryModel;
       return MaterialPageRoute(
         builder:
             (context) =>
-                ProductDetailsPage(category: category, product: product),
+                ProductDetailsPage( product: product),
       );
 
     case HomePage.route:
