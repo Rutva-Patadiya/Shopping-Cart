@@ -4,14 +4,11 @@ import 'package:shopping_cart/product/bloc/product_bloc.dart';
 import 'package:shopping_cart/product/bloc/product_state.dart';
 import 'package:shopping_cart/product/product_card.dart';
 
-import '../product/data/models/category_model.dart';
 import '../product/domain/entities/product.dart';
 
 //shows the gridview of products seperated widget
 
 class ProductGridView extends StatelessWidget {
-  // CategoryModel categoryModel;
-
   const ProductGridView({super.key});
 
   @override

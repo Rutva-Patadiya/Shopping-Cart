@@ -40,3 +40,10 @@ class ProductSizeLoaded extends FilterProductEvent {
 
   ProductSizeLoaded(this.product);
 }
+
+//to handle the color of the product
+class ProductColorLoaded extends FilterProductEvent {
+  final Product product;
+
+  ProductColorLoaded(this.product);
+}

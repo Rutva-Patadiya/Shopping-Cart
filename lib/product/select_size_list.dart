@@ -8,13 +8,13 @@ import '../core/utils/theme/text_theme.dart';
 class SelectedSize extends StatefulWidget {
   final Product product;
   final List<String> sizes;
-  final String? selectedSize;
+  final String? sizeList;
 
   const SelectedSize({
     super.key,
     required this.product,
     required this.sizes,
-    this.selectedSize,
+    this.sizeList,
   });
 
   @override
@@ -33,7 +33,7 @@ class _SelectSizeState extends State<SelectedSize> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16, top: 8),
+          padding: const EdgeInsets.only(left: 16, top: 4),
           child: Text(
             context.loc.selectSize,
             style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
@@ -42,41 +42,33 @@ class _SelectSizeState extends State<SelectedSize> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children:
-                  widget.sizes.map((size) {
-                    // Use widget.sizes here
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: CustomChips(
-                        label: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            size,
-                            style: TTextTheme.lightTextTheme.labelSmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      widget.selectedSize == size
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
-                          ),
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: SizedBox(
+            height: 40,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.sizes.length,
+              itemBuilder: (context, index) {
+                final size = widget.sizes[index];
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: CustomChips(
+                    label: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        size,
+                        style: TTextTheme.lightTextTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
-                        onTap: () {
-                          setState(() {});
-                        },
-                        backgroundColor:
-                            widget.selectedSize == size
-                                ? Colors.brown
-                                : Colors.white,
-                        height: 40,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                    backgroundColor: Colors.white,
+                    height: 40,
+                    onTap: () {},
+                  ),
+                );
+              },
             ),
           ),
         ),

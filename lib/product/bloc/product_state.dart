@@ -66,10 +66,17 @@ class CategoryLoadFailure extends ProductState {
 
 class ProductSizeLoadSuccess extends ProductState {
   final List<String> productSize;
-  final String selectedSize;
+  final String sizeList;
 
-  ProductSizeLoadSuccess({
-    required this.productSize,
-    required this.selectedSize,
+  ProductSizeLoadSuccess({required this.productSize, required this.sizeList});
+}
+
+class ProductColorLoadSuccess extends ProductState {
+  final List<String> productColor;
+  final String colorList; // Add the colorList parameter
+
+  ProductColorLoadSuccess({
+    required this.productColor,
+    required this.colorList,
   });
 }

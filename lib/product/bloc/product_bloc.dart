@@ -6,6 +6,7 @@ import 'package:shopping_cart/product/data/models/product_size_model.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../data/models/category_model.dart';
+import '../data/models/product_color_model.dart';
 import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
@@ -151,9 +152,19 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         final List<String> sizeList =
             productSize.expand((model) => model.sizes).toList();
 
-        emit(ProductSizeLoadSuccess(productSize: sizeList, selectedSize: ''));
+        emit(ProductSizeLoadSuccess(productSize: sizeList, sizeList: ''));
       } catch (e) {
         emit(ProductLoadFailure("Failed to load sizes"));
+      }
+    });
+
+    on<ProductColorLoaded>((event, emit) async {
+      final List<ProductColorModel> productColor;
+
+      try {
+        productColor = await dataSources.fetchColors(event.product);
+      } catch (e) {
+        emit(ProductLoadFailure("Failed to load colors"));
       }
     });
   }

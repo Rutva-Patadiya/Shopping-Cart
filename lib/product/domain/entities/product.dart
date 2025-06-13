@@ -22,7 +22,6 @@ class Product {
   });
 
   //handles only products should be added in cart
-  @override
   List<Object?> get props => [
     name,
     categoryId,
