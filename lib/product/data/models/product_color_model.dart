@@ -8,6 +8,9 @@ class ProductColorModel {
 
   factory ProductColorModel.fromFireStore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return ProductColorModel(colors: List<String>.from(data['color']), id: doc.id);
+    return ProductColorModel(
+      colors: List<String>.from(data['color']),
+      id: doc.id,
+    );
   }
 }

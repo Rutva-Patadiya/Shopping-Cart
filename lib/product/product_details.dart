@@ -28,13 +28,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   void initState() {
     super.initState();
+
     if (widget.product.categoryName == "Clothing") {
+      //handles the ProductSizeLoaded event
       context.read<ProductBloc>().add(ProductSizeLoaded(widget.product));
-      context.read<ProductBloc>().add(ProductColorLoaded(widget.product));
+      context.read<ProductColorBloc>().add(ProductColorLoaded(widget.product));
+      //Handles the ProductColorLoaded event
     }
-    // } else if (widget.product.categoryName == "Shoes" ||
-    //     widget.product.categoryName == "Clothing") {
-    //   // context.read<ProductBloc>().add(ProductColorLoaded(widget.product));
+    // if (widget.product.categoryName == "Footwear" ||
+    //     widget.product.categoryName == "Electronic") {
+    //   context.read<ProductColorBloc>().add(ProductColorLoaded(widget.product));
     // }
   }
 
@@ -259,7 +262,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     if (widget.product.categoryName == "Clothing")
                       BlocBuilder<ProductBloc, ProductState>(
                         builder: (context, state) {
-                          if (state is ProductSizeLoadSuccess ) {
+                          if (state is ProductSizeLoadSuccess) {
                             return ProductSizeList(
                               product: widget.product,
                               sizes: state.productSize,
@@ -277,30 +280,32 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           }
                         },
                       ),
-                    BlocBuilder<ProductBloc, ProductState>(
-                        builder: (context, state) {
-                          if (state is ProductColorLoadSuccess) {
-                            return ProductColorList(product:widget.product,colorList:state.colorList,color:state.productColor);
-
-                          } else if (widget.product.categoryName !=
-                              "Clothing") {
-                            return const Center(
-                              child: Text("Your category is not matched"),
-                            );
-                          }
-                          else
-                            {
-                              return SizedBox();
-                            }
-                        },
-                      ),
-                      ],
+                    BlocBuilder<ProductColorBloc, ColorState>(
+                      builder: (context, state) {
+                        if (state is ProductColorLoadSuccess) {
+                          return ProductColorList(
+                            product: widget.product,
+                            colorList: state.colorList,
+                            color: state.productColor,
+                          );
+                          // } else if (widget.product.categoryName != "Clothing") {
+                          //   return const Center(
+                          //     child: Text("Your category is not matched"),
+                          //   );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
                     ),
                   ],
-                ),),
+                ),
               ],
-            )
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
-

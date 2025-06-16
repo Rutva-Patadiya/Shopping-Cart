@@ -6,7 +6,6 @@ import 'package:shopping_cart/product/data/models/product_size_model.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../data/models/category_model.dart';
-import '../data/models/product_color_model.dart';
 import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
@@ -157,19 +156,49 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         emit(ProductLoadFailure("Failed to load sizes"));
       }
     });
+  }
+}
 
+class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
+  final ProductDataSources dataSources = ProductDataSources();
+
+  ProductColorBloc() : super(ProductColorInProgress()) {
     on<ProductColorLoaded>((event, emit) async {
       try {
-      final productColor = await dataSources.fetchColors(event.product);
+        final productColor = await dataSources.fetchColors(event.product);
 
-        final colorList=productColor.expand((model) => model.colors).toList();
+        final colorList = productColor.expand((model) => model.colors).toList();
 
-      print("Fetched colors: $colorList"); // <-- Add this print statement
+        print("Fetched colors: $colorList");
 
-        emit(ProductColorLoadSuccess(productColor:'', colorList: colorList));
+        emit(ProductColorLoadSuccess(productColor: '', colorList: colorList));
       } catch (e) {
-        emit(ProductLoadFailure("Failed to load colors"));
+        emit(ProductColorLoadFailure("Failed to load colors"));
       }
     });
   }
 }
+//the bloc when the color is written only in the color collection
+// class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
+//   final ProductDataSources dataSources = ProductDataSources();
+//
+//   ProductColorBloc() : super(ProductColorInProgress()) {
+//     on<ProductColorLoaded>((event, emit) async {
+//       try {
+//         final productColor = await dataSources.fetchColors(event.product);
+//
+//         final colorList = productColor.expand((model) => model.colors).toList();
+//
+//         print("Fetched colors: $colorList");
+//
+//         emit(ProductColorLoadSuccess(productColor: '', colorList: colorList));
+//       } catch (e) {
+//         emit(ProductColorLoadFailure("Failed to load colors"));
+//       }
+//     });
+//   }
+// }
+
+// class ProductWeightBloc extends Bloc<ProductWeightEvent, WeightState> {
+//   ProductWeightBloc(super.initialState);
+// }

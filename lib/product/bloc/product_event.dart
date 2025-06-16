@@ -41,9 +41,28 @@ class ProductSizeLoaded extends FilterProductEvent {
   ProductSizeLoaded(this.product);
 }
 
-//to handle the color of the product
-class ProductColorLoaded extends FilterProductEvent {
+//This Event is used to handle the color of the product in product_details page
+class ColorEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+//It is called when the product color is loaded in product_details page
+class ProductColorLoaded extends ColorEvent {
   final Product product;
 
   ProductColorLoaded(this.product);
 }
+
+//This Event is used to handle the weight of the product in product_details page
+// class ProductWeightEvent extends Equatable {
+//   @override
+//   List<Object?> get props => [];
+// }
+//
+// //This is called when the product weight is loaded in product_details page
+// class ProductWeightLoaded extends ProductWeightEvent {
+//   final Product product;
+//
+//   ProductWeightLoaded(this.product);
+// }

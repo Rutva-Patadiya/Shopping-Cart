@@ -28,13 +28,20 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
       final product = routeSettings.arguments as Product;
       return MaterialPageRoute(
         builder:
-            (context) => BlocProvider(
-              create:
-                  (_) => ProductBloc(
-                    productRepository: ProductRepositoryImpl(
-                      ProductDataSources(),
-                    ),
-                  ),
+            (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider<ProductBloc>(
+                  create:
+                      (_) => ProductBloc(
+                        productRepository: ProductRepositoryImpl(
+                          ProductDataSources(),
+                        ),
+                      ),
+                ),
+                BlocProvider<ProductColorBloc>(
+                  create: (_) => ProductColorBloc(),
+                ),
+              ],
               child: ProductDetailsPage(product: product),
             ),
       );

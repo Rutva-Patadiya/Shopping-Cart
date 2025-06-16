@@ -11,18 +11,22 @@ abstract class ProductState extends Equatable {
   List<Object?> get props => [];
 }
 
-// abstract class CategoryState extends Equatable {
-//   @override
-//   List<Object?> get props => [];
-// }
+//super class for all Color states
+abstract class ColorState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
-class ProductInitial extends ProductState {}
+//super class for all Weight states
+abstract class WeightState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 //emits when the state is loading
 class ProductLoadInProgress extends ProductState {}
 
 //emits when products are loaded successfully
-
 class ProductLoadSuccess extends ProductState {
   final List<Product> allProducts;
   final List<Product> filteredProducts;
@@ -64,6 +68,7 @@ class CategoryLoadFailure extends ProductState {
   CategoryLoadFailure(this.message);
 }
 
+//Triggers when the product size is loaded
 class ProductSizeLoadSuccess extends ProductState {
   final List<String> productSize;
   final String sizeList;
@@ -71,7 +76,11 @@ class ProductSizeLoadSuccess extends ProductState {
   ProductSizeLoadSuccess({required this.productSize, required this.sizeList});
 }
 
-class ProductColorLoadSuccess extends ProductState {
+//triggers when the productColor is loading
+class ProductColorInProgress extends ColorState {}
+
+//triggers when productColor is loaded
+class ProductColorLoadSuccess extends ColorState {
   final List<String> colorList;
   final String productColor; // Add the colorList parameter
 
@@ -80,3 +89,20 @@ class ProductColorLoadSuccess extends ProductState {
     required this.colorList,
   });
 }
+
+//triggers when the productColor loading fails
+class ProductColorLoadFailure extends ColorState {
+  final String errorMessage;
+
+  ProductColorLoadFailure(this.errorMessage);
+}
+
+//triggers when the productWeight is loading
+// class ProductWeightInProgress extends ColorState {}
+//
+// //triggers when productWeight is loaded
+// class ProductWeightLoadSuccess extends ColorState {
+//   final List<String> weightList;
+//
+//   ProductWeightLoadSuccess({required this.weightList});
+// }
