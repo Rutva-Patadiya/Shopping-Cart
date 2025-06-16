@@ -72,8 +72,8 @@ class ProductSizeLoadSuccess extends ProductState {
 }
 
 class ProductColorLoadSuccess extends ProductState {
-  final List<String> productColor;
-  final String colorList; // Add the colorList parameter
+  final List<String> colorList;
+  final String productColor; // Add the colorList parameter
 
   ProductColorLoadSuccess({
     required this.productColor,

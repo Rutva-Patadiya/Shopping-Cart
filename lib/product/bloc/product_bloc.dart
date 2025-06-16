@@ -159,10 +159,14 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     });
 
     on<ProductColorLoaded>((event, emit) async {
-      final List<ProductColorModel> productColor;
-
       try {
-        productColor = await dataSources.fetchColors(event.product);
+      final productColor = await dataSources.fetchColors(event.product);
+
+        final colorList=productColor.expand((model) => model.colors).toList();
+
+      print("Fetched colors: $colorList"); // <-- Add this print statement
+
+        emit(ProductColorLoadSuccess(productColor:'', colorList: colorList));
       } catch (e) {
         emit(ProductLoadFailure("Failed to load colors"));
       }

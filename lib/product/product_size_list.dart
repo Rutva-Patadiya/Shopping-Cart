@@ -5,12 +5,12 @@ import 'package:shopping_cart/widgets/custom_chips.dart';
 
 import '../core/utils/theme/text_theme.dart';
 
-class SelectedSize extends StatefulWidget {
+class ProductSizeList extends StatefulWidget {
   final Product product;
   final List<String> sizes;
   final String? sizeList;
 
-  const SelectedSize({
+  const ProductSizeList({
     super.key,
     required this.product,
     required this.sizes,
@@ -21,7 +21,7 @@ class SelectedSize extends StatefulWidget {
   State<StatefulWidget> createState() => _SelectSizeState();
 }
 
-class _SelectSizeState extends State<SelectedSize> {
+class _SelectSizeState extends State<ProductSizeList> {
   @override
   Widget build(BuildContext context) {
     // Check if the sizes list is empty or null before mapping

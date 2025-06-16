@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
 
 import '../models/category_model.dart';
+// import '../models/product_color_model.dart';
 import '../models/product_color_model.dart';
 import '../models/product_model.dart';
 import '../models/product_size_model.dart';
@@ -20,7 +21,7 @@ class ProductDataSources {
   Future<List<ProductModel>> fetchProducts() async {
     try {
       final productSnapshot =
-          await FirebaseFirestore.instance.collection(productCollection).get();
+      await FirebaseFirestore.instance.collection(productCollection).get();
 
       return productSnapshot.docs
           .map((doc) => ProductModel.fromFirestore(doc.data()))
@@ -35,15 +36,15 @@ class ProductDataSources {
   Future<List<CategoryModel>> fetchCategories() async {
     try {
       final categorySnapshot =
-          await FirebaseFirestore.instance
-              .collection(categoriesCollection)
-              .get();
+      await FirebaseFirestore.instance
+          .collection(categoriesCollection)
+          .get();
 
       if (categorySnapshot.docs.isEmpty) {
         if (kDebugMode) {
           print(
             "Warning: No documents found in the '$categoriesCollection' collection. "
-            "It may be empty or the collection name might be incorrect.",
+                "It may be empty or the collection name might be incorrect.",
           );
         }
         return [];
@@ -73,42 +74,160 @@ class ProductDataSources {
     }
   }
 
+  // Future<List<ProductColorModel>> fetchColors(Product product) async {
+  //   try {
+  //     final colorSnapshot =
+  //         await FirebaseFirestore.instance
+  //             .collection(categoriesCollection)
+  //             .where('name', isEqualTo: product.categoryName)
+  //             .limit(1)
+  //             .get();
+  //
+  //     if (colorSnapshot.docs.isNotEmpty) {
+  //       final colorDoc = colorSnapshot.docs.last;
+  //       final color = ProductColorModel.fromFireStore(colorDoc);
+  //
+  //
+  //       //fetch product_color subcollection
+  //
+  //       final productColorSnapShot= await FirebaseFirestore.instance.collection(categoriesCollection).doc(color.id).collection('product_color').get();
+  //       return color;
+  //     }
+  //   } catch (e) {
+  //     handleException(e);
+  //     return [];
+  //   }
+  // }
+
+
+  // Future<List<ProductColorModel>> fetchColors(Product product) async {
+  //   try {
+  //     log(
+  //       "\n STARTING FETCH FOR PRODUCT: ${product.name} (Category: ${product
+  //           .categoryName})",
+  //     );
+  //
+  //     // Fetch category
+  //     final categoryQuerySnapshot =
+  //     await FirebaseFirestore.instance
+  //         .collection(categoriesCollection)
+  //         .where('name', isEqualTo: product.categoryName)
+  //         .get();
+  //
+  //     if (categoryQuerySnapshot.docs.isNotEmpty) {
+  //       final categoryDoc = categoryQuerySnapshot.docs.first;
+  //       final category = ProductColorModel.fromFireStore(categoryDoc);
+  //
+  //       log(
+  //         "Main category fetched. ID: ${category.id}",
+  //       );
+  //
+  //       // Fetch product_size subcollection
+  //       final productColorSnapshot =
+  //       await FirebaseFirestore.instance
+  //           .collection(categoriesCollection)
+  //           .doc(category.id)
+  //           .collection('product_color')
+  //           .get();
+  //
+  //       if (productColorSnapshot.docs.isNotEmpty) {
+  //         // convert all docs to ProductSizeModel list
+  //         final color =
+  //         productColorSnapshot.docs
+  //             .map((doc) => ProductColorModel.fromFireStore(doc))
+  //             .toList();
+  //
+  //         log("Successfully fetched ${color.length} color document(s)");
+  //         return color;
+  //       }
+  //       else {
+  //         log(
+  //           "NO DOCUMENTS FOUND in 'product_size' for category ID: ${category
+  //               .id}",
+  //         );
+  //         return []; // return empty list if nothing found
+  //       }
+  //     } else {
+  //       log("NO CATEGORY FOUND for name: ${product.categoryName}");
+  //       return []; // No category matched
+  //     }
+  //   } catch (e) {
+  //     log("CRITICAL UNHANDLED ERROR during fetch: $e");
+  //     return []; // Return empty list on error
+  //   } finally {
+  //     log("FETCH COMPLETED");
+  //   }
+  // }
+
   Future<List<ProductColorModel>> fetchColors(Product product) async {
     try {
-      final colorSnapshot =
-          await FirebaseFirestore.instance
-              .collection(categoriesCollection)
-              .where('name', isEqualTo: product.categoryName)
-              .limit(1)
-              .get();
+      log("Fetching colors for product: ${product.name}");
 
-      if (colorSnapshot.docs.isNotEmpty) {
-        final colorDoc = colorSnapshot.docs.last;
-        final color = ProductColorModel.fromFireStore(colorDoc);
+      // First get the category document
+      final categoryQuery = await FirebaseFirestore.instance
+          .collection(categoriesCollection)
+          .where('name', isEqualTo: product.categoryName)
+          .limit(1)
+          .get();
 
-        return [];
-      } else {
+      if (categoryQuery.docs.isEmpty) {
+        log("No category found for ${product.categoryName}");
         return [];
       }
+
+      final categoryDoc = categoryQuery.docs.first;
+
+      // Then get the product_color subcollection
+      final colorCollection = await FirebaseFirestore.instance
+          .collection(categoriesCollection)
+          .doc(categoryDoc.id)
+          .collection('product_color')
+          .get();
+
+      if (colorCollection.docs.isEmpty) {
+        log("No color documents found");
+        return [];
+      }
+
+      // Process all color documents
+      final colors = colorCollection.docs.map((doc) {
+        final data = doc.data();
+        final colorList = <String>[];
+
+        // Extract all color fields (color1, color2, etc.)
+        data.forEach((key, value) {
+          if (key.startsWith('color') && value is String) {
+            colorList.add(value);
+          }
+        });
+
+        return ProductColorModel(
+          id: doc.id,
+          colors: colorList,
+        );
+      }).toList();
+
+      log("Successfully fetched ${colors.length} color documents");
+      return colors;
     } catch (e) {
-      handleException(e);
+      log("Error fetching colors: $e");
       return [];
     }
   }
-
   Future<List<ProductSizeModel>> fetchCategoryAndSizes(Product product) async {
     try {
       log(
-        "\n STARTING FETCH FOR PRODUCT: ${product.name} (Category: ${product.categoryName})",
+        "\n STARTING FETCH FOR PRODUCT: ${product.name} (Category: ${product
+            .categoryName})",
       );
 
       // Fetch category
       final categoryQuerySnapshot =
-          await FirebaseFirestore.instance
-              .collection(categoriesCollection)
-              .where('name', isEqualTo: product.categoryName)
-              .limit(1)
-              .get();
+      await FirebaseFirestore.instance
+          .collection(categoriesCollection)
+          .where('name', isEqualTo: product.categoryName)
+          .limit(1)
+          .get();
 
       if (categoryQuerySnapshot.docs.isNotEmpty) {
         final categoryDoc = categoryQuerySnapshot.docs.first;
@@ -120,24 +239,25 @@ class ProductDataSources {
 
         // Fetch product_size subcollection
         final productSizeSnapshot =
-            await FirebaseFirestore.instance
-                .collection(categoriesCollection)
-                .doc(category.id)
-                .collection('product_size')
-                .get();
+        await FirebaseFirestore.instance
+            .collection(categoriesCollection)
+            .doc(category.id)
+            .collection('product_size')
+            .get();
 
         if (productSizeSnapshot.docs.isNotEmpty) {
           // convert all docs to ProductSizeModel list
           final sizes =
-              productSizeSnapshot.docs
-                  .map((doc) => ProductSizeModel.fromFirestore(doc))
-                  .toList();
+          productSizeSnapshot.docs
+              .map((doc) => ProductSizeModel.fromFirestore(doc))
+              .toList();
 
           log("Successfully fetched ${sizes.length} size document(s)");
           return sizes;
         } else {
           log(
-            "NO DOCUMENTS FOUND in 'product_size' for category ID: ${category.id}",
+            "NO DOCUMENTS FOUND in 'product_size' for category ID: ${category
+                .id}",
           );
           return []; // return empty list if nothing found
         }
@@ -152,4 +272,7 @@ class ProductDataSources {
       log("FETCH COMPLETED");
     }
   }
+
+
+
 }

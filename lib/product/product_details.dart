@@ -5,7 +5,8 @@ import 'package:shopping_cart/l10n/translation_extension.dart';
 import 'package:shopping_cart/product/bloc/product_event.dart';
 import 'package:shopping_cart/product/bloc/product_state.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
-import 'package:shopping_cart/product/select_size_list.dart';
+import 'package:shopping_cart/product/product_color_list.dart';
+import 'package:shopping_cart/product/product_size_list.dart';
 
 import '../cart/cart_page.dart';
 import '../core/utils/theme/text_theme.dart';
@@ -29,10 +30,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     super.initState();
     if (widget.product.categoryName == "Clothing") {
       context.read<ProductBloc>().add(ProductSizeLoaded(widget.product));
-    } else if (widget.product.categoryName == "Shoes" ||
-        widget.product.categoryName == "Clothing") {
-      // context.read<ProductBloc>().add(ProductColorLoaded(widget.product));
+      context.read<ProductBloc>().add(ProductColorLoaded(widget.product));
     }
+    // } else if (widget.product.categoryName == "Shoes" ||
+    //     widget.product.categoryName == "Clothing") {
+    //   // context.read<ProductBloc>().add(ProductColorLoaded(widget.product));
+    // }
   }
 
   @override
@@ -256,8 +259,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     if (widget.product.categoryName == "Clothing")
                       BlocBuilder<ProductBloc, ProductState>(
                         builder: (context, state) {
-                          if (state is ProductSizeLoadSuccess) {
-                            return SelectedSize(
+                          if (state is ProductSizeLoadSuccess ) {
+                            return ProductSizeList(
                               product: widget.product,
                               sizes: state.productSize,
                               sizeList: state.sizeList,
@@ -274,133 +277,30 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           }
                         },
                       ),
+                    BlocBuilder<ProductBloc, ProductState>(
+                        builder: (context, state) {
+                          if (state is ProductColorLoadSuccess) {
+                            return ProductColorList(product:widget.product,colorList:state.colorList,color:state.productColor);
 
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 2),
-                          child: Text(
-                            context.loc.selectColor,
-                            style: TTextTheme.lightTextTheme.bodyLarge
-                                ?.copyWith(fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 16),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.brown,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 12),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.cream,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 12),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.creamColor,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 12),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.lightBrown,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 12),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.lightYellow,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 12),
-                          child: Container(
-                            height: 28,
-                            width: 28,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.orange,
-                            ),
-                          ),
-                        ),
+                          } else if (widget.product.categoryName !=
+                              "Clothing") {
+                            return const Center(
+                              child: Text("Your category is not matched"),
+                            );
+                          }
+                          else
+                            {
+                              return SizedBox();
+                            }
+                        },
+                      ),
                       ],
                     ),
                   ],
-                ),
+                ),),
               ],
-            ),
-          ),
-        ],
-      ),
+            )
     );
   }
 }
 
-// body: CustomScrollView(
-//   slivers: [
-// SliverAppBar(
-//   centerTitle: true,
-//   pinned: true,
-//   actions: [
-//     Padding(
-//       padding: const EdgeInsets.all(8),
-//       child: CircleAvatar(
-//         radius: 20,
-//         backgroundColor: Colors.white,
-//         child: IconButton(
-//           icon: Icon(Icons.favorite_border),
-//           onPressed: () {},
-//         ),
-//       ),
-//     ),
-//   ],
-//   title: Text(
-//     context.loc.productDetails,
-//     style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
-//       fontWeight: FontWeight.w500,
-//     ),
-//   ),
-//   backgroundColor: AppColors.cream,
-//   leading: Padding(
-//     padding: const EdgeInsets.all(8),
-//     child: CircleAvatar(
-//       backgroundColor: Colors.white,
-//       child: IconButton(
-//         icon: Icon(Icons.arrow_back, color: Colors.black),
-//         onPressed: () => Navigator.pop(context),
-//       ),
-//     ),
-//   ),
-// ),

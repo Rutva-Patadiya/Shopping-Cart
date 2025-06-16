@@ -26,7 +26,6 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
 
     case ProductDetailsPage.route:
       final product = routeSettings.arguments as Product;
-      // final category = routeSettings.arguments as CategoryModel;
       return MaterialPageRoute(
         builder:
             (context) => BlocProvider(
