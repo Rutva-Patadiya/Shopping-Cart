@@ -9,20 +9,18 @@ import 'domain/entities/product.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
 
-  const ProductCard({
-    super.key,
-    required this.product,
-  });
+  const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     // The GestureDetector wraps the entire card so the tap works on the whole item
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        ProductDetailsPage.route,
-        arguments: product,
-      ),
+      onTap:
+          () => Navigator.pushNamed(
+            context,
+            ProductDetailsPage.route,
+            arguments: product,
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -32,16 +30,14 @@ class ProductCard extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.transparent,
-                    width: 2,
-                  ),
+                  border: Border.all(color: Colors.transparent, width: 2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: AspectRatio(
-                    aspectRatio: 1, // This means width == height for the image area
+                    aspectRatio:
+                        1, // This means width == height for the image area
                     child: Image.network(product.imageUrl, fit: BoxFit.cover),
                   ),
                 ),
@@ -71,11 +67,17 @@ class ProductCard extends StatelessWidget {
               // without a flexible parent.
               // To handle long product names gracefully, you can wrap it in Expanded
               // or ensure it has an overflow property.
-              Expanded( // Ensure Text takes available space but doesn't overflow
+              Expanded(
+                // Ensure Text takes available space but doesn't overflow
                 child: Text(
                   product.name,
-                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                  overflow: TextOverflow.ellipsis, // Add overflow handling for long names
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                  overflow:
+                      TextOverflow
+                          .ellipsis, // Add overflow handling for long names
                   maxLines: 1, // Limit to one line
                 ),
               ),
@@ -99,6 +101,7 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+
 //
 // import 'package:flutter/material.dart';
 // import 'package:shopping_cart/core/utils/theme/text_theme.dart';

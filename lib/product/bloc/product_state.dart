@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shopping_cart/product/data/models/category_model.dart';
 
+import '../data/models/product_color_model.dart';
 import '../domain/entities/product.dart';
 
 // Equatable: when the state changes, Equatable compares whether the parameters are the same.
@@ -19,6 +20,11 @@ abstract class ColorState extends Equatable {
 
 //super class for all Weight states
 abstract class WeightState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+abstract class ProductSizeState extends Equatable {
   @override
   List<Object?> get props => [];
 }
@@ -68,12 +74,19 @@ class CategoryLoadFailure extends ProductState {
   CategoryLoadFailure(this.message);
 }
 
-//Triggers when the product size is loaded
-class ProductSizeLoadSuccess extends ProductState {
-  final List<String> productSize;
-  final String sizeList;
+class ProductSizeInProgress extends ProductSizeState {}
 
-  ProductSizeLoadSuccess({required this.productSize, required this.sizeList});
+//Triggers when the product size is loaded
+class ProductSizeLoadSuccess extends ProductSizeState {
+  final List<String> productSize;
+
+  ProductSizeLoadSuccess({required this.productSize});
+}
+
+class ProductSizeLoadFailure extends ProductSizeState {
+  final String message;
+
+  ProductSizeLoadFailure({required this.message});
 }
 
 //triggers when the productColor is loading
@@ -81,13 +94,10 @@ class ProductColorInProgress extends ColorState {}
 
 //triggers when productColor is loaded
 class ProductColorLoadSuccess extends ColorState {
-  final List<String> colorList;
-  final String productColor; // Add the colorList parameter
+  final List<ColorItem> colorList;
+  final String? selectedColor; // store selected name if needed
 
-  ProductColorLoadSuccess({
-    required this.productColor,
-    required this.colorList,
-  });
+  ProductColorLoadSuccess({required this.colorList, this.selectedColor});
 }
 
 //triggers when the productColor loading fails

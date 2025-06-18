@@ -4,6 +4,7 @@ import '../../domain/entities/product.dart';
 
 //converts the raw firebase data into dart classes
 class ProductModel {
+  final String id;
   final DocumentReference categoryId;
   final String categoryName;
   final String imageUrl;
@@ -14,6 +15,7 @@ class ProductModel {
   final String productContext;
 
   ProductModel({
+    required this.id,
     required this.categoryId,
     required this.categoryName,
     required this.imageUrl,
@@ -25,8 +27,10 @@ class ProductModel {
   });
 
   //converts the raw firebase data into dart object
-  factory ProductModel.fromFirestore(Map<String, dynamic> data) {
+  factory ProductModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return ProductModel(
+      id: doc.id,
       categoryId: data['category_id'] ?? '',
       categoryName: data['category_name'] ?? '',
       name: data['name'] ?? '',
@@ -48,6 +52,7 @@ class ProductModel {
 
   Product toEntity() {
     return Product(
+      id: id,
       categoryId: categoryId,
       name: name,
       categoryName: categoryName,

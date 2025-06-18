@@ -2,8 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-import '../domain/entities/product.dart';
-
 //equatable to compare the instance efficiently
 class FilterProductEvent extends Equatable {
   @override
@@ -34,11 +32,16 @@ class ProductSearchedEvent extends FilterProductEvent {
   List<Object?> get props => [query];
 }
 
-//to handle the size of the product
-class ProductSizeLoaded extends FilterProductEvent {
-  final Product product;
+class ProductSizeEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
-  ProductSizeLoaded(this.product);
+//to handle the size of the product
+class ProductSizeLoaded extends ProductSizeEvent {
+  final String productId;
+
+  ProductSizeLoaded(this.productId);
 }
 
 //This Event is used to handle the color of the product in product_details page
@@ -49,9 +52,9 @@ class ColorEvent extends Equatable {
 
 //It is called when the product color is loaded in product_details page
 class ProductColorLoaded extends ColorEvent {
-  final Product product;
+  final String productId;
 
-  ProductColorLoaded(this.product);
+  ProductColorLoaded(this.productId);
 }
 
 //This Event is used to handle the weight of the product in product_details page

@@ -8,20 +8,18 @@ import '../core/utils/theme/text_theme.dart';
 class ProductSizeList extends StatefulWidget {
   final Product product;
   final List<String> sizes;
-  final String? sizeList;
 
   const ProductSizeList({
     super.key,
     required this.product,
     required this.sizes,
-    this.sizeList,
   });
 
   @override
-  State<StatefulWidget> createState() => _SelectSizeState();
+  State<StatefulWidget> createState() => _ProductSizeListState();
 }
 
-class _SelectSizeState extends State<ProductSizeList> {
+class _ProductSizeListState extends State<ProductSizeList> {
   @override
   Widget build(BuildContext context) {
     // Check if the sizes list is empty or null before mapping

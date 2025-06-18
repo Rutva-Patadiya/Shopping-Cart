@@ -2,18 +2,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductSizeModel {
-  final String id;
+  final String productId;
   final List<String> sizes; // This will hold the list of strings
+  final String name;
 
-  ProductSizeModel({required this.id, required this.sizes});
+  ProductSizeModel({
+    required this.name,
+    required this.productId,
+    required this.sizes,
+  });
 
   factory ProductSizeModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ProductSizeModel(
-      id: doc.id,
-      sizes: List<String>.from(
-        data['size'] ?? [],
-      ), // IMPORTANT: Use the actual field name for your sizes list
+      productId: doc.id,
+      sizes: List<String>.from(data['size'] ?? []),
+      name: data['name'],
     );
   }
 }

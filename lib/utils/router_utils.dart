@@ -41,6 +41,8 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
                 BlocProvider<ProductColorBloc>(
                   create: (_) => ProductColorBloc(),
                 ),
+
+                BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()),
               ],
               child: ProductDetailsPage(product: product),
             ),

@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
-import 'package:shopping_cart/product/data/models/product_size_model.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../data/models/category_model.dart';
+import '../data/models/product_size_model.dart';
 import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
@@ -140,24 +140,32 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         }
       }
     });
+  }
+}
 
+class ProductSizeBloc extends Bloc<ProductSizeEvent, ProductSizeState> {
+  final ProductDataSources dataSources = ProductDataSources();
+
+  ProductSizeBloc() : super(ProductSizeInProgress()) {
     on<ProductSizeLoaded>((event, emit) async {
       final List<ProductSizeModel> productSize;
 
       try {
-        productSize = await dataSources.fetchCategoryAndSizes(event.product);
+        productSize = await dataSources.fetchSizes(event.productId);
 
         // Collect all size strings
         final List<String> sizeList =
             productSize.expand((model) => model.sizes).toList();
 
-        emit(ProductSizeLoadSuccess(productSize: sizeList, sizeList: ''));
+        print("SizeList: $sizeList");
+        emit(ProductSizeLoadSuccess(productSize: sizeList));
       } catch (e) {
-        emit(ProductLoadFailure("Failed to load sizes"));
+        emit(ProductSizeLoadFailure(message: 'product size load failed'));
       }
     });
   }
 }
+//the bloc when the color is written only in the color collection
 
 class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
   final ProductDataSources dataSources = ProductDataSources();
@@ -165,39 +173,28 @@ class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
   ProductColorBloc() : super(ProductColorInProgress()) {
     on<ProductColorLoaded>((event, emit) async {
       try {
-        final productColor = await dataSources.fetchColors(event.product);
+        final productColorModels = await dataSources.fetchColors(
+          event.productId,
+        );
 
-        final colorList = productColor.expand((model) => model.colors).toList();
+        if (productColorModels.isEmpty) {
+          emit(ProductColorLoadFailure("No color variant found."));
+          return;
+        }
 
-        print("Fetched colors: $colorList");
+        // convert color model into list
+        final colorList =
+            productColorModels.expand((model) => model.colors).toList();
 
-        emit(ProductColorLoadSuccess(productColor: '', colorList: colorList));
+        log("Fetched colors: $colorList");
+
+        emit(ProductColorLoadSuccess(colorList: colorList));
       } catch (e) {
         emit(ProductColorLoadFailure("Failed to load colors"));
       }
     });
   }
 }
-//the bloc when the color is written only in the color collection
-// class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
-//   final ProductDataSources dataSources = ProductDataSources();
-//
-//   ProductColorBloc() : super(ProductColorInProgress()) {
-//     on<ProductColorLoaded>((event, emit) async {
-//       try {
-//         final productColor = await dataSources.fetchColors(event.product);
-//
-//         final colorList = productColor.expand((model) => model.colors).toList();
-//
-//         print("Fetched colors: $colorList");
-//
-//         emit(ProductColorLoadSuccess(productColor: '', colorList: colorList));
-//       } catch (e) {
-//         emit(ProductColorLoadFailure("Failed to load colors"));
-//       }
-//     });
-//   }
-// }
 
 // class ProductWeightBloc extends Bloc<ProductWeightEvent, WeightState> {
 //   ProductWeightBloc(super.initialState);

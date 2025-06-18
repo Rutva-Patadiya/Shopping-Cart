@@ -48,7 +48,8 @@ class CustomTextField extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 4, left: 2),
               child: Text(
                 label ?? '',
-                style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w400,
+                style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             )

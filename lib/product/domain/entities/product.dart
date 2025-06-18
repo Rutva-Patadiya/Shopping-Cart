@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
+  final String id;
   final DocumentReference categoryId;
   final String categoryName;
   final String imageUrl;
@@ -11,6 +12,7 @@ class Product {
   final String productContext;
 
   Product({
+    required this.id,
     required this.categoryId,
     required this.categoryName,
     required this.price,
@@ -23,6 +25,7 @@ class Product {
 
   //handles only products should be added in cart
   List<Object?> get props => [
+    id,
     name,
     categoryId,
     price,

@@ -11,9 +11,7 @@ class TTextTheme {
     displaySmall: TextStyle(fontSize: 22),
 
     headlineLarge: TextStyle(fontSize: 20),
-    headlineSmall: TextStyle(
-      fontSize: 18,
-    ),
+    headlineSmall: TextStyle(fontSize: 18),
 
     bodyLarge: TextStyle(fontSize: 16),
 
@@ -21,9 +19,7 @@ class TTextTheme {
 
     bodySmall: TextStyle(fontSize: 12),
 
-    labelLarge: TextStyle(
-      fontSize: 16,
-    ),
+    labelLarge: TextStyle(fontSize: 16),
 
     //grey text button
     labelMedium: TextStyle(fontSize: 14),

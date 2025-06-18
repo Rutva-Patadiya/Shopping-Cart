@@ -31,8 +31,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
     if (widget.product.categoryName == "Clothing") {
       //handles the ProductSizeLoaded event
-      context.read<ProductBloc>().add(ProductSizeLoaded(widget.product));
-      context.read<ProductColorBloc>().add(ProductColorLoaded(widget.product));
+      context.read<ProductSizeBloc>().add(ProductSizeLoaded(widget.product.id));
+      context.read<ProductColorBloc>().add(
+        ProductColorLoaded(widget.product.id),
+      );
       //Handles the ProductColorLoaded event
     }
     // if (widget.product.categoryName == "Footwear" ||
@@ -92,9 +94,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               const SizedBox(width: 32),
               Column(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
                       vertical: 16,
                     ),
                     child: ElevatedButton(
@@ -259,44 +261,35 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       height: 28,
                     ),
 
-                    if (widget.product.categoryName == "Clothing")
-                      BlocBuilder<ProductBloc, ProductState>(
-                        builder: (context, state) {
-                          if (state is ProductSizeLoadSuccess) {
-                            return ProductSizeList(
-                              product: widget.product,
-                              sizes: state.productSize,
-                              sizeList: state.sizeList,
-                            );
-                          } else if (widget.product.categoryName !=
-                              "Clothing") {
-                            return const Center(
-                              child: Text("Your category is not matched"),
-                            );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
                     BlocBuilder<ProductColorBloc, ColorState>(
                       builder: (context, state) {
-                        if (state is ProductColorLoadSuccess) {
+                        if (state is ProductColorInProgress) {
+                          return CircularProgressIndicator();
+                        } else if (state is ProductColorLoadSuccess) {
                           return ProductColorList(
                             product: widget.product,
                             colorList: state.colorList,
-                            color: state.productColor,
+                            selectedColor:
+                                state.colorList.first.hex, // default selected
                           );
-                          // } else if (widget.product.categoryName != "Clothing") {
-                          //   return const Center(
-                          //     child: Text("Your category is not matched"),
-                          //   );
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                        } else if (state is ProductColorLoadFailure) {
+                          return Text("Failed to load colors");
                         }
+                        return SizedBox.shrink();
+                      },
+                    ),
+
+                    BlocBuilder<ProductSizeBloc, ProductSizeState>(
+                      builder: (context, state) {
+                        if (state is ProductSizeLoadSuccess) {
+                          return ProductSizeList(
+                            product: widget.product,
+                            sizes: state.productSize,
+                          );
+                        } else if (state is ProductSizeLoadFailure) {
+                          return Text("Failed to load sizes");
+                        }
+                        return SizedBox.shrink();
                       },
                     ),
                   ],

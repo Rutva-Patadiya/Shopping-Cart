@@ -140,7 +140,10 @@ class Login extends StatelessWidget {
                           child: Text(
                             context.loc.forgotPassword,
                             style: TTextTheme.lightTextTheme.labelMedium
-                                ?.copyWith(color: AppColors.bgAccent,fontWeight: FontWeight.w400),
+                                ?.copyWith(
+                                  color: AppColors.bgAccent,
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
                         ),
                       ),
@@ -170,7 +173,10 @@ class Login extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 6),
                                       child: Text(
                                         context.loc.loginButton,
-                                        style: TextStyle(color: Colors.white,height: 0.6),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          height: 0.6,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -187,7 +193,10 @@ class Login extends StatelessWidget {
                           child: Text(
                             context.loc.noAccountText,
                             style: TTextTheme.lightTextTheme.labelMedium
-                                ?.copyWith(color: AppColors.bgAccent,fontWeight: FontWeight.w400),
+                                ?.copyWith(
+                                  color: AppColors.bgAccent,
+                                  fontWeight: FontWeight.w400,
+                                ),
                           ),
                         ),
                       ),
