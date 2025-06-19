@@ -11,7 +11,6 @@ import '../product/bloc/product_bloc.dart';
 import '../product/bloc/product_event.dart';
 import '../product/bloc/product_state.dart';
 import '../product/category_list.dart';
-import '../product/data/datasources/product_data_sources.dart';
 import '../widgets/carousel_images.dart';
 import '../widgets/custom_textfield.dart';
 import '../widgets/filter_button.dart';
@@ -33,7 +32,6 @@ class HomePageState extends State<HomePage> {
 
   Placemark? placeMark; //for fetching human readable location
   bool _isInitialized = false;
-  final dataSources = ProductDataSources();
 
   @override
   void initState() {

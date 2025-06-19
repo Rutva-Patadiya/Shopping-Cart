@@ -8,6 +8,7 @@ extension FirebaseHandler<T> on Future<T> {
     try {
       return await this;
     } on FirebaseException catch (e) {
+      // multiple exceptions hanlding required
       if (showDebug && kDebugMode) {
         log(
           "[FIREBASE ERROR] ${logName ?? ''} => Code: ${e.code}, Message: ${e.message}",

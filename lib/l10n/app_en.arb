@@ -36,6 +36,9 @@
   "femaleStyle": "Female's Style",
   "selectSize": "Select Size",
   "selectColor": "Select Color",
+  "selectLitre": "Select Litre",
+  "selectWeight": "Select Weight",
+  "selectQuantity": "Select No of Colors",
   "totalPrice": "Total Price",
   "addToCart": "Add to Cart"
 }

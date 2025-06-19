@@ -30,19 +30,21 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
         builder:
             (context) => MultiBlocProvider(
               providers: [
-                BlocProvider<ProductBloc>(
+                // understand and use it if required
+                // category immediate selection not working
+                // bloc observer
+                // on search clearance categories are removed, should not happen
+                // data sources and repositories  multiple instances, should be one only
+                BlocProvider<ProductVariantsBloc>(
                   create:
-                      (_) => ProductBloc(
+                      (_) => ProductVariantsBloc(
                         productRepository: ProductRepositoryImpl(
                           ProductDataSources(),
                         ),
                       ),
+                  //
                 ),
-                BlocProvider<ProductColorBloc>(
-                  create: (_) => ProductColorBloc(),
-                ),
-
-                BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()),
+                // BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()),
               ],
               child: ProductDetailsPage(product: product),
             ),

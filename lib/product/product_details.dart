@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/favorite_page/favorite_page.dart';
 import 'package:shopping_cart/l10n/translation_extension.dart';
-import 'package:shopping_cart/product/bloc/product_event.dart';
-import 'package:shopping_cart/product/bloc/product_state.dart';
 import 'package:shopping_cart/product/domain/entities/product.dart';
 import 'package:shopping_cart/product/product_color_list.dart';
 import 'package:shopping_cart/product/product_size_list.dart';
+import 'package:shopping_cart/product/variant_chip_list.dart';
 
 import '../cart/cart_page.dart';
 import '../core/utils/theme/text_theme.dart';
 import '../core/utils/theme/theme.dart';
 import 'bloc/product_bloc.dart';
+import 'bloc/product_event.dart';
+import 'bloc/product_state.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -28,19 +29,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   void initState() {
     super.initState();
-
-    if (widget.product.categoryName == "Clothing") {
-      //handles the ProductSizeLoaded event
-      context.read<ProductSizeBloc>().add(ProductSizeLoaded(widget.product.id));
-      context.read<ProductColorBloc>().add(
-        ProductColorLoaded(widget.product.id),
-      );
-      //Handles the ProductColorLoaded event
-    }
-    // if (widget.product.categoryName == "Footwear" ||
-    //     widget.product.categoryName == "Electronic") {
-    //   context.read<ProductColorBloc>().add(ProductColorLoaded(widget.product));
-    // }
+    context.read<ProductVariantsBloc>().add(
+      ProductVariantsLoaded(widget.product.id),
+    );
   }
 
   @override
@@ -260,36 +251,47 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       indent: 16,
                       height: 28,
                     ),
-
-                    BlocBuilder<ProductColorBloc, ColorState>(
+                    BlocBuilder<ProductVariantsBloc, ProductVariantState>(
                       builder: (context, state) {
-                        if (state is ProductColorInProgress) {
-                          return CircularProgressIndicator();
-                        } else if (state is ProductColorLoadSuccess) {
-                          return ProductColorList(
-                            product: widget.product,
-                            colorList: state.colorList,
-                            selectedColor:
-                                state.colorList.first.hex, // default selected
-                          );
-                        } else if (state is ProductColorLoadFailure) {
-                          return Text("Failed to load colors");
-                        }
-                        return SizedBox.shrink();
-                      },
-                    ),
+                        if (state is ProductVariantsLoadSuccess) {
+                          final variants = state.variants;
 
-                    BlocBuilder<ProductSizeBloc, ProductSizeState>(
-                      builder: (context, state) {
-                        if (state is ProductSizeLoadSuccess) {
-                          return ProductSizeList(
-                            product: widget.product,
-                            sizes: state.productSize,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (variants.containsKey('color'))
+                                ProductColorList(
+                                  product: widget.product,
+                                  colorList: variants['color'],
+                                  selectedColor: variants['color'].first.hex,
+                                ),
+                              if (variants.containsKey('sizes'))
+                                ProductSizeList(
+                                  product: widget.product,
+                                  sizes: variants['sizes'],
+                                ),
+                              if (variants.containsKey('weight'))
+                                VariantChipList(
+                                  title: context.loc.selectWeight,
+                                  items: variants['weight'],
+                                ),
+                              if (variants.containsKey('litre'))
+                                VariantChipList(
+                                  title: context.loc.selectLitre,
+                                  items: variants['litre'],
+                                ),
+                              if (variants.containsKey('set_size'))
+                                VariantChipList(
+                                  title: context.loc.selectQuantity,
+                                  items: variants['set_size'],
+                                ),
+                            ],
                           );
-                        } else if (state is ProductSizeLoadFailure) {
-                          return Text("Failed to load sizes");
+                        } else if (state is ProductVariantFailure) {
+                          return Text(state.message);
                         }
-                        return SizedBox.shrink();
+
+                        return CircularProgressIndicator();
                       },
                     ),
                   ],

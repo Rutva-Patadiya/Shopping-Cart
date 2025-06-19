@@ -5,7 +5,6 @@ import 'package:shopping_cart/product/data/datasources/product_data_sources.dart
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
 
 import '../data/models/category_model.dart';
-import '../data/models/product_size_model.dart';
 import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
@@ -14,23 +13,34 @@ import 'product_state.dart';
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
+
+  /// constant required
   static const allCategories = "All";
 
   ProductBloc({required this.productRepository})
-    : super(ProductLoadInProgress()) {
+    : super(
+        EmptyProductState(
+          allProducts: [],
+          filteredProducts: [],
+          searchQuery: '',
+          categories: [],
+        ),
+      ) {
     //Initially loads the products
 
+    // segregate the handler
+    // on<Initialize>(_handleInitialse)
     on<InitialProductLoaded>((event, emit) async {
       //for storing the categories
       final List<CategoryModel> categories;
       log('Initial Product Loaded');
-      emit(ProductLoadInProgress());
+      emit(state.withLoading());
       try {
         final allProducts = await productRepository.getProducts();
         categories = await dataSources.fetchCategories();
 
         if (categories.isEmpty) {
-          emit(ProductLoadFailure("No categories & products found"));
+          // emit(ProductLoadFailure("No categories & products found"));
           return;
         }
 
@@ -45,7 +55,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           ),
         );
       } catch (e) {
-        emit(ProductLoadFailure(e.toString()));
+        // emit(ProductLoadFailure(e.toString()));
       }
     });
 
@@ -91,7 +101,15 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           ),
         );
       } catch (e) {
-        emit(ProductLoadFailure('Failed to filter products'));
+        emit(
+          ProductLoadFailure(
+            errorMessage: 'Failed to filter products',
+            allProducts: [],
+            filteredProducts: [],
+            searchQuery: '',
+            categories: [],
+          ),
+        );
       }
     });
 
@@ -136,66 +154,27 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             ),
           );
         } catch (e) {
-          emit(ProductLoadFailure('Failed to filter products'));
+          // emit(ProductLoadFailure('Failed to filter products'));
         }
       }
     });
   }
 }
 
-class ProductSizeBloc extends Bloc<ProductSizeEvent, ProductSizeState> {
+class ProductVariantsBloc
+    extends Bloc<ProductVariantEvent, ProductVariantState> {
+  final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
 
-  ProductSizeBloc() : super(ProductSizeInProgress()) {
-    on<ProductSizeLoaded>((event, emit) async {
-      final List<ProductSizeModel> productSize;
-
+  ProductVariantsBloc({required this.productRepository})
+    : super(ProductVariantInProgress()) {
+    on<ProductVariantsLoaded>((event, emit) async {
       try {
-        productSize = await dataSources.fetchSizes(event.productId);
-
-        // Collect all size strings
-        final List<String> sizeList =
-            productSize.expand((model) => model.sizes).toList();
-
-        print("SizeList: $sizeList");
-        emit(ProductSizeLoadSuccess(productSize: sizeList));
+        final variants = await dataSources.fetchAllVariants(event.productId);
+        emit(ProductVariantsLoadSuccess(variants));
       } catch (e) {
-        emit(ProductSizeLoadFailure(message: 'product size load failed'));
+        emit(ProductVariantFailure("Failed to load variants"));
       }
     });
   }
 }
-//the bloc when the color is written only in the color collection
-
-class ProductColorBloc extends Bloc<ColorEvent, ColorState> {
-  final ProductDataSources dataSources = ProductDataSources();
-
-  ProductColorBloc() : super(ProductColorInProgress()) {
-    on<ProductColorLoaded>((event, emit) async {
-      try {
-        final productColorModels = await dataSources.fetchColors(
-          event.productId,
-        );
-
-        if (productColorModels.isEmpty) {
-          emit(ProductColorLoadFailure("No color variant found."));
-          return;
-        }
-
-        // convert color model into list
-        final colorList =
-            productColorModels.expand((model) => model.colors).toList();
-
-        log("Fetched colors: $colorList");
-
-        emit(ProductColorLoadSuccess(colorList: colorList));
-      } catch (e) {
-        emit(ProductColorLoadFailure("Failed to load colors"));
-      }
-    });
-  }
-}
-
-// class ProductWeightBloc extends Bloc<ProductWeightEvent, WeightState> {
-//   ProductWeightBloc(super.initialState);
-// }

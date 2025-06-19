@@ -6,7 +6,6 @@ import 'package:shopping_cart/utils/firebase_utils.dart';
 import '../models/category_model.dart'; // import '../models/product_color_model.dart';
 import '../models/product_color_model.dart';
 import '../models/product_model.dart';
-import '../models/product_size_model.dart';
 
 // This class fetches data from Firebase Fire store, which contains the product details.
 class ProductDataSources {
@@ -16,7 +15,6 @@ class ProductDataSources {
 
   late Product product;
   late CategoryModel categoryModel;
-  late ProductSizeModel productSizeModel;
 
   //Fetches the products from the firebase
   Future<List<ProductModel>> fetchProducts() async {
@@ -55,48 +53,100 @@ class ProductDataSources {
         .toList();
   }
 
-  Future<List<ProductColorModel>> fetchColors(String productId) async {
-    //retrieves the reference of the document
+  Future<Map<String, dynamic>> fetchAllVariants(String productId) async {
+    // missing try catch
     final productRef = FirebaseFirestore.instance
         .collection(productCollection)
         .doc(productId);
 
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection(variantsCollection)
-        .where('product_id', isEqualTo: productRef)
-        .where('name', isEqualTo: 'Color') //  fetch only color variant
-        .limit(1)
-        .get()
-        .handleFirebase(logName: "fetchColors");
+    final querySnapshot =
+        await FirebaseFirestore.instance
+            .collection(variantsCollection)
+            .where('product_id', isEqualTo: productRef)
+            .get();
 
-    if (querySnapshot == null || querySnapshot.docs.isEmpty) return [];
+    final Map<String, dynamic> result = {};
 
-    return querySnapshot.docs
-        .map((doc) => ProductColorModel.fromFirestore(doc))
-        .toList();
+    for (var doc in querySnapshot.docs) {
+      final data = doc.data();
+      final name = data['name'];
+
+      switch (name) {
+        // missing constants
+        case 'Size':
+          result['sizes'] = List<String>.from(
+            data['sizes'].map((e) => e.toString()),
+          );
+          break;
+        case 'Color':
+          result['color'] = List<ColorItem>.from(
+            data['color'].map((e) => ColorItem.fromMap(e)),
+          );
+          break;
+        case 'Weight':
+          result['weight'] = List<String>.from(
+            data['weight'].map((e) => e.toString()),
+          );
+          break;
+        case 'Litre':
+          result['litre'] = List<String>.from(
+            data['litre'].map((e) => e.toString()),
+          );
+          break;
+        case 'Quantity':
+          result['set_size'] = List<String>.from(
+            data['set_size'].map((e) => e.toString()),
+          );
+        // Add more cases if needed
+      }
+    }
+
+    return result;
   }
 
-  Future<List<ProductSizeModel>> fetchSizes(String productId) async {
-    //fetch the document id of the collection
-    final productRef = FirebaseFirestore.instance
-        .collection(productCollection)
-        .doc(productId);
-
-    //fetch the document inside variants where product_id matched
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection(variantsCollection)
-        .where('product_id', isEqualTo: productRef)
-        .where('name', isEqualTo: 'Size')
-        .limit(1)
-        .get()
-        .handleFirebase(logName: "fetchSizes");
-
-    if (querySnapshot == null || querySnapshot.docs.isEmpty) return [];
-
-    return querySnapshot.docs
-        .map((doc) => ProductSizeModel.fromFirestore(doc))
-        .toList();
-  }
+  //
+  // Future<List<ProductColorModel>> fetchColors(String productId) async {
+  //   //retrieves the reference of the document
+  //   final productRef = FirebaseFirestore.instance
+  //       .collection(productCollection)
+  //       .doc(productId);
+  //
+  //   final querySnapshot = await FirebaseFirestore.instance
+  //       .collection(variantsCollection)
+  //       .where('product_id', isEqualTo: productRef)
+  //       .where('name', isEqualTo: 'Color') //  fetch only color variant
+  //       .limit(1)
+  //       .get()
+  //       .handleFirebase(logName: "fetchColors");
+  //
+  //   if (querySnapshot == null || querySnapshot.docs.isEmpty) return [];
+  //
+  //   return querySnapshot.docs
+  //       .map((doc) => ProductColorModel.fromFirestore(doc))
+  //       .toList();
+  // }
+  //
+  // Future<List<ProductSizeModel>> fetchSizes(String productId) async {
+  //   //fetch the document id of the collection
+  //   final productRef = FirebaseFirestore.instance
+  //       .collection(productCollection)
+  //       .doc(productId);
+  //
+  //   //fetch the document inside variants where product_id matched
+  //   final querySnapshot = await FirebaseFirestore.instance
+  //       .collection(variantsCollection)
+  //       .where('product_id', isEqualTo: productRef)
+  //       .where('name', isEqualTo: 'Size')
+  //       .limit(1)
+  //       .get()
+  //       .handleFirebase(logName: "fetchSizes");
+  //
+  //   if (querySnapshot == null || querySnapshot.docs.isEmpty) return [];
+  //
+  //   return querySnapshot.docs
+  //       .map((doc) => ProductSizeModel.fromFirestore(doc))
+  //       .toList();
+  // }
 
   //It will be called when there is an exception
   // void handleException(e) {
