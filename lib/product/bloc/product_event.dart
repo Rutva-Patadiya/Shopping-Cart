@@ -2,6 +2,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+//handle events related to category
+class CategoryEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+// class Category
+
 //equatable to compare the instance efficiently
 class FilterProductEvent extends Equatable {
   @override

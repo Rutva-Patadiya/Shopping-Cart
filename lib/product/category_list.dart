@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/core/utils/theme/theme.dart';
-import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 
+import '../Constants.dart';
 import '../product/bloc/product_bloc.dart';
 import '../product/bloc/product_event.dart';
 import '../product/bloc/product_state.dart';
@@ -14,12 +14,28 @@ class CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return BlocSelector<CategoryBloc, CategoryState>(
+    //   selector: (state) {
+    //     if (state is CategoryLoadSuccess && state.categories.isNotEmpty) {}
+    //   },
+    // return BlocSelector<ProductBloc, ProductState, Map<String, dynamic>>(
+    //     selector: (state) {
+    //       //if checks that state is ProductLoadSuccess and if categories is not empty
+    //       if (state is ProductLoadSuccess && state.categories.isNotEmpty) {
+    //         return {
+    //           'categories': state.categories,
+    //           'selectedCategoryId': state.categoryId,
+    //         };
+    //       }
+    //       //if productloadsuccess and categories is empty
+    //       return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
+    //     },
     return BlocSelector<ProductBloc, ProductState, Map<String, dynamic>>(
       selector: (state) {
         //if checks that state is ProductLoadSuccess and if categories is not empty
-        if (state is ProductLoadSuccess && state.categories.isNotEmpty) {
+        if (state is ProductLoadSuccess) {
           return {
-            'categories': state.categories,
+            'categories': state.categoryName,
             'selectedCategoryId': state.categoryId,
           };
         }
@@ -88,7 +104,7 @@ class CategoryList extends StatelessWidget {
 
               final category = categories[index - 1];
               final categoryRef = FirebaseFirestore.instance
-                  .collection(ProductDataSources.categoriesCollection)
+                  .collection(Constants.categoriesCollection)
                   .doc(category.id);
               final isSelected = selectedCategoryId?.id == categoryRef.id;
 

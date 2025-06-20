@@ -4,15 +4,35 @@ import 'package:shopping_cart/product/data/models/category_model.dart';
 
 import '../domain/entities/product.dart';
 
+abstract class CategoryState extends Equatable {
+  final List<CategoryModel> categories;
+
+  const CategoryState({required this.categories});
+}
+
+class CategoryLoadInProgress extends CategoryState {
+  const CategoryLoadInProgress({required super.categories});
+
+  @override
+  List<Object?> get props => [categories];
+}
+
+class CategoryLoadSuccess extends CategoryState {
+  const CategoryLoadSuccess({required super.categories});
+
+  @override
+  List<Object?> get props => [categories];
+}
+
 // Equatable: when the state changes, Equatable compares whether the parameters are the same.
 // If they are the same, it avoids re-rendering
+/// Passed the parameters in the initial state so that we can reuse it by using the super keyword
 abstract class ProductState extends Equatable {
   final List<Product> allProducts;
   final List<Product> filteredProducts;
   final String? categoryName;
   final DocumentReference? categoryId;
   final String searchQuery;
-  final List<CategoryModel> categories;
 
   const ProductState({
     required this.allProducts,
@@ -20,7 +40,7 @@ abstract class ProductState extends Equatable {
     this.categoryName,
     this.categoryId,
     required this.searchQuery,
-    required this.categories,
+    // required this.categories,
   });
 
   ProductLoadInProgress withLoading() {
@@ -30,9 +50,8 @@ abstract class ProductState extends Equatable {
       categoryName: categoryName,
       categoryId: categoryId,
       searchQuery: searchQuery,
-      categories: categories,
+      // categories: categories,
     );
-    // return ProductLoadInProgress();
   }
 
   @override
@@ -42,7 +61,7 @@ abstract class ProductState extends Equatable {
     categoryName,
     categoryId,
     searchQuery,
-    categories,
+    // categories,
   ];
 }
 
@@ -51,7 +70,7 @@ class EmptyProductState extends ProductState {
     required super.allProducts,
     required super.filteredProducts,
     required super.searchQuery,
-    required super.categories,
+    // required super.categories,
   });
 }
 
@@ -63,29 +82,21 @@ class ProductLoadInProgress extends ProductState {
     super.categoryName,
     super.categoryId,
     required super.searchQuery,
-    required super.categories,
+    // required super.categories,
   });
 }
 
 //emits when products are loaded successfully
 class ProductLoadSuccess extends ProductState {
-  final List<Product> allProducts;
-  final List<Product> filteredProducts;
-  final String? categoryName;
-  final DocumentReference? categoryId;
-  final String searchQuery;
-  final List<CategoryModel> categories;
-
-  // remaining to solve the error
   @override
-  ProductLoadSuccess({
-    required this.allProducts,
-    required this.filteredProducts,
-    this.categoryName,
-    required this.categoryId,
-    required this.searchQuery,
-    required this.categories,
-  }) : super(allProducts: [], filteredProducts: null);
+  const ProductLoadSuccess({
+    required super.allProducts,
+    required super.filteredProducts,
+    super.categoryName,
+    required super.categoryId,
+    required super.searchQuery,
+    // required super.categories,
+  });
 
   @override
   List<Object?> get props => [
@@ -94,7 +105,7 @@ class ProductLoadSuccess extends ProductState {
     categoryId,
     categoryName,
     searchQuery,
-    categories,
+    // categories,
   ];
 }
 
@@ -107,22 +118,46 @@ class ProductLoadFailure extends ProductState {
     required super.allProducts,
     required super.filteredProducts,
     required super.searchQuery,
-    required super.categories,
+    // required super.categories,
   });
 }
 
-abstract class ProductVariantState {}
-
-class ProductVariantInProgress extends ProductVariantState {}
-
-class ProductVariantsLoadSuccess extends ProductVariantState {
+/// Abstract class for all variant states
+abstract class ProductVariantState extends Equatable {
   final Map<String, dynamic> variants;
 
-  ProductVariantsLoadSuccess(this.variants);
+  const ProductVariantState({required this.variants});
+
+  // Optional helper method to convert current state to loading state
+  ProductVariantInProgress withLoading() {
+    return ProductVariantInProgress(variants: variants);
+  }
+
+  @override
+  List<Object?> get props => [variants];
 }
 
+/// Initial or empty state
+class EmptyProductVariantState extends ProductVariantState {
+  const EmptyProductVariantState({required super.variants});
+}
+
+/// Loading state
+class ProductVariantInProgress extends ProductVariantState {
+  const ProductVariantInProgress({required super.variants});
+}
+
+/// Successful load state
+class ProductVariantsLoadSuccess extends ProductVariantState {
+  const ProductVariantsLoadSuccess({required super.variants});
+}
+
+/// Failure state
 class ProductVariantFailure extends ProductVariantState {
   final String message;
 
-  ProductVariantFailure(this.message);
+  const ProductVariantFailure({required this.message, required super.variants});
+
+  @override
+  List<Object?> get props => [variants, message];
 }

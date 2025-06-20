@@ -26,11 +26,19 @@ class AuthState extends Equatable {
 
   @override
   List<Object> get props => [isLoading, obscureText, confirmPass];
+
+  AuthInProgress withLoading() {
+    return AuthInProgress();
+  }
 }
 
-class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {
+  const AuthInitial({super.isLoading, super.obscureText, super.confirmPass});
+}
 
-class AuthInProgress extends AuthState {}
+class AuthInProgress extends AuthState {
+  const AuthInProgress({super.isLoading, super.obscureText, super.confirmPass});
+}
 
 class AuthSuccess extends AuthState {
   final String? email;
@@ -38,6 +46,9 @@ class AuthSuccess extends AuthState {
   final String? photoUrl;
 
   const AuthSuccess({
+    super.isLoading,
+    super.obscureText,
+    super.confirmPass,
     required this.email,
     required this.name,
     required this.photoUrl,
@@ -47,9 +58,30 @@ class AuthSuccess extends AuthState {
 class AuthFailure extends AuthState {
   final String message;
 
-  const AuthFailure({required this.message});
+  const AuthFailure({
+    required this.message,
+    super.isLoading,
+    super.confirmPass,
+    super.obscureText,
+  });
 }
 
-class AuthRegistrationSuccess extends AuthState {}
+class AuthRegistrationSuccess extends AuthState {
+  const AuthRegistrationSuccess({
+    super.isLoading,
+    super.confirmPass,
+    super.obscureText,
+  });
+}
 
-class AuthLogOutSuccess extends AuthState {}
+class AuthLogOutSuccess extends AuthState {
+  const AuthLogOutSuccess({
+    super.isLoading,
+    super.confirmPass,
+    super.obscureText,
+  });
+}
+
+class EmptyAuthState extends AuthState {
+  const EmptyAuthState({super.isLoading, super.confirmPass, super.obscureText});
+}
