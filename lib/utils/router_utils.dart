@@ -26,6 +26,7 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
 
     case ProductDetailsPage.route:
       final product = routeSettings.arguments as Product;
+
       return MaterialPageRoute(
         builder:
             (context) => MultiBlocProvider(
@@ -34,7 +35,7 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
                 // category immediate selection not working
                 // bloc observer
                 // on search clearance categories are removed, should not happen
-                // data sources and repositories  multiple instances, should be one only
+                // data sources and repositories multiple instances, should be one only
                 BlocProvider<ProductVariantsBloc>(
                   create:
                       (_) => ProductVariantsBloc(
@@ -42,9 +43,9 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
                           ProductDataSources(),
                         ),
                       ),
-                  //
                 ),
-                // BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()),
+
+                // BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()), // Add when needed
               ],
               child: ProductDetailsPage(product: product),
             ),

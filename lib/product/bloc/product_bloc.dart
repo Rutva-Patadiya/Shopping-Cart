@@ -10,11 +10,47 @@ import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 
+/// The bloc class for managing the category-related operations
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  CategoryBloc(super.initialState);
+  CategoryBloc() : super(EmptyCategoryState(categories: [], categoryId: null)) {
+    on<CategoryLoadedEvent>(_handleCategoryList);
+    on<CategorySelectedEvent>(_handleCategorySelected);
+  }
+
+  Future<void> _handleCategoryList(
+    CategoryEvent event,
+    Emitter<CategoryState> emit,
+  ) async {
+    emit(state.withLoading());
+    List<CategoryModel> categories;
+    ProductDataSources dataSources = ProductDataSources();
+    categories = await dataSources.fetchCategories();
+    log("Categories: $categories");
+    if (categories.isEmpty) {
+      emit(CategoryLoadFailure(categories: [], categoryId: null));
+      return;
+    } else {
+      emit(CategoryLoadSuccess(categories: categories));
+    }
+  }
+
+  Future<void> _handleCategorySelected(
+    CategorySelectedEvent event,
+    Emitter<CategoryState> emit,
+  ) async {
+    if (state is CategoryLoadSuccess) {
+      // print("selected id: ${event.categoryId?.id}");
+      emit(
+        CategoryLoadSuccess(
+          categories: state.categories,
+          categoryId: event.categoryId,
+        ),
+      );
+    }
+  }
 }
 
-//The bloc class is for managing the product & category related operation
+/// The bloc class for managing the product & category-related operations
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository productRepository;
   final ProductDataSources dataSources = ProductDataSources();
@@ -26,44 +62,46 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           allProducts: [],
           filteredProducts: [],
           searchQuery: '',
-          // categories: [],
         ),
       ) {
-    //Initially loads the products
+    // Initially loads the products
     on<InitialProductLoaded>(_handleInitialProducts);
-    //filters products
+
+    // Filters products
     on<ProductFilteredEvent>(_handleFilterProducts);
-    //handle product search
+
+    // Handles product search
     on<ProductSearchedEvent>(_handleProductSearch);
   }
 
+  /// Loads all products and categories initially
   Future<void> _handleInitialProducts(
     FilterProductEvent event,
     Emitter<ProductState> emit,
   ) async {
-    final List<CategoryModel> categories;
+    // final List<CategoryModel> categories;
     log('Initial Product Loaded');
     emit(state.withLoading());
+
     try {
       final allProducts = await productRepository.getProducts();
-      categories = await dataSources.fetchCategories();
+      // categories = await dataSources.fetchCategories();
 
-      if (categories.isEmpty) {
-        emit(
-          ProductLoadFailure(
-            errorMessage: 'No categories & products found',
-            allProducts: [],
-            filteredProducts: [],
-            searchQuery: '',
-            // categories: [],
-          ),
-        );
-        return;
-      }
+      // if (categories.isEmpty) {
+      //   emit(
+      //     ProductLoadFailure(
+      //       errorMessage: 'No categories & products found',
+      //       allProducts: [],
+      //       filteredProducts: [],
+      //       searchQuery: '',
+      //     ),
+      //   );
+      //   return;
+      // }
 
       emit(
         ProductLoadSuccess(
-          // categories: categories,
+          // categories: categories,  // uncomment if categories needed
           allProducts: allProducts,
           filteredProducts: allProducts,
           categoryName: "All",
@@ -72,10 +110,18 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
         ),
       );
     } catch (e) {
-      // emit(ProductLoadFailure(e.toString()));
+      emit(
+        ProductLoadFailure(
+          errorMessage: e.toString(),
+          allProducts: [],
+          filteredProducts: [],
+          searchQuery: '',
+        ),
+      );
     }
   }
 
+  /// Filters products based on category and previous search query
   Future<void> _handleFilterProducts(
     ProductFilteredEvent event,
     Emitter<ProductState> emit,
@@ -86,10 +132,9 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
     try {
       final allProducts = await productRepository.getProducts();
-
       List<Product> filtered = allProducts;
 
-      // Apply filter category wise first
+      // Apply filter category-wise first
       if (event.categoryId != null) {
         filtered =
             filtered.where((p) => p.categoryId == event.categoryId).toList();
@@ -107,10 +152,10 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
                 .toList();
       }
 
-      //after filtering, emits the ProductLoadSuccess state
+      // After filtering, emits the ProductLoadSuccess state
       emit(
         ProductLoadSuccess(
-          // categories: await dataSources.fetchCategories(),
+          // categories: await dataSources.fetchCategories(), // uncomment if categories needed
           allProducts: allProducts,
           filteredProducts: filtered,
           categoryId: event.categoryId,
@@ -125,12 +170,13 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           allProducts: [],
           filteredProducts: [],
           searchQuery: '',
-          // categories: [],
+          // categories: [],  // uncomment if categories needed
         ),
       );
     }
   }
 
+  /// Handles product search based on current filters
   Future<void> _handleProductSearch(
     ProductSearchedEvent event,
     Emitter<ProductState> emit,
@@ -140,7 +186,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     if (currentState is ProductLoadSuccess) {
       try {
         final allProducts = await productRepository.getProducts();
-
         List<Product> filtered = allProducts;
 
         // Reuse current category filter
@@ -165,12 +210,12 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
         emit(
           ProductLoadSuccess(
-            // categories: await dataSources.fetchCategories(),
+            // categories: await dataSources.fetchCategories(), // uncomment if categories needed
             allProducts: allProducts,
             filteredProducts: filtered,
             categoryId: currentState.categoryId,
             categoryName: currentState.categoryName,
-            searchQuery: event.query, // <- save new query (even if empty)
+            searchQuery: event.query, // <- Save new query (even if empty)
           ),
         );
       } catch (e) {
@@ -180,7 +225,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             allProducts: [],
             filteredProducts: [],
             searchQuery: '',
-            // categories: [],
+            // categories: [],  // uncomment if categories needed
           ),
         );
       }
@@ -188,6 +233,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   }
 }
 
+/// Bloc to load product variants for a specific product
 class ProductVariantsBloc
     extends Bloc<ProductVariantEvent, ProductVariantState> {
   final ProductRepository productRepository;
@@ -198,6 +244,7 @@ class ProductVariantsBloc
     on<ProductVariantsLoaded>(_handleProductVariants);
   }
 
+  /// Loads all variants for a product
   Future<void> _handleProductVariants(
     ProductVariantsLoaded event,
     Emitter<ProductVariantState> emit,
@@ -212,141 +259,3 @@ class ProductVariantsBloc
     }
   }
 }
-
-// on<InitialProductLoaded>((event, emit) async {
-//   //for storing the categories
-//   final List<CategoryModel> categories;
-//   log('Initial Product Loaded');
-//   emit(state.withLoading());
-//   try {
-//     final allProducts = await productRepository.getProducts();
-//     categories = await dataSources.fetchCategories();
-//
-//     if (categories.isEmpty) {
-//       // emit(ProductLoadFailure("No categories & products found"));
-//       return;
-//     }
-//
-//     emit(
-//       ProductLoadSuccess(
-//         categories: categories,
-//         allProducts: allProducts,
-//         filteredProducts: allProducts,
-//         categoryName: "All",
-//         categoryId: null,
-//         searchQuery: "",
-//       ),
-//     );
-//   } catch (e) {
-//     // emit(ProductLoadFailure(e.toString()));
-//   }
-// });
-
-// Loads all products from the repository when the app starts
-
-// on<ProductFilteredEvent>((event, emit) async {
-//   final currentState = state;
-//   final previousSearchQuery =
-//       currentState is ProductLoadSuccess ? currentState.searchQuery : "";
-//
-//   try {
-//     final allProducts = await productRepository.getProducts();
-//
-//     List<Product> filtered = allProducts;
-//
-//     // Apply filter category wise first
-//     if (event.categoryId != null) {
-//       filtered =
-//           filtered.where((p) => p.categoryId == event.categoryId).toList();
-//     }
-//
-//     // Apply search filter
-//     if (previousSearchQuery.isNotEmpty) {
-//       filtered =
-//           filtered
-//               .where(
-//                 (p) => p.name.toLowerCase().contains(
-//                   previousSearchQuery.toLowerCase(),
-//                 ),
-//               )
-//               .toList();
-//     }
-//
-//     //after filtering, emits the ProductLoadSuccess state
-//     emit(
-//       ProductLoadSuccess(
-//         categories: await dataSources.fetchCategories(),
-//         allProducts: allProducts,
-//         filteredProducts: filtered,
-//         categoryId: event.categoryId,
-//         categoryName: event.categoryName,
-//         searchQuery: previousSearchQuery,
-//       ),
-//     );
-//   } catch (e) {
-//     emit(
-//       ProductLoadFailure(
-//         errorMessage: 'Failed to filter products',
-//         allProducts: [],
-//         filteredProducts: [],
-//         searchQuery: '',
-//         categories: [],
-//       ),
-//     );
-//   }
-// });
-//
-// //It handles product search
-// on<ProductSearchedEvent>((event, emit) async {
-//   final currentState = state;
-//
-//   if (currentState is ProductLoadSuccess) {
-//     try {
-//       final allProducts = await productRepository.getProducts();
-//
-//       List<Product> filtered = allProducts;
-//
-//       // Reuse current category filter
-//       if (currentState.categoryId != null) {
-//         filtered =
-//             filtered
-//                 .where((p) => p.categoryId == currentState.categoryId)
-//                 .toList();
-//       }
-//
-//       // Apply new search query (even if it's empty)
-//       if (event.query.isNotEmpty) {
-//         filtered =
-//             filtered
-//                 .where(
-//                   (p) => p.name.toLowerCase().contains(
-//                     event.query.toLowerCase(),
-//                   ),
-//                 )
-//                 .toList();
-//       }
-//
-//       emit(
-//         ProductLoadSuccess(
-//           categories: await dataSources.fetchCategories(),
-//           allProducts: allProducts,
-//           filteredProducts: filtered,
-//           categoryId: currentState.categoryId,
-//           categoryName: currentState.categoryName,
-//           searchQuery: event.query, // <- save new query (even if empty)
-//         ),
-//       );
-//     } catch (e) {
-//       // emit(ProductLoadFailure('Failed to filter products'));
-//     }
-//   }
-// });
-
-// on<ProductVariantsLoaded>((event, emit) async {
-// try {
-// final variants = await dataSources.fetchAllVariants(event.productId);
-// emit(ProductVariantsLoadSuccess(variants));
-// } catch (e) {
-// emit(ProductVariantFailure("Failed to load variants"));
-// }
-// });

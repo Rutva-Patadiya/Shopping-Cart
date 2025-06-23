@@ -19,7 +19,7 @@ class _CarouselImagesState extends State<CarouselImages> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: SizedBox(
         height: 200,
         child: Column(

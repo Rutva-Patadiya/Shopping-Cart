@@ -90,31 +90,34 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       horizontal: 2,
                       vertical: 16,
                     ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(220, 50),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, CartPage.route);
-                      },
-                      child: Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 8),
-                            child: Icon(Icons.shopping_bag_rounded, size: 20),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            context.loc.addToCart,
-                            textAlign: TextAlign.center,
-                            style: TTextTheme.lightTextTheme.headlineSmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  height: 0.5,
-                                  letterSpacing: 0,
-                                ),
-                          ),
-                        ],
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(220, 50),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, CartPage.route);
+                        },
+                        child: Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 8),
+                              child: Icon(Icons.shopping_bag_rounded, size: 20),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              context.loc.addToCart,
+                              textAlign: TextAlign.center,
+                              style: TTextTheme.lightTextTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    height: 0.5,
+                                    letterSpacing: 0,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

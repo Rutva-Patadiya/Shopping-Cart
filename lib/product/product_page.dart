@@ -42,6 +42,7 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                 ),
           ),
+          BlocProvider(create: (_) => CategoryBloc()),
         ],
         child: HomePage(),
       ),

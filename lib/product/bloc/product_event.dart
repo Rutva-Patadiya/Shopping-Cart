@@ -8,7 +8,13 @@ class CategoryEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// class Category
+class CategoryLoadedEvent extends CategoryEvent {}
+
+class CategorySelectedEvent extends CategoryEvent {
+  final DocumentReference? categoryId;
+
+  CategorySelectedEvent({required this.categoryId});
+}
 
 //equatable to compare the instance efficiently
 class FilterProductEvent extends Equatable {

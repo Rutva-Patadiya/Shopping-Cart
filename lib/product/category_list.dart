@@ -14,40 +14,24 @@ class CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocSelector<CategoryBloc, CategoryState>(
-    //   selector: (state) {
-    //     if (state is CategoryLoadSuccess && state.categories.isNotEmpty) {}
-    //   },
-    // return BlocSelector<ProductBloc, ProductState, Map<String, dynamic>>(
-    //     selector: (state) {
-    //       //if checks that state is ProductLoadSuccess and if categories is not empty
-    //       if (state is ProductLoadSuccess && state.categories.isNotEmpty) {
-    //         return {
-    //           'categories': state.categories,
-    //           'selectedCategoryId': state.categoryId,
-    //         };
-    //       }
-    //       //if productloadsuccess and categories is empty
-    //       return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
-    //     },
-    return BlocSelector<ProductBloc, ProductState, Map<String, dynamic>>(
+    // BlocSelector listens only to part of the state to avoid unnecessary rebuilds
+    return BlocSelector<CategoryBloc, CategoryState, Map<String, dynamic>>(
       selector: (state) {
-        //if checks that state is ProductLoadSuccess and if categories is not empty
-        if (state is ProductLoadSuccess) {
+        // Checks if state is CategoryLoadSuccess and returns categories
+        if (state is CategoryLoadSuccess) {
           return {
-            'categories': state.categoryName,
+            'categories': state.categories,
             'selectedCategoryId': state.categoryId,
           };
         }
-        //if productloadsuccess and categories is empty
+        // Default empty list and null selection
         return {'categories': <CategoryModel>[], 'selectedCategoryId': null};
       },
       builder: (context, data) {
         final categories = data['categories'] as List<CategoryModel>;
         final selectedCategoryId =
             data['selectedCategoryId'] as DocumentReference?;
-        final isAllSelected = selectedCategoryId == null;
-
+        // final isAllSelected = categoryId == null;
         return SizedBox(
           height: 72,
           child: ListView.builder(
@@ -56,6 +40,7 @@ class CategoryList extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: categories.length + 1,
             itemBuilder: (context, index) {
+              // First item: "All" button
               if (index == 0) {
                 return SizedBox(
                   width: 72,
@@ -67,23 +52,22 @@ class CategoryList extends StatelessWidget {
                           context.read<ProductBloc>().add(
                             ProductFilteredEvent('All', null),
                           );
+                          context.read<CategoryBloc>().add(
+                            CategorySelectedEvent(categoryId: null),
+                          );
                         },
-                        child: AnimatedContainer(
+                        child: Container(
                           padding: const EdgeInsets.all(12),
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color:
-                                isAllSelected
-                                    ? AppColors.brown
-                                    : AppColors.lightBrown,
+                            color: AppColors.lightBrown,
                           ),
-                          duration: const Duration(milliseconds: 100),
+                          // duration: const Duration(milliseconds: 100),
                           child: Icon(
                             Icons.all_inclusive,
                             size: 28,
-                            color:
-                                isAllSelected ? Colors.white : AppColors.brown,
+                            color: AppColors.brown,
                           ),
                         ),
                       ),
@@ -93,8 +77,7 @@ class CategoryList extends StatelessWidget {
                         style: TextTheme.of(context).labelSmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color:
-                              isAllSelected ? AppColors.brown : Colors.black87,
+                          color: Colors.black87,
                         ),
                       ),
                     ],
@@ -102,12 +85,15 @@ class CategoryList extends StatelessWidget {
                 );
               }
 
+              // Category Item Rendering
               final category = categories[index - 1];
               final categoryRef = FirebaseFirestore.instance
                   .collection(Constants.categoriesCollection)
                   .doc(category.id);
-              final isSelected = selectedCategoryId?.id == categoryRef.id;
 
+              // print("Selected ID: ${selectedCategoryId?.id}");
+              print("category ref: ${categoryRef.id}");
+              // final isSelected = == categoryRef.id;
               return SizedBox(
                 width: 72,
                 child: Column(
@@ -115,25 +101,30 @@ class CategoryList extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        print("All id= ${selectedCategoryId?.id}");
+                        print("category id= ${categoryRef.id}");
+                        // print(isSelected);
                         context.read<ProductBloc>().add(
                           ProductFilteredEvent(category.name, categoryRef),
                         );
+
+                        //It will change the color of the Selected Category
+                        context.read<CategoryBloc>().add(
+                          CategorySelectedEvent(categoryId: categoryRef),
+                        );
                       },
-                      child: AnimatedContainer(
+                      child: Container(
                         padding: const EdgeInsets.all(12),
                         margin: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color:
-                              isSelected
-                                  ? AppColors.brown
-                                  : AppColors.lightBrown,
+                          color: AppColors.lightBrown,
                         ),
-                        duration: const Duration(milliseconds: 100),
+                        // duration: const Duration(milliseconds: 100),
                         child: Image.network(
                           category.image,
                           height: 28,
-                          color: isSelected ? Colors.white : AppColors.brown,
+                          color: AppColors.brown,
                         ),
                       ),
                     ),
@@ -143,7 +134,7 @@ class CategoryList extends StatelessWidget {
                       style: TextTheme.of(context).labelSmall?.copyWith(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? AppColors.brown : Colors.black87,
+                        color: Colors.black87,
                       ),
                     ),
                   ],

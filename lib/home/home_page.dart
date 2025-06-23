@@ -47,6 +47,7 @@ class HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_isInitialized) {
         context.read<ProductBloc>().add(InitialProductLoaded());
+        context.read<CategoryBloc>().add(CategoryLoadedEvent());
         _isInitialized = true;
         _getCurrentLocation(); //when the UI is ready,it will fetch location
       }
@@ -256,7 +257,23 @@ class _StickyCategoryDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: const CategoryList(),
+      // Ensure the child fills the available height defined by minExtent/maxExtent
+      height: maxExtent,
+      // Explicitly set height
+      child: BlocBuilder<CategoryBloc, CategoryState>(
+        builder: (context, state) {
+          if (state is CategoryLoadInProgress) {
+            // Wrap the CircularProgressIndicator in a Center widget
+            // to ensure it takes up the full space provided by the Container.
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CategoryLoadSuccess) {
+            return CategoryList();
+          } else if (state is CategoryLoadFailure) {
+            return const Center(child: Text("No categorylist found"));
+          }
+          return const SizedBox.shrink(); // fallback
+        },
+      ),
     );
   }
 
@@ -270,3 +287,39 @@ class _StickyCategoryDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       true;
 }
+
+// class _StickyCategoryDelegate extends SliverPersistentHeaderDelegate {
+//   @override
+//   Widget build(
+//     BuildContext context,
+//     double shrinkOffset,
+//     bool overlapsContent,
+//   ) {
+//     return Container(
+//       color: Colors.white,
+//       padding: const EdgeInsets.symmetric(vertical: 4),
+//       child: BlocBuilder<CategoryBloc, CategoryState>(
+//         builder: (context, state) {
+//           if (state is CategoryLoadInProgress) {
+//             return CircularProgressIndicator();
+//           } else if (state is CategoryLoadSuccess) {
+//             return CategoryList();
+//           } else if (state is CategoryLoadFailure) {
+//             return Center(child: Text("No categorylist found"));
+//           }
+//           return SizedBox();
+//         },
+//       ),
+//     );
+//   }
+//
+//   @override
+//   double get maxExtent => 80;
+//
+//   @override
+//   double get minExtent => 80;
+//
+//   @override
+//   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+//       true;
+// }
