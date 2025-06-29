@@ -35,14 +35,20 @@ class _ProductPageState extends State<ProductPage> {
       MultiBlocProvider(
         providers: [
           BlocProvider<ProductBloc>(
-            create:
-                (_) => ProductBloc(
-                  productRepository: ProductRepositoryImpl(
-                    ProductDataSources(),
-                  ),
-                ),
+            create: (_) {
+              final dataSources = ProductDataSources();
+              return ProductBloc(
+                productRepository: ProductRepositoryImpl(dataSources),
+                dataSources: dataSources,
+              );
+            },
           ),
-          BlocProvider(create: (_) => CategoryBloc()),
+          BlocProvider(
+            create: (_) {
+              final dataSources = ProductDataSources();
+              return CategoryBloc(dataSources: dataSources);
+            },
+          ),
         ],
         child: HomePage(),
       ),

@@ -37,12 +37,13 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
                 // on search clearance categories are removed, should not happen
                 // data sources and repositories multiple instances, should be one only
                 BlocProvider<ProductVariantsBloc>(
-                  create:
-                      (_) => ProductVariantsBloc(
-                        productRepository: ProductRepositoryImpl(
-                          ProductDataSources(),
-                        ),
-                      ),
+                  create: (_) {
+                    final dataSources = ProductDataSources();
+                    return ProductVariantsBloc(
+                      productRepository: ProductRepositoryImpl(dataSources),
+                      dataSources: dataSources,
+                    );
+                  },
                 ),
 
                 // BlocProvider<ProductSizeBloc>(create: (_) => ProductSizeBloc()), // Add when needed

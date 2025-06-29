@@ -19,7 +19,7 @@ abstract class CategoryState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [categories];
+  List<Object?> get props => [categories, categoryId];
 }
 
 /// Empty state for categories

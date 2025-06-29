@@ -10,36 +10,41 @@ import '../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 
-/// The bloc class for managing the category-related operations
+/// Bloc for managing category-related operations
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  CategoryBloc() : super(EmptyCategoryState(categories: [], categoryId: null)) {
-    on<CategoryLoadedEvent>(_handleCategoryList);
-    on<CategorySelectedEvent>(_handleCategorySelected);
+  final ProductDataSources dataSources;
+  CategoryBloc({required this.dataSources})
+    : super(EmptyCategoryState(categories: [], categoryId: null)) {
+    on<CategoryLoadedEvent>(_onCategoryLoaded);
+    on<CategorySelectedEvent>(_onCategorySelected);
   }
 
-  Future<void> _handleCategoryList(
+  Future<void> _onCategoryLoaded(
     CategoryEvent event,
     Emitter<CategoryState> emit,
   ) async {
     emit(state.withLoading());
-    List<CategoryModel> categories;
     ProductDataSources dataSources = ProductDataSources();
-    categories = await dataSources.fetchCategories();
+    List<CategoryModel> categories = await dataSources.fetchCategories();
     log("Categories: $categories");
+
     if (categories.isEmpty) {
       emit(CategoryLoadFailure(categories: [], categoryId: null));
-      return;
     } else {
-      emit(CategoryLoadSuccess(categories: categories));
+      emit(
+        CategoryLoadSuccess(
+          categories: categories,
+          categoryId: state.categoryId,
+        ),
+      );
     }
   }
 
-  Future<void> _handleCategorySelected(
+  Future<void> _onCategorySelected(
     CategorySelectedEvent event,
     Emitter<CategoryState> emit,
   ) async {
     if (state is CategoryLoadSuccess) {
-      // print("selected id: ${event.categoryId?.id}");
       emit(
         CategoryLoadSuccess(
           categories: state.categories,
@@ -50,13 +55,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 }
 
-/// The bloc class for managing the product & category-related operations
+/// Bloc for managing product and category-related operations
 class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
   final ProductRepository productRepository;
-  final ProductDataSources dataSources = ProductDataSources();
+  final ProductDataSources dataSources;
 
-  /// constant required
-  ProductBloc({required this.productRepository})
+  ProductBloc({required this.productRepository, required this.dataSources})
     : super(
         EmptyProductState(
           allProducts: [],
@@ -64,44 +68,23 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           searchQuery: '',
         ),
       ) {
-    // Initially loads the products
-    on<InitialProductLoaded>(_handleInitialProducts);
-
-    // Filters products
-    on<ProductFilteredEvent>(_handleFilterProducts);
-
-    // Handles product search
-    on<ProductSearchedEvent>(_handleProductSearch);
+    on<InitialProductLoaded>(_onInitialProductLoaded);
+    on<ProductFilteredEvent>(_onProductsFiltered);
+    on<ProductSearchedEvent>(_onProductsSearched);
   }
 
-  /// Loads all products and categories initially
-  Future<void> _handleInitialProducts(
+  Future<void> _onInitialProductLoaded(
     FilterProductEvent event,
     Emitter<ProductState> emit,
   ) async {
-    // final List<CategoryModel> categories;
     log('Initial Product Loaded');
     emit(state.withLoading());
 
     try {
       final allProducts = await productRepository.getProducts();
-      // categories = await dataSources.fetchCategories();
-
-      // if (categories.isEmpty) {
-      //   emit(
-      //     ProductLoadFailure(
-      //       errorMessage: 'No categories & products found',
-      //       allProducts: [],
-      //       filteredProducts: [],
-      //       searchQuery: '',
-      //     ),
-      //   );
-      //   return;
-      // }
 
       emit(
         ProductLoadSuccess(
-          // categories: categories,  // uncomment if categories needed
           allProducts: allProducts,
           filteredProducts: allProducts,
           categoryName: "All",
@@ -121,8 +104,7 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
     }
   }
 
-  /// Filters products based on category and previous search query
-  Future<void> _handleFilterProducts(
+  Future<void> _onProductsFiltered(
     ProductFilteredEvent event,
     Emitter<ProductState> emit,
   ) async {
@@ -134,13 +116,11 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
       final allProducts = await productRepository.getProducts();
       List<Product> filtered = allProducts;
 
-      // Apply filter category-wise first
       if (event.categoryId != null) {
         filtered =
             filtered.where((p) => p.categoryId == event.categoryId).toList();
       }
 
-      // Apply search filter
       if (previousSearchQuery.isNotEmpty) {
         filtered =
             filtered
@@ -152,10 +132,8 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
                 .toList();
       }
 
-      // After filtering, emits the ProductLoadSuccess state
       emit(
         ProductLoadSuccess(
-          // categories: await dataSources.fetchCategories(), // uncomment if categories needed
           allProducts: allProducts,
           filteredProducts: filtered,
           categoryId: event.categoryId,
@@ -170,25 +148,21 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           allProducts: [],
           filteredProducts: [],
           searchQuery: '',
-          // categories: [],  // uncomment if categories needed
         ),
       );
     }
   }
 
-  /// Handles product search based on current filters
-  Future<void> _handleProductSearch(
+  Future<void> _onProductsSearched(
     ProductSearchedEvent event,
     Emitter<ProductState> emit,
   ) async {
     final currentState = state;
-
     if (currentState is ProductLoadSuccess) {
       try {
         final allProducts = await productRepository.getProducts();
         List<Product> filtered = allProducts;
 
-        // Reuse current category filter
         if (currentState.categoryId != null) {
           filtered =
               filtered
@@ -196,7 +170,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
                   .toList();
         }
 
-        // Apply new search query (even if it's empty)
         if (event.query.isNotEmpty) {
           filtered =
               filtered
@@ -210,12 +183,11 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 
         emit(
           ProductLoadSuccess(
-            // categories: await dataSources.fetchCategories(), // uncomment if categories needed
             allProducts: allProducts,
             filteredProducts: filtered,
             categoryId: currentState.categoryId,
             categoryName: currentState.categoryName,
-            searchQuery: event.query, // <- Save new query (even if empty)
+            searchQuery: event.query,
           ),
         );
       } catch (e) {
@@ -225,7 +197,6 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
             allProducts: [],
             filteredProducts: [],
             searchQuery: '',
-            // categories: [],  // uncomment if categories needed
           ),
         );
       }
@@ -237,15 +208,16 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
 class ProductVariantsBloc
     extends Bloc<ProductVariantEvent, ProductVariantState> {
   final ProductRepository productRepository;
-  final ProductDataSources dataSources = ProductDataSources();
+  final ProductDataSources dataSources;
 
-  ProductVariantsBloc({required this.productRepository})
-    : super(ProductVariantInProgress(variants: {})) {
-    on<ProductVariantsLoaded>(_handleProductVariants);
+  ProductVariantsBloc({
+    required this.productRepository,
+    required this.dataSources,
+  }) : super(ProductVariantInProgress(variants: {})) {
+    on<ProductVariantsLoaded>(_onVariantsLoaded);
   }
 
-  /// Loads all variants for a product
-  Future<void> _handleProductVariants(
+  Future<void> _onVariantsLoaded(
     ProductVariantsLoaded event,
     Emitter<ProductVariantState> emit,
   ) async {

@@ -31,7 +31,7 @@ class CategoryList extends StatelessWidget {
         final categories = data['categories'] as List<CategoryModel>;
         final selectedCategoryId =
             data['selectedCategoryId'] as DocumentReference?;
-        // final isAllSelected = categoryId == null;
+        final isAllSelected = selectedCategoryId == null;
         return SizedBox(
           height: 72,
           child: ListView.builder(
@@ -61,13 +61,19 @@ class CategoryList extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: AppColors.lightBrown,
+                            color:
+                                isAllSelected
+                                    ? AppColors.brown
+                                    : AppColors.lightBrown,
                           ),
                           // duration: const Duration(milliseconds: 100),
                           child: Icon(
                             Icons.all_inclusive,
                             size: 28,
-                            color: AppColors.brown,
+                            color:
+                                isAllSelected
+                                    ? AppColors.lightBrown
+                                    : AppColors.brown,
                           ),
                         ),
                       ),
@@ -90,7 +96,7 @@ class CategoryList extends StatelessWidget {
               final categoryRef = FirebaseFirestore.instance
                   .collection(Constants.categoriesCollection)
                   .doc(category.id);
-
+              final isSelected = categoryRef.id == selectedCategoryId?.id;
               // print("Selected ID: ${selectedCategoryId?.id}");
               print("category ref: ${categoryRef.id}");
               // final isSelected = == categoryRef.id;
@@ -118,13 +124,19 @@ class CategoryList extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: AppColors.lightBrown,
+                          color:
+                              isSelected
+                                  ? AppColors.brown
+                                  : AppColors.lightBrown,
                         ),
                         // duration: const Duration(milliseconds: 100),
                         child: Image.network(
                           category.image,
                           height: 28,
-                          color: AppColors.brown,
+                          color:
+                              isSelected
+                                  ? AppColors.lightBrown
+                                  : AppColors.brown,
                         ),
                       ),
                     ),

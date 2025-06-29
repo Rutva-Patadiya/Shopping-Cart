@@ -10,6 +10,11 @@ import '../models/product_model.dart';
 
 // This class fetches data from Firebase Fire store, which contains the product details.
 class ProductDataSources {
+  static final ProductDataSources _instance = ProductDataSources._internal();
+
+  factory ProductDataSources() => _instance;
+
+  ProductDataSources._internal();
   late Product product;
   late CategoryModel categoryModel;
 
@@ -69,7 +74,6 @@ class ProductDataSources {
       final name = data['name'];
 
       switch (name) {
-        // missing constants
         case Constants.size:
           result['sizes'] = List<String>.from(
             data['sizes'].map((e) => e.toString()),
