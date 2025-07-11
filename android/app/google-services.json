@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:48808032272:android:dd7149d65c047f67b77295",
         "android_client_info": {
-          "package_name": "com.rutva.shopping_cart"
+          "package_name": "com.example.shopping_cart"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "48808032272-de1a4udikg70n65c4tu5ijqpoq9bltm8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.rutva.shopping_cart",
+            "package_name": "com.example.shopping_cart",
             "certificate_hash": "e65a9f4594109b6067c36ba43d2b7ff92216be25"
           }
         },
@@ -42,7 +42,43 @@
               "client_id": "48808032272-8tb6solqoshh7jg8dcgane0b67lvlgv1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.rutva.shoppingCart"
+                "bundle_id": "com.example.shoppingCart"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48808032272:android:88b8e665736f6d14b77295",
+        "android_client_info": {
+          "package_name": "com.rutva.shopping_cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDawwYEqJl84TNlE_jZoDnCVaCYALCDw-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "48808032272-8tb6solqoshh7jg8dcgane0b67lvlgv1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.shoppingCart"
               }
             }
           ]
