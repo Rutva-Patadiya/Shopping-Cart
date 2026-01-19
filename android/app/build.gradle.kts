@@ -17,16 +17,12 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
 
-
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
 }
 
 android {
     namespace = "com.rutva.shopping_cart"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
-//    ndkVersion = "27.2.12479018"
+    ndkVersion = "29.0.14033849"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -54,6 +50,20 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+//    product flavours
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            applicationIdSuffix = "dev"
+            dimension = "environment"
+            resValue("string", "app_name", "Shopping Cart-Dev")
+        }
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", "Shopping Cart")
+        }
+
     }
 }
 

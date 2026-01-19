@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "48808032272",
+    "project_id": "shopping-cart-52f9b",
+    "storage_bucket": "shopping-cart-52f9b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48808032272:android:88b8e665736f6d14b77295",
+        "android_client_info": {
+          "package_name": "com.rutva.shopping_cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDawwYEqJl84TNlE_jZoDnCVaCYALCDw-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "48808032272-31ogd4lk1l3unh3bsmfmh3bsjjn0u6se.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rutva.shoppingCart-dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48808032272:android:f38865b07a70ea82b77295",
+        "android_client_info": {
+          "package_name": "com.rutva.shopping_cart.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDawwYEqJl84TNlE_jZoDnCVaCYALCDw-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48808032272-eqeio7o1oehtkktsnbc0madb4c897mf2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "48808032272-31ogd4lk1l3unh3bsmfmh3bsjjn0u6se.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rutva.shoppingCart-dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

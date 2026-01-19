@@ -5,13 +5,13 @@ import '../datasources/product_data_sources.dart';
 
 // This class interacts with the data source to fetch product data. It is provided to the ProductBloc.
 class ProductRepositoryImpl implements ProductRepository {
-  final ProductDataSources remoteDataSource;
+  final ProductDataSources productDataSources;
 
-  ProductRepositoryImpl(this.remoteDataSource);
+  ProductRepositoryImpl({required this.productDataSources});
 
   @override
   Future<List<Product>> getProducts() async {
-    final models = await remoteDataSource.fetchProducts();
+    final models = await productDataSources.fetchProducts();
 
     return models.map((model) => model.toEntity()).toList();
   }

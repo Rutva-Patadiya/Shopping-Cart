@@ -6,7 +6,6 @@ buildscript {
     dependencies {
         classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")  // Updated Kotlin Gradle plugin version
         classpath ("com.google.gms:google-services:4.3.15"); // Latest version (check for updates)
-
     }
 }
 

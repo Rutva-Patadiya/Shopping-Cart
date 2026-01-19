@@ -129,6 +129,7 @@ class CategoryList extends StatelessWidget {
                                   ? AppColors.brown
                                   : AppColors.lightBrown,
                         ),
+
                         // duration: const Duration(milliseconds: 100),
                         child: Image.network(
                           category.image,
@@ -137,6 +138,11 @@ class CategoryList extends StatelessWidget {
                               isSelected
                                   ? AppColors.lightBrown
                                   : AppColors.brown,
+                          errorBuilder:
+                              (context, error, stackTrace) => Container(
+                                alignment: Alignment.center,
+                                child: Icon(Icons.wifi_off,color: AppColors.grey2),
+                              ),
                         ),
                       ),
                     ),

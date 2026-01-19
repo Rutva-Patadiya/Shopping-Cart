@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/product/data/datasources/product_data_sources.dart';
 import 'package:shopping_cart/product/domain/repositories/product_repositories.dart';
@@ -24,7 +25,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     emit(state.withLoading());
-    ProductDataSources dataSources = ProductDataSources();
     List<CategoryModel> categories = await dataSources.fetchCategories();
     log("Categories: $categories");
 
@@ -92,10 +92,32 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           searchQuery: "",
         ),
       );
+    } on FirebaseException catch (e) {
+      if (e.code == 'unavailable') {
+        emit(
+          ProductLoadFailure(
+            errorMessage: 'No internet connection',
+            allProducts: [],
+            filteredProducts: [],
+            searchQuery: '',
+          ),
+        );
+      } else {
+        emit(
+          ProductLoadFailure(
+            errorMessage: e.message ?? 'Failed to load products',
+            allProducts: [],
+            filteredProducts: [],
+            searchQuery: '',
+          ),
+        );
+      }
     } catch (e) {
       emit(
         ProductLoadFailure(
-          errorMessage: e.toString(),
+          errorMessage: e.toString().contains('No internet connection')
+              ? 'No internet connection'
+              : 'Failed to load products',
           allProducts: [],
           filteredProducts: [],
           searchQuery: '',
@@ -141,7 +163,30 @@ class ProductBloc extends Bloc<FilterProductEvent, ProductState> {
           searchQuery: previousSearchQuery,
         ),
       );
-    } catch (e) {
+    }
+    on FirebaseException catch(e) {
+      if (e.code == 'unavailable') {
+        emit(
+          ProductLoadFailure(
+            errorMessage: 'Network Error',
+            allProducts: [],
+            filteredProducts: [],
+            searchQuery: '',
+          ),
+        );
+      }
+      else if(e.code == 'not-found'){
+        emit(
+          ProductLoadFailure(
+            errorMessage: 'Collection Not Found',
+            allProducts: [],
+            filteredProducts: [],
+            searchQuery: '',
+          ),
+        );
+      }
+    }
+    catch (e) {
       emit(
         ProductLoadFailure(
           errorMessage: 'Failed to filter products',

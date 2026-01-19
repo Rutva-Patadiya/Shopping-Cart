@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -102,6 +103,7 @@ class HomePageState extends State<HomePage> {
                         textAlign: TextAlign.start,
                       ),
                     ),
+                    ElevatedButton(onPressed: (){ final result = 10 ~/ 0; print(result); }, child: const Text('trigger crash'))
                   ],
                 ),
               ),
@@ -165,7 +167,7 @@ class HomePageState extends State<HomePage> {
                   } else if (state is ProductLoadSuccess) {
                     return ProductGridView();
                   } else if (state is ProductLoadFailure) {
-                    return Center(child: Text('Error loading products'));
+                    return Center(child: Text(state.errorMessage));
                   } else {
                     return SizedBox.shrink(); // fallback
                   }

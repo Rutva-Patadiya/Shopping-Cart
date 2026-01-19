@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_cart/favorite_page/favorite_page.dart';
 import 'package:shopping_cart/product/bloc/product_bloc.dart';
+import 'package:shopping_cart/profile/profile_page.dart';
 
 import '../cart/cart_page.dart';
 import '../home/home_page.dart';
+import '../login/bloc/auth_bloc.dart';
+import '../login/bloc/auth_event.dart';
 import '../login/login_page.dart';
 import '../product/data/datasources/product_data_sources.dart';
 import '../product/data/repositories/product_repositories_impl.dart';
@@ -31,16 +34,14 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
         builder:
             (context) => MultiBlocProvider(
               providers: [
-                // understand and use it if required
-                // category immediate selection not working
-                // bloc observer
-                // on search clearance categories are removed, should not happen
-                // data sources and repositories multiple instances, should be one only
                 BlocProvider<ProductVariantsBloc>(
                   create: (_) {
                     final dataSources = ProductDataSources();
+                    // final dataSources = RepositoryProvbider.of<ProductDataSources>(context);
                     return ProductVariantsBloc(
-                      productRepository: ProductRepositoryImpl(dataSources),
+                      productRepository: ProductRepositoryImpl(
+                        productDataSources: dataSources,
+                      ),
                       dataSources: dataSources,
                     );
                   },
@@ -60,7 +61,6 @@ Route<dynamic> onGenerateRoutes(RouteSettings routeSettings) {
 
     case FavoritePage.route:
       return MaterialPageRoute(builder: (context) => FavoritePage());
-
     default:
       return MaterialPageRoute(builder: (context) => Login());
   }

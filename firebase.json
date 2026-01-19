@@ -4,14 +4,14 @@
       "android": {
         "default": {
           "projectId": "shopping-cart-52f9b",
-          "appId": "1:48808032272:android:88b8e665736f6d14b77295",
+          "appId": "1:48808032272:android:f38865b07a70ea82b77295",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "ios": {
         "default": {
           "projectId": "shopping-cart-52f9b",
-          "appId": "1:48808032272:ios:930d25ce03249546b77295",
+          "appId": "1:48808032272:ios:474267d6a96cf677b77295",
           "uploadDebugSymbols": true,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
@@ -24,6 +24,20 @@
             "ios": "1:48808032272:ios:930d25ce03249546b77295",
             "web": "1:48808032272:web:c90980ebd6479d9fb77295",
             "windows": "1:48808032272:web:550547dc06f3d8cab77295"
+          }
+        },
+        "lib/firebase_options_dev.dart": {
+          "projectId": "shopping-cart-52f9b",
+          "configurations": {
+            "android": "1:48808032272:android:f38865b07a70ea82b77295",
+            "ios": "1:48808032272:ios:474267d6a96cf677b77295"
+          }
+        },
+        "lib/firebase_options_prod.dart": {
+          "projectId": "shopping-cart-52f9b",
+          "configurations": {
+            "android": "1:48808032272:android:88b8e665736f6d14b77295",
+            "ios": "1:48808032272:ios:930d25ce03249546b77295"
           }
         }
       }

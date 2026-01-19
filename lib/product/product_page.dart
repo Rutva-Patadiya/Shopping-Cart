@@ -38,7 +38,7 @@ class _ProductPageState extends State<ProductPage> {
             create: (_) {
               final dataSources = ProductDataSources();
               return ProductBloc(
-                productRepository: ProductRepositoryImpl(dataSources),
+                productRepository: ProductRepositoryImpl(productDataSources: dataSources),
                 dataSources: dataSources,
               );
             },

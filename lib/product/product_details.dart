@@ -142,6 +142,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           child: Image.network(
                             widget.product.imageUrl,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: Colors.grey[200],
+                              alignment: Alignment.center,
+                              child: const Icon(Icons.wifi_off, color: Colors.grey, size: 48),
+                            ),
                           ),
                         ),
                         Positioned(

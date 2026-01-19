@@ -36,9 +36,16 @@ class ProductCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: AspectRatio(
-                    aspectRatio:
-                        1, // This means width == height for the image area
-                    child: Image.network(product.imageUrl, fit: BoxFit.cover),
+                    aspectRatio: 1,
+                    child: Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey[200],
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.wifi_off, color: Colors.grey, size: 32),
+                      ),
+                    ),
                   ),
                 ),
               ),
